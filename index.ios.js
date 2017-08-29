@@ -1,9 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
-
 import React, { Component } from 'react';
 import {
   AppRegistry,
@@ -11,6 +5,49 @@ import {
   Text,
   View
 } from 'react-native';
+
+var MOCKED_EVENTS_DATA = [
+  {
+    from: '2017-08-31 22:00:00',
+    to: '2017-09-01 03:00:00',
+    eventTitle: 'Surface Tension 26: Nick Klein, Enrique, Genital Quartz',
+    venue: 'F8 1192 Folsom',
+    city: 'San Francisco',
+    genre: ['techno', 'industrial', 'noise'],
+    price: {
+      standard: 20
+    },
+    ageLimit: 21
+  },
+  {
+    from: '2017-09-01 20:00:00',
+    to: null,
+    eventTitle: 'Com Truise, Nosaj Thing w/Cleopold',
+    venue: 'Harlow\'s Restaurant And Nightclub',
+    city: 'San Francisco',
+    genre: ['synthpop', 'downtempo', 'electro', 'IDM'],
+    price: {
+      standard: 20,
+      pre: 18,
+      preTime: null
+    },
+    ageLimit: 21
+  },
+  {
+    from: '2017-09-01 20:00:00',
+    to: '2017-09-02 02:00:00',
+    eventTitle: 'Riddim Hours: Digitist, Sub Artillery, Cosmonaut, Nukez, Dare -b2b- Vatic, Triple F, Chix, Slghtr',
+    venue: 'DNA Lounge',
+    city: 'San Francisco',
+    genre: ['dubstep'],
+    price: {
+      standard: 20,
+      pre: 12,
+      preTime: '23:00:00'
+    },
+    ageLimit: 18
+  }
+];
 
 export default class blendedDates extends Component {
   render() {
@@ -25,7 +62,6 @@ export default class blendedDates extends Component {
         <Text style={styles.instructions}>
           Press Cmd+R to reload,{'\n'}
           Cmd+D or shake for dev menu
-          Turtle :)
         </Text>
       </View>
     );
