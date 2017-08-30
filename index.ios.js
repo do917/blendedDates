@@ -6,6 +6,8 @@ import {
   View
 } from 'react-native';
 
+import Events from './app/Events';
+
 var MOCKED_EVENTS_DATA = [
   {
     from: '2017-08-31 22:00:00',
@@ -13,7 +15,7 @@ var MOCKED_EVENTS_DATA = [
     eventTitle: 'Surface Tension 26: Nick Klein, Enrique, Genital Quartz',
     venue: 'F8 1192 Folsom',
     city: 'San Francisco',
-    genre: ['techno', 'industrial', 'noise'],
+    genres: ['techno', 'industrial', 'noise'],
     price: {
       standard: 20
     },
@@ -25,7 +27,7 @@ var MOCKED_EVENTS_DATA = [
     eventTitle: 'Com Truise, Nosaj Thing w/Cleopold',
     venue: 'Harlow\'s Restaurant And Nightclub',
     city: 'San Francisco',
-    genre: ['synthpop', 'downtempo', 'electro', 'IDM'],
+    genres: ['synthpop', 'downtempo', 'electro', 'IDM'],
     price: {
       standard: 20,
       pre: 18,
@@ -39,7 +41,7 @@ var MOCKED_EVENTS_DATA = [
     eventTitle: 'Riddim Hours: Digitist, Sub Artillery, Cosmonaut, Nukez, Dare -b2b- Vatic, Triple F, Chix, Slghtr',
     venue: 'DNA Lounge',
     city: 'San Francisco',
-    genre: ['dubstep'],
+    genres: ['dubstep'],
     price: {
       standard: 20,
       pre: 12,
@@ -50,10 +52,17 @@ var MOCKED_EVENTS_DATA = [
 ];
 
 export default class blendedDates extends Component {
+  constructor() {
+    super()
+    this.state = {
+      events: null
+    }
+  }
+
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>
+        {/*<Text style={styles.welcome}>
           Welcome to React Native!
         </Text>
         <Text style={styles.instructions}>
@@ -62,7 +71,8 @@ export default class blendedDates extends Component {
         <Text style={styles.instructions}>
           Press Cmd+R to reload,{'\n'}
           Cmd+D or shake for dev menu
-        </Text>
+        </Text>*/}
+        <Events events={MOCKED_EVENTS_DATA}/>
       </View>
     );
   }
