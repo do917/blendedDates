@@ -31,9 +31,12 @@ export default class CameraView extends Component {
 
   takePicture() {
     const options = {};
-
-    this.camera.capture()
-      .then((data) => this.props.captureData(data))
+    console.log(this.camera)
+    
+    this.camera.capture({target: 'disk'})
+      .then((data) => {
+        this.props.captureData(data.data)
+      })
       .catch(err => console.error(err));
   }
 }

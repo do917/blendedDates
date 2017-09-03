@@ -21,9 +21,30 @@ export default class App extends Component {
   }
 
   captureData(data) {
-    this.setState({
-      imageData: data.path
-    });
+    let formData = new FormData();
+    formData.append('sampleBase64Content', data)
+    formData.append('modelId', '5SYIIE2JSUADH522UB3SUODVEU')
+    
+    fetch('https://api.einstein.ai/v2/vision/predict', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer bbad2c9c1e4830715146c6924fda366ca7ac59f5',
+        'Cache-Control': 'no-cache',
+        'Content-Type': 'multipart/form-data'
+      },
+      body: formData
+    })
+      .then(response => response.json())
+      .then(json => {
+        this.setState({
+          imageData: JSON.stringify(json.probabilities)
+        })
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+
   }
 
   render() {
