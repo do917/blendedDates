@@ -13,16 +13,14 @@ var {height, width} = Dimensions.get('window');
 
 
 export default class CameraView extends Component {
-
   render() {
     return(
       <View style={styles.container}>
         <Camera
-          ref={(cam) => {
-            this.camera = cam;
-          }}
+          ref={cam => this.camera = cam}
           style={styles.preview}
-          aspect={Camera.constants.Aspect.fill}>
+          aspect={Camera.constants.Aspect.fill}
+        >
           <Text style={styles.capture} onPress={this.takePicture.bind(this)}>[CAPTURE]</Text>
         </Camera>
       </View>
@@ -30,9 +28,6 @@ export default class CameraView extends Component {
   }
 
   takePicture() {
-    const options = {};
-    console.log(this.camera)
-    
     this.camera.capture({target: 'disk'})
       .then((data) => {
         this.props.captureData(data.data)

@@ -23,12 +23,12 @@ export default class App extends Component {
   captureData(data) {
     let formData = new FormData();
     formData.append('sampleBase64Content', data)
-    formData.append('modelId', '5SYIIE2JSUADH522UB3SUODVEU')
+    formData.append('modelId', 'DWL464WGO7IJFPKA2QIXVW6OM4')
     
     fetch('https://api.einstein.ai/v2/vision/predict', {
       method: 'POST',
       headers: {
-        'Authorization': 'Bearer bbad2c9c1e4830715146c6924fda366ca7ac59f5',
+        'Authorization': 'Bearer beb2a180595b8c8f5d9b70d38aa8ad537a61c0bd',
         'Cache-Control': 'no-cache',
         'Content-Type': 'multipart/form-data'
       },
