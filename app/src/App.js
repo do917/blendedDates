@@ -9,10 +9,12 @@ import {
 } from 'react-native';
 
 import { Button } from 'native-base';
-
-import CameraView from './components/CameraView';
-import Header from './components/Header';
 import SafariView from 'react-native-safari-view';
+
+import Header from './components/Header';
+import CameraView from './components/CameraView';
+import Login from './components/Login';
+import Home from './components/Home';
 
 
 
@@ -27,31 +29,27 @@ export default class App extends Component {
   }
 
   componentDidMount() {
-    console.log('mounting listenr')
     Linking.addEventListener('url', (event) => {
-      console.log('adding event listener for linking')
-      //remove listener here as it makes sense rather than doing it in component
-      // Linking.removeEventListener('url', handleUrl)
       var url = new URL(event.url);
       const code = url.searchParams.get("token");
       const error = url.searchParams.get("error");
-      //perform error handling...
 
       console.log('GOT THE AUTH CODE', code)
       SafariView.dismiss();
-    })
+    });
   }
 
   authenticate() {
-    fetch('http://localhost:3000/authorize_user', {
-      method: 'POST'
-    })
+    fetch('http://10.0.1.2:3000/authorize_user', { method: 'POST' })
       .then(res => res.json())
       .then(json => {
         SafariView.show({
           url: json.url,
           fromBottom: true
         });
+      })
+      .catch(error => {
+        console.log('error in authentication', error);
       });
   }
 
@@ -63,7 +61,7 @@ export default class App extends Component {
     fetch('https://api.einstein.ai/v2/vision/predict', {
       method: 'POST',
       headers: {
-        'Authorization': 'Bearer 9a2b2148e50387f8af2e78fe43c4710dc7ecd9ba',
+        'Authorization': 'Bearer ee1b297d035cef8afbe1244fde3187839628b249',
         'Cache-Control': 'no-cache',
         'Content-Type': 'multipart/form-data'
       },
@@ -88,7 +86,7 @@ export default class App extends Component {
     fetch('https://api.einstein.ai/v2/vision/predict', {
       method: 'POST',
       headers: {
-        'Authorization': 'Bearer 9a2b2148e50387f8af2e78fe43c4710dc7ecd9ba',
+        'Authorization': 'Bearer ee1b297d035cef8afbe1244fde3187839628b249',
         'Cache-Control': 'no-cache',
         'Content-Type': 'multipart/form-data'
       },
@@ -113,7 +111,7 @@ export default class App extends Component {
           })
         }
       })
-      .catch((error) => {
+      .catch(error => {
         console.error(error);
       });
   }
@@ -125,17 +123,18 @@ export default class App extends Component {
           <StatusBar
            barStyle="light-content"
           />
-         </View>
+        </View>
         <Header/>
         
-
-        <CameraView captureData={this.captureData.bind(this)}/>
-        <Button onPress={this.authenticate}>
-          <Text>Click Me!</Text>
-        </Button>
+        {!this.state.loggedIn : <Login/> ? <Home/>}
         <Text>
-          {this.state.imageData}
+          {this.state.loggedIn.toString()}
         </Text>
+
+        {/*<CameraView captureData={this.captureData.bind(this)}/>*/}
+        <Button onPress={this.authenticate}>
+          <Text>Login with Instagram</Text>
+        </Button>
         
       </View>
     );
