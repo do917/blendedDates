@@ -4,7 +4,8 @@ import {
   StyleSheet,
   Text,
   View,
-  StatusBar
+  StatusBar,
+  Linking
 } from 'react-native';
 
 import { Button } from 'native-base';
@@ -25,6 +26,22 @@ export default class App extends Component {
     }
   }
 
+  componentDidMount() {
+    console.log('mounting listenr')
+    Linking.addEventListener('url', (event) => {
+      console.log('adding event listener for linking')
+      //remove listener here as it makes sense rather than doing it in component
+      // Linking.removeEventListener('url', handleUrl)
+      var url = new URL(event.url);
+      const code = url.searchParams.get("token");
+      const error = url.searchParams.get("error");
+      //perform error handling...
+
+      console.log('GOT THE AUTH CODE', code)
+      SafariView.dismiss();
+    })
+  }
+
   authenticate() {
     fetch('http://localhost:3000/authorize_user', {
       method: 'POST'
@@ -32,23 +49,10 @@ export default class App extends Component {
       .then(res => res.json())
       .then(json => {
         SafariView.show({
-          url: json.url
+          url: json.url,
+          fromBottom: true
         });
-        const handleUrl = (event) => {
-          //remove listener here as it makes sense rather than doing it in component
-          Linking.removeEventListener('url', handleUrl)
-          var url = new URL(event.url);
-          const code = url.searchParams.get("token");
-          const error = url.searchParams.get("error");
-          //perform error handling...
-          SafariView.dismiss();
-        }
-
-        Linking.addEventListener('url', handleUrl)
-
-        
-      })
-
+      });
   }
 
   generalPredict(data) {
@@ -112,8 +116,6 @@ export default class App extends Component {
       .catch((error) => {
         console.error(error);
       });
-
-
   }
 
   render() {
