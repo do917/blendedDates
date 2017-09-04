@@ -39,9 +39,9 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string/>
 	<key>NSCameraUsageDescription</key>
-	<string>REI&apos;s Agent Valentine needs access to the camera to do her job!</string>
+	<string>REI's Agent Valentine needs access to the camera to do her job!</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSExceptionDomains</key>
@@ -54,7 +54,7 @@
 		</dict>
 	</dict>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>REI&apos;s Agent Valentine needs access to the photo she takes to do her job!</string>
+	<string>REI's Agent Valentine needs access to the photo she takes to do her job!</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Entypo.ttf</string>
