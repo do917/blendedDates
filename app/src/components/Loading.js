@@ -19,3 +19,15 @@ export default class Loading extends Component {
     )
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'space-between',
+    padding: 10,
+    // alignSelf: 'center',
+    alignItems: 'center',
+    borderColor: 'orange',
+    borderStyle: 'solid',
+    borderWidth: 1
+  },

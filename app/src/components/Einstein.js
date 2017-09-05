@@ -11,14 +11,6 @@ import phrases from '../einsteinPhrases';
 
 export default class Einstein extends Component {
   render() {
-    // const { loggedIn, showHome, einsteinResults } = this.props;
-    // let text = 'a text not set'
-    // console.log('aa', loggedIn, showHome, phrases.results)
-    // if (loggedIn && !showHome) {
-    //   text = phrases.results
-    // }
-
-
     return(
       <View style={styles.container}>
         <Image 
@@ -36,11 +28,11 @@ export default class Einstein extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 2,
     paddingVertical: 10,
     borderColor: 'blue',
     borderStyle: 'solid',
-    borderWidth: 3
+    borderWidth: 1
   },
   einstein: {
     flex: 1,
@@ -54,5 +46,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Gill Sans',
     fontSize: 20,
     textAlign: 'center',
+    height: 60
   },
 });

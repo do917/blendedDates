@@ -8,26 +8,32 @@ import {
 
 import SafariView from 'react-native-safari-view';
 import { Button } from 'native-base';
+import shoppingModels from '../shoppingModels';
+
 
 export default class Results extends Component {
+  
   takeShopping() {
+    let label = this.props.einsteinResults.mostPopular.label;
     SafariView.show({
-      url: 'https://www.google.com',
+      url: shoppingModels.links[label],
       fromBottom: true
     });
   }
 
   render() {
+    let label = this.props.einsteinResults.mostPopular.label;
+    label = shoppingModels.verbs[label]
     return(
       <View style={styles.container}>
-        <Button block info onPress={this.takeShopping}>
+        <Button block info onPress={this.takeShopping.bind(this)}>
           <Text style={styles.buttonText}>
-            Take me shopping at REI!
+            Get {label} gear from REI
           </Text>
         </Button>
 
         <Button block info onPress={this.props.showHome}>
-          <Text>
+          <Text style={styles.buttonText}>
             Help me shop for another friend
           </Text>
         </Button>
@@ -46,7 +52,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderColor: 'red',
     borderStyle: 'solid',
-    borderWidth: 3
+    borderWidth: 1
   },
   buttonText: {
     fontFamily: 'Gill Sans',

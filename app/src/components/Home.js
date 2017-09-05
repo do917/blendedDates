@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderColor: 'orange',
     borderStyle: 'solid',
-    borderWidth: 3
+    borderWidth: 1
   },
   buttonText: {
     fontFamily: 'Gill Sans',

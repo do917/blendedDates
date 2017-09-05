@@ -35,38 +35,38 @@ export default class App extends Component {
       query: null,
       
       // einsteinText: 'no text set',
-      einsteinResults: {
-        "photos": [
-            {
-               "label": "campandhike",
-               "url": "https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/21227558_494613014236106_3681810282990010368_n.jpg"
-            },
-            {
-               "label": "campandhike",
-               "url": "https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/21224880_2358544487702994_4825951134982078464_n.jpg"
-            },
-            {
-               "label": "campandhike",
-               "url": "https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/19050886_251722641899162_3319195467023122432_n.jpg"
-            },
-            {
-               "url": "https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/19122202_281792375617272_571626762316808192_n.jpg"
-            },
-            {
-               "label": "campandhike",
-               "url": "https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/18646386_446623515698621_2087497716677476352_n.jpg"
-            }
-         ],
-         "categoryCount": {
-            "campandhike": 4,
-            "undefined": 1
-         },
-         "mostPopular": {
-            "label": "campandhike",
-            "count": 4
-         }
-      },
-      showHome: false,
+      // einsteinResults: {
+      //   "photos": [
+      //       {
+      //          "label": "campandhike",
+      //          "url": "https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/21227558_494613014236106_3681810282990010368_n.jpg"
+      //       },
+      //       {
+      //          "label": "campandhike",
+      //          "url": "https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/21224880_2358544487702994_4825951134982078464_n.jpg"
+      //       },
+      //       {
+      //          "label": "campandhike",
+      //          "url": "https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/19050886_251722641899162_3319195467023122432_n.jpg"
+      //       },
+      //       {
+      //          "url": "https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/19122202_281792375617272_571626762316808192_n.jpg"
+      //       },
+      //       {
+      //          "label": "campandhike",
+      //          "url": "https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/18646386_446623515698621_2087497716677476352_n.jpg"
+      //       }
+      //    ],
+      //    "categoryCount": {
+      //       "campandhike": 4,
+      //       "undefined": 1
+      //    },
+      //    "mostPopular": {
+      //       "label": "campandhike",
+      //       "count": 4
+      //    }
+      // },
+      showHome: true,
       loggedIn: true,
       token: '240954482.61ba2c7.63c617faf63940cfb532ad7f3879427a',
       user: {id: "240954482", username: "davidisturtle", profile_picture: "https://scontent.cdninstagram.com/t51.2885-19/s150x150/11296795_485223351641943_1257523564_a.jpg", full_name: "David Oh", bio: "🍞🍇"},
@@ -258,31 +258,32 @@ export default class App extends Component {
   }
 
   render() {
-    const { loggedIn, showHome, user, query, einsteinResults, einsteinText } = this.state;
+    const { user, query, loggedIn, showHome, loading, einsteinResults, einsteinText } = this.state;
 
     return (
       <KeyboardAvoidingView 
         behavior='padding'
         style={styles.container}
-        // keyboardVerticalOffset={10}
       >
         <Header/>
         <Einstein
           loggedIn={loggedIn}
           showHome={loggedIn}
-          einsteinResults={einsteinResults}
           einsteinText={einsteinText}
+          einsteinResults={einsteinResults}
         />
         
         {!loggedIn
           ? <Login authenticate={this.authenticate.bind(this)}/> 
-          : showHome
+          : loading
+          ? <Loading />
+          : showHome 
           ? <Home 
               user={user}
               query={query}
               shopFor={this.shopFor.bind(this)}
               updateQuery={this.updateQuery.bind(this)}
-            />
+            /> 
           : <Results
               showHome={this.showHome.bind(this)}
               einsteinResults={einsteinResults}
