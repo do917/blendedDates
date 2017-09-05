@@ -22,10 +22,10 @@ export default class App extends Component {
   constructor() {
     super()
     this.state = {
-      events: null,
-      imageData: 'no image dat',
+      results: null,
       loggedIn: true,
       loading: false,
+      photos: [],
       token: '240954482.61ba2c7.63c617faf63940cfb532ad7f3879427a'
     }
   }
@@ -61,26 +61,47 @@ export default class App extends Component {
       });
   }
 
-  // retreiveRecentPictures(userId) {
-  //   fetch(`https://api.instagram.com/v1/users/${userId}/media/recent/?access_token=${this.state.token}`)
-  //     .then(response => response.json())
-  //     .then(results => {
-  //       return results.data.map(result => {
-  //         return result.images.standard_resolution.url;
-  //       });
-  //     });
-  // }
+  getRecentPics(userId) {
+    return fetch(`https://api.instagram.com/v1/users/${userId}/media/recent/?access_token=${this.state.token}`)
+      .then(response => response.json());
+  }
 
-  retreiveReiRelated(userId) {
-    fetch(`https://api.instagram.com/v1/users/${userId}/media/recent/?access_token=${this.state.token}`)
-      .then(response => response.json())
-      .then(results => {
-        let recentPictures = results.data.map(result => {
-          return result.images.standard_resolution.url;
+  filterForRei(data) {
+    let reiRelatedPics = [];
+    let einsteinQueue = [];
+
+    for (let i = 0; i < data.length; i++) {
+      let url = data[i].images.standard_resolution.url;
+      console.log('url', url)
+      einsteinQueue.push(this.einsteinPredict(url)
+        .then(label => {
+          if (label !== 'other') {
+            reiRelatedPics.push(data[i]);
+          }
         })
+      );
+    }
 
-        console.log('recentPictures', recentPictures);
+    return Promise.all(einsteinQueue)
+      .then(() => {
+        return reiRelatedPics;
+      });
+  }
+
+  shopFor(userId) {
+    this.getRecentPics(userId)
+      .then(results => {
+        this.filterForRei(results.data)
+          .then(filteredPics => {
+            console.log('these are the filtered pics', filteredPics);
+          })
+          .catch(error => {
+            console.log('error on filtering', error);
+          });
       })
+      .catch(error => {
+        console.log('error on getting recent pics', error);
+      });
   }
 
   generalPredict(data) {
@@ -91,32 +112,28 @@ export default class App extends Component {
     fetch('https://api.einstein.ai/v2/vision/predict', {
       method: 'POST',
       headers: {
-        'Authorization': 'Bearer ee1b297d035cef8afbe1244fde3187839628b249',
+        'Authorization': 'Bearer 00ac379db0e480ba70ea01a4e6b80bceba237663',
         'Cache-Control': 'no-cache',
         'Content-Type': 'multipart/form-data'
       },
       body: formData
     })
       .then(res => res.json())
-      .then(json => {
-        this.setState({
-          imageData: JSON.stringify(json.probabilities)
-        })
-      })
       .catch((error) => {
         console.error(error);
       });
   }
 
-  captureData(data) {
+  einsteinPredict(url) {
     let formData = new FormData();
-    formData.append('sampleBase64Content', data)
+    formData.append('sampleLocation', url)
+    formData.append('numResults', 1)
     formData.append('modelId', '3G4636B2DHG5ID7JXDYFBIL7S4') // models for REI + Global categories 
     
-    fetch('https://api.einstein.ai/v2/vision/predict', {
+    return fetch('https://api.einstein.ai/v2/vision/predict', {
       method: 'POST',
       headers: {
-        'Authorization': 'Bearer ee1b297d035cef8afbe1244fde3187839628b249',
+        'Authorization': 'Bearer e2772a497aafaa0224e31f4deb7b843920aa19ea',
         'Cache-Control': 'no-cache',
         'Content-Type': 'multipart/form-data'
       },
@@ -124,22 +141,8 @@ export default class App extends Component {
     })
       .then(res => res.json())
       .then(json => {
-        let probabilities = json.probabilities;
-        let hasGeneral = false;
-
-        for (let i = 0; i < probabilities.length; i++) {
-          let probability = probabilities[i];
-          if (probability.label === 'other' && probability.probability > 0.9) {
-            hasGeneral = true;
-            this.generalPredict(data)
-          }
-        }
-
-        if (!hasGeneral) {
-          this.setState({
-            imageData: JSON.stringify(json.probabilities)
-          })
-        }
+        console.log('label', json.probabilities[0].label);
+        return json.probabilities[0].label;
       })
       .catch(error => {
         console.error(error);
@@ -153,7 +156,7 @@ export default class App extends Component {
         
         {!this.state.loggedIn 
           ? <Login authenticate={this.authenticate.bind(this)}/> 
-          : <Home retreiveReiRelated={this.retreiveReiRelated.bind(this)}/>
+          : <Home shopFor={this.shopFor.bind(this)}/>
         }
 
         {/*<CameraView captureData={this.captureData.bind(this)}/>*/}        

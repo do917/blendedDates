@@ -14,7 +14,7 @@ export default class Home extends Component {
   render() {
     return(
       <View>
-        <Button onPress={() => this.props.retreiveReiRelated('self')}>
+        <Button onPress={() => this.props.shopFor('self')}>
           <Text>
             Shop for Me
           </Text>
