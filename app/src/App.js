@@ -31,6 +31,7 @@ export default class App extends Component {
       loading: false,
       showHome: true,
       query: null,
+      results: null,
       
 
       loggedIn: true,
@@ -103,32 +104,36 @@ export default class App extends Component {
     });
   }
 
-  fetchUserId(username) {
+  fetchUser(username) {
     return fetch(`https://www.instagram.com/${username}/?__a=1`)
       .then(res => res.json())
       .then(json => {
         console.log('json', json)
-        return json.user.id;
+        return json.user;
       })
       .catch(error => console.log('fetching user id error: ', error));
   }
 
-  fetchPhotos(userId) {
-    return fetch(`https://api.instagram.com/v1/users/${userId}/media/recent/?access_token=${this.state.token}`)
-      .then(response => response.json())
-      .catch(error => console.log('fetching photos error: ', error));
-  }
+  // fetchPhotos(userId) {
+  //   return fetch(`https://api.instagram.com/v1/users/${userId}/media/recent/?access_token=${this.state.token}`)
+  //     .then(response => response.json())
+  //     .catch(error => console.log('fetching photos error: ', error));
+  // }
 
   filterForRei(data) {
     let reiRelatedPhotos = [];
     let einsteinQueue = [];
 
     for (let i = 0; i < data.length; i++) {
-      let url = data[i].images.standard_resolution.url;
+      let url = data[i].display_src
       einsteinQueue.push(this.einsteinPredict(url)
         .then(label => {
+          let analyzedData = {
+            label: label,
+            url: url
+          }
           if (label !== 'other') {
-            reiRelatedPhotos.push(data[i]);
+            reiRelatedPhotos.push(analyzedData);
           }
         })
         .catch(error => console.log('creating queue error: ', error))
@@ -148,12 +153,9 @@ export default class App extends Component {
     });
     
 
-    this.fetchUserId(username)
-      .then(userId => {
-        return this.fetchPhotos(userId);
-      })
-      .then(results => {
-        return this.filterForRei(results.data);
+    this.fetchUser(username)
+      .then(userData => {
+        return this.filterForRei(userData.media.nodes);
       })
       .then(filteredPhotos => {
         this.setState({
