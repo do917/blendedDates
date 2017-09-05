@@ -5,50 +5,67 @@ import {
   AppRegistry,
   StyleSheet,
   Text,
-  View
+  View,
+  Image,
+  StatusBar
 } from 'react-native';
+
+
 
 
 export default class HeaderExample extends Component {
   render() {
     return(
-      <View style={styles.container}>
-        <Text style={styles.header}>
-          AgentValentine
-        </Text>
+      <View>
+        <View style={styles.statusBar}>
+          <StatusBar barStyle="light-content"/>
+        </View>
+        <View style={styles.header}>
+          <Image
+            source={require('../static/header.png')}
+            style={styles.imageHeader}
+          />
+        </View>
       </View>
     )
   }
 
-  /*render() {
-    return (
-      <Container>
-        <Header>
-          <Left>
-            <Button transparent>
-              <Icon name='arrow-back' />
-            </Button>
-          </Left>
-          <Body>
-            <Title>Header</Title>
-          </Body>
-          <Right>
-            <Button transparent>
-              <Icon name='menu' />
-            </Button>
-          </Right>
-        </Header>
-      </Container>
-    );
-  }*/
+  // render() {
+  //   return (
+  //     <Container >
+  //       <Header>
+  //         <Left>
+
+  //         </Left>
+  //         <Body>
+  //           <Title>Header</Title>
+  //         </Body>
+  //         <Right>
+
+  //         </Right>
+  //       </Header>
+  //     </Container>
+  //   );
+  // }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    height: 85
+  statusBar: {
+    backgroundColor: '#000',
+    height: 18,
+    
+    borderColor: 'green',
+    borderStyle: 'solid',
+    borderWidth: 1
   },
   header: {
-    fontSize: 19,
-    textAlign: 'center'
-  }
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    backgroundColor: '#000',
+
+    borderColor: 'blue',
+    borderStyle: 'solid',
+    borderWidth: 0.5,
+  },
+
 });
