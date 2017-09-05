@@ -6,7 +6,8 @@ import {
   StyleSheet,
   Text,
   View,
-  Image
+  Image,
+  StatusBar
 } from 'react-native';
 
 
@@ -15,11 +16,16 @@ import {
 export default class HeaderExample extends Component {
   render() {
     return(
-      <View style={styles.container}>
-        <Image
-          source={require('../static/header.png')}
-          style={styles.imageHeader}
-        />
+      <View>
+        <View style={styles.statusBar}>
+          <StatusBar barStyle="light-content"/>
+        </View>
+        <View style={styles.header}>
+          <Image
+            source={require('../static/header.png')}
+            style={styles.imageHeader}
+          />
+        </View>
       </View>
     )
   }
@@ -44,7 +50,15 @@ export default class HeaderExample extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  statusBar: {
+    backgroundColor: '#000',
+    height: 18,
+    
+    borderColor: 'green',
+    borderStyle: 'solid',
+    borderWidth: 1
+  },
+  header: {
     justifyContent: 'flex-end',
     alignItems: 'center',
     backgroundColor: '#000',
@@ -52,5 +66,6 @@ const styles = StyleSheet.create({
     borderColor: 'blue',
     borderStyle: 'solid',
     borderWidth: 0.5,
-  }
+  },
+
 });

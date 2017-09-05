@@ -8,13 +8,13 @@ import {
   Linking
 } from 'react-native';
 
-import { Button } from 'native-base';
+
 import SafariView from 'react-native-safari-view';
 
 import Header from './components/Header';
-import CameraView from './components/CameraView';
 import Login from './components/Login';
 import Home from './components/Home';
+import CameraView from './components/CameraView';
 
 
 
@@ -24,7 +24,9 @@ export default class App extends Component {
     this.state = {
       events: null,
       imageData: 'no image dat',
-      loggedIn: false
+      loggedIn: true,
+      loading: false,
+      token: '240954482.61ba2c7.63c617faf63940cfb532ad7f3879427a'
     }
   }
 
@@ -34,7 +36,13 @@ export default class App extends Component {
       const code = url.searchParams.get("token");
       const error = url.searchParams.get("error");
 
-      console.log('GOT THE AUTH CODE', code)
+      if (code) {
+        this.setState({
+          loggedIn: true,
+          token: code
+        });
+      }
+      
       SafariView.dismiss();
     });
   }
@@ -51,6 +59,28 @@ export default class App extends Component {
       .catch(error => {
         console.log('error in authentication', error);
       });
+  }
+
+  // retreiveRecentPictures(userId) {
+  //   fetch(`https://api.instagram.com/v1/users/${userId}/media/recent/?access_token=${this.state.token}`)
+  //     .then(response => response.json())
+  //     .then(results => {
+  //       return results.data.map(result => {
+  //         return result.images.standard_resolution.url;
+  //       });
+  //     });
+  // }
+
+  retreiveReiRelated(userId) {
+    fetch(`https://api.instagram.com/v1/users/${userId}/media/recent/?access_token=${this.state.token}`)
+      .then(response => response.json())
+      .then(results => {
+        let recentPictures = results.data.map(result => {
+          return result.images.standard_resolution.url;
+        })
+
+        console.log('recentPictures', recentPictures);
+      })
   }
 
   generalPredict(data) {
@@ -119,23 +149,14 @@ export default class App extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.statusBar}>
-          <StatusBar
-           barStyle="light-content"
-          />
-        </View>
         <Header/>
         
-        {!this.state.loggedIn : <Login/> ? <Home/>}
-        <Text>
-          {this.state.loggedIn.toString()}
-        </Text>
+        {!this.state.loggedIn 
+          ? <Login authenticate={this.authenticate.bind(this)}/> 
+          : <Home retreiveReiRelated={this.retreiveReiRelated.bind(this)}/>
+        }
 
-        {/*<CameraView captureData={this.captureData.bind(this)}/>*/}
-        <Button onPress={this.authenticate}>
-          <Text>Login with Instagram</Text>
-        </Button>
-        
+        {/*<CameraView captureData={this.captureData.bind(this)}/>*/}        
       </View>
     );
   }
@@ -144,14 +165,8 @@ export default class App extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+
     borderColor: 'brown',
-    borderStyle: 'solid',
-    borderWidth: 1
-  },
-  statusBar: {
-    backgroundColor: '#000',
-    height: 18,
-    borderColor: 'green',
     borderStyle: 'solid',
     borderWidth: 1
   }
