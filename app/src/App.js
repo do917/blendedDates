@@ -13,6 +13,7 @@ import {
 import SafariView from 'react-native-safari-view';
 
 import Header from './components/Header';
+import Footer from './components/Footer';
 import Login from './components/Login';
 import Home from './components/Home';
 import Einstein from './components/Einstein';
@@ -27,46 +28,47 @@ export default class App extends Component {
     this.state = {
       // user: null,
       // token: null,
-      // loggedIn: false,
       // showHome: true,
+      // loggedIn: false,
+      // einsteinText: null,
       // einsteinResults: null,
-      
+
       loading: false,
-      query: null,
+      query: '',
       
       // einsteinText: 'no text set',
-      // einsteinResults: {
-      //   "photos": [
-      //       {
-      //          "label": "campandhike",
-      //          "url": "https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/21227558_494613014236106_3681810282990010368_n.jpg"
-      //       },
-      //       {
-      //          "label": "campandhike",
-      //          "url": "https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/21224880_2358544487702994_4825951134982078464_n.jpg"
-      //       },
-      //       {
-      //          "label": "campandhike",
-      //          "url": "https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/19050886_251722641899162_3319195467023122432_n.jpg"
-      //       },
-      //       {
-      //          "url": "https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/19122202_281792375617272_571626762316808192_n.jpg"
-      //       },
-      //       {
-      //          "label": "campandhike",
-      //          "url": "https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/18646386_446623515698621_2087497716677476352_n.jpg"
-      //       }
-      //    ],
-      //    "categoryCount": {
-      //       "campandhike": 4,
-      //       "undefined": 1
-      //    },
-      //    "mostPopular": {
-      //       "label": "campandhike",
-      //       "count": 4
-      //    }
-      // },
-      showHome: true,
+      einsteinResults: {
+        "photos": [
+            {
+               "label": "campandhike",
+               "url": "https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/21227558_494613014236106_3681810282990010368_n.jpg"
+            },
+            {
+               "label": "campandhike",
+               "url": "https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/21224880_2358544487702994_4825951134982078464_n.jpg"
+            },
+            {
+               "label": "campandhike",
+               "url": "https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/19050886_251722641899162_3319195467023122432_n.jpg"
+            },
+            {
+               "url": "https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/19122202_281792375617272_571626762316808192_n.jpg"
+            },
+            {
+               "label": "campandhike",
+               "url": "https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/18646386_446623515698621_2087497716677476352_n.jpg"
+            }
+         ],
+         "categoryCount": {
+            "campandhike": 4,
+            "undefined": 1
+         },
+         "mostPopular": {
+            "label": "campandhike",
+            "count": 4
+         }
+      },
+      showHome: false,
       loggedIn: true,
       token: '240954482.61ba2c7.63c617faf63940cfb532ad7f3879427a',
       user: {id: "240954482", username: "davidisturtle", profile_picture: "https://scontent.cdninstagram.com/t51.2885-19/s150x150/11296795_485223351641943_1257523564_a.jpg", full_name: "David Oh", bio: "🍞🍇"},
@@ -197,7 +199,8 @@ export default class App extends Component {
   shopFor(username) {
     this.setState({
       loading: true
-    });
+    }, () => this.setEinsteinResponse(username));
+    
 
     this.fetchUserData(username)
       .then(userData => {
@@ -225,7 +228,7 @@ export default class App extends Component {
     return fetch('https://api.einstein.ai/v2/vision/predict', {
       method: 'POST',
       headers: {
-        'Authorization': 'Bearer e61d041182df2e8658bcb0468343e3fe1cb83ae4',
+        'Authorization': 'Bearer 09f74b4d440fa6e5715aac39925e3c5d96b5a278',
         'Cache-Control': 'no-cache',
         'Content-Type': 'multipart/form-data'
       },
@@ -238,15 +241,20 @@ export default class App extends Component {
       .catch(error => console.error('einstein prediction error: ', error));
   }
 
-  setEinsteinResponse() {
-    const { loggedIn, showHome, einsteinResults } = this.state;
+  setEinsteinResponse(username) {
+    const { user, loggedIn, showHome, loading, einsteinResults } = this.state;
     let text;
 
     if (!loggedIn) {
       text = phrases.login;
+    } else if (loading) {
+      if (username === 'self') {
+        username = user.username;
+      }
+      text = phrases.loading(username);
     } else {
       if (showHome) {
-        text = phrases.home(this.state.user.full_name.split(' ')[0]);
+        text = phrases.home(user.full_name.split(' ')[0]);
       } else {
         text = phrases.results(einsteinResults.mostPopular.label);
       }
@@ -290,6 +298,7 @@ export default class App extends Component {
             />
         }
         {/*<CameraView captureData={this.captureData.bind(this)}/>*/}        
+        <Footer/>
       </KeyboardAvoidingView>
     );
   }

@@ -46,6 +46,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Gill Sans',
     fontSize: 20,
     textAlign: 'center',
+    textAlignVertical: 'bottom',
     height: 60
   },
 });

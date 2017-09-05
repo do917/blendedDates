@@ -11,11 +11,6 @@ import {
 
 import { Button, Item, Input } from 'native-base';
 
-// import Einstein from './Einstein';
-// import Results from './Results';
-
-// var {height, width} = Dimensions.get('window');
-
 export default class Home extends Component {
   render() {
     return(
@@ -34,7 +29,17 @@ export default class Home extends Component {
           </Text>
         </Button>*/}
         <Item rounded>
-          <Input style={styles.inputField} placeholder='Shop for a Friend...' onChangeText={text => this.props.updateQuery(text)} onSubmitEditing={() => this.props.shopFor(this.props.query)}/>
+          <Input
+            style={styles.inputField}
+            placeholder='Shop for a Friend...'
+            autoCapitalize='none'
+            onChangeText={text => this.props.updateQuery(text)}
+            onSubmitEditing={() => {
+              if (this.props.query !== '') {
+                this.props.shopFor(this.props.query);
+              }
+            }}
+          />
         </Item>
       </View>
     )
@@ -44,7 +49,7 @@ export default class Home extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     padding: 10,
     // alignSelf: 'center',
     alignItems: 'center',

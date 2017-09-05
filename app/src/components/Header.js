@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Header, Left, Body, Right, Button, Icon, Title } from 'native-base';
+// import { Container, Header, Left, Body, Right, Button, Icon, Title } from 'native-base';
 
 import {
   AppRegistry,

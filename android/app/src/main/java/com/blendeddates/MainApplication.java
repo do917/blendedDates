@@ -3,10 +3,7 @@ package com.blendeddates;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
-import com.reactnative.photoview.PhotoViewPackage;
-import cl.json.RNSharePackage;
-import com.BV.LinearGradient.LinearGradientPackage;
-import com.oblador.vectoricons.VectorIconsPackage;
+import com.react.rnspinkit.RNSpinkitPackage;
 import com.lwansbrough.RCTCamera.RCTCameraPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -28,10 +25,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new PhotoViewPackage(),
-            new RNSharePackage(),
-            new LinearGradientPackage(),
-            new VectorIconsPackage(),
+            new RNSpinkitPackage(),
             new RCTCameraPackage()
       );
     }

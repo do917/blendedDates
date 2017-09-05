@@ -7,14 +7,13 @@ import {
 } from 'react-native';
 
 import { Button } from 'native-base';
+const Spinner = require('react-native-spinkit');
 
 export default class Loading extends Component {
   render() {
     return(
-      <View>
-        <Text>
-          LOADING...
-        </Text>
+      <View style={styles.container}>
+        <Spinner size={100} type={'Wave'} color={'#319dde'}/>
       </View>
     )
   }
@@ -23,11 +22,9 @@ export default class Loading extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'space-between',
     padding: 10,
-    // alignSelf: 'center',
-    alignItems: 'center',
-    borderColor: 'orange',
-    borderStyle: 'solid',
-    borderWidth: 1
-  },
+    
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
+});

@@ -37,6 +37,12 @@ export default class Results extends Component {
             Help me shop for another friend
           </Text>
         </Button>
+
+        <Button block info onPress={() => console.log('pressed')}>
+          <Text style={styles.buttonText}>
+            Train Einstein's image analysis
+          </Text>
+        </Button>
       </View>
     )
   }
@@ -47,9 +53,8 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     justifyContent: 'space-around',
-    // padding: 10,
-    // alignSelf: 'center',
     alignItems: 'center',
+
     borderColor: 'red',
     borderStyle: 'solid',
     borderWidth: 1
