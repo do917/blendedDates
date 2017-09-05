@@ -19,7 +19,7 @@ import { Button, Item, Input } from 'native-base';
 export default class Home extends Component {
   render() {
     return(
-      <View style={styles.inputContainer}>
+      <View style={styles.container}>
         <Button block info onPress={() => this.props.shopFor(this.props.user.username)}>
           <Text style={styles.buttonText}>
             Shop for Me!
@@ -42,7 +42,7 @@ export default class Home extends Component {
 }
 
 const styles = StyleSheet.create({
-  inputContainer: {
+  container: {
     flex: 1,
     justifyContent: 'space-between',
     padding: 10,

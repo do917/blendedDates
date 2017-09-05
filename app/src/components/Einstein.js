@@ -7,8 +7,18 @@ import {
   Image
 } from 'react-native';
 
+import phrases from '../einsteinPhrases';
+
 export default class Einstein extends Component {
   render() {
+    // const { loggedIn, showHome, einsteinResults } = this.props;
+    // let text = 'a text not set'
+    // console.log('aa', loggedIn, showHome, phrases.results)
+    // if (loggedIn && !showHome) {
+    //   text = phrases.results
+    // }
+
+
     return(
       <View style={styles.container}>
         <Image 
@@ -17,7 +27,7 @@ export default class Einstein extends Component {
           style={styles.einstein}
         />
         <Text style={styles.text}>
-          Hi! How may I assist your shopping experience today?
+          {this.props.einsteinText}
         </Text>
       </View>
     )

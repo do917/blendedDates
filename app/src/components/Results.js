@@ -6,25 +6,29 @@ import {
   View
 } from 'react-native';
 
+import SafariView from 'react-native-safari-view';
 import { Button } from 'native-base';
 
 export default class Results extends Component {
+  takeShopping() {
+    SafariView.show({
+      url: 'https://www.google.com',
+      fromBottom: true
+    });
+  }
+
   render() {
     return(
       <View style={styles.container}>
-        <Text>
-          you have this many photos
-          {this.props.einsteinResults.photos.length}
+        <Button block info onPress={this.takeShopping}>
+          <Text style={styles.buttonText}>
+            Take me shopping at REI!
+          </Text>
+        </Button>
 
-        </Text>
-        <Text>
-          this category is the most popular: 
-          {this.props.einsteinResults.mostPopular.label + ',' + this.props.einsteinResults.mostPopular.count}
-          
-        </Text>
-        <Button onPress={this.props.showHome}>
+        <Button block info onPress={this.props.showHome}>
           <Text>
-            Click to go back to Home
+            Help me shop for another friend
           </Text>
         </Button>
       </View>
@@ -35,12 +39,18 @@ export default class Results extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // justifyContent: 'space-between',
+    padding: 10,
+    justifyContent: 'space-around',
     // padding: 10,
     // alignSelf: 'center',
     alignItems: 'center',
     borderColor: 'red',
     borderStyle: 'solid',
     borderWidth: 3
-  }
+  },
+  buttonText: {
+    fontFamily: 'Gill Sans',
+    fontSize: 18,
+    color: 'white'
+  },
 });
