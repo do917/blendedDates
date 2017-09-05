@@ -5,17 +5,22 @@ import {
   Text,
   View,
   Image,
-  Dimensions
+  Dimensions,
+  KeyboardAvoidingView
 } from 'react-native';
 
-import { Button } from 'native-base';
+import { Button, Item, Input } from 'native-base';
 
 var {height, width} = Dimensions.get('window');
 
 export default class Home extends Component {
   render() {
     return(
-      <View style={styles.container}>
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior='padding'
+        keyboardVerticalOffset={10}
+      >
         <View style={styles.einsteinContainer}>
           <Image 
             source={require('../static/einstein.png')}
@@ -28,19 +33,19 @@ export default class Home extends Component {
         </View>
 
         <View style={styles.inputContainer}>
-          <Button block info onPress={() => this.props.shopFor('self')} style={styles.button}>
+          <Button block info onPress={() => this.props.shopFor('self')}>
             <Text style={styles.buttonText}>
               Shop for Me
             </Text>
           </Button>
-          
-          <Text>
-            Or enter your Friend's Instagram Account Below
+          <Text style={styles.inputContainerText}>
+            or
           </Text>
-          
-          
+          <Item rounded>
+            <Input style={styles.inputField} placeholder='Shop for a Friend...' onChangeText={text => this.props.updateQuery(text)}/>
+          </Item>
         </View>
-      </View>
+      </KeyboardAvoidingView>
     )
   }
 }
@@ -49,14 +54,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     height: 90,
-    // backgroundColor: '#ddf6ff',
-
-    // borderColor: 'yellow',
-    // borderStyle: 'solid',
-    // borderWidth: 1,
   },
   einsteinContainer: {
-    height: width * .9,
+    flex: 2,
     paddingVertical: 10,
     borderColor: 'blue',
     borderStyle: 'solid',
@@ -71,13 +71,13 @@ const styles = StyleSheet.create({
   },
   introText: {
     paddingHorizontal: 10,
-    
     fontFamily: 'Gill Sans',
     fontSize: 20,
-    // color: 'white',
     textAlign: 'center',
   },
   inputContainer: {
+    flex: 1,
+    justifyContent: 'space-between',
     padding: 10,
     // alignSelf: 'center',
     alignItems: 'center',
@@ -85,14 +85,20 @@ const styles = StyleSheet.create({
     borderStyle: 'solid',
     borderWidth: 3
   },
-  button: {
-    // alignSelf: 'center',
-    // height: 40,
-    // color: '#319dde'
-    // color: 'red'
-  },
   buttonText: {
-    color: 'white',
     fontFamily: 'Gill Sans',
+    fontSize: 18,
+    color: 'white'
+  },
+  inputContainerText: {
+    fontFamily: 'Gill Sans',
+    fontSize: 18,
+    textAlign: 'center',
+  },
+  inputField: {
+    fontFamily: 'Gill Sans',
+    fontSize: 18,
+    textAlign: 'center',
+    height: 40
   }
 });

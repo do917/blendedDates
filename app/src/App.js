@@ -30,6 +30,7 @@ export default class App extends Component {
       photos: [],
       loading: false,
       showHome: true,
+      query: null,
 
       loggedIn: true,
       token: '240954482.61ba2c7.63c617faf63940cfb532ad7f3879427a',
@@ -38,7 +39,17 @@ export default class App extends Component {
   }
 
   componentDidMount() {
-    this.setTokenListener() 
+    this.setTokenListener();
+  }
+
+  returnHome() {
+    this.setState({
+      showHome: true
+    });
+  }
+
+  updateQuery(text) {
+    console.log('got text', text)
   }
 
   authenticate() {
@@ -153,11 +164,7 @@ export default class App extends Component {
       .catch(error => console.error('einstein prediction error: ', error));
   }
 
-  returnHome() {
-    this.setState({
-      showHome: true
-    })
-  }
+
 
   render() {
     return (
@@ -169,7 +176,7 @@ export default class App extends Component {
           : this.state.loading 
           ? <Loading/> 
           : this.state.showHome
-          ? <Home user={this.state.user} shopFor={this.shopFor.bind(this)}/> 
+          ? <Home user={this.state.user} shopFor={this.shopFor.bind(this)} updateQuery={this.updateQuery.bind(this)}/> 
           : <Results photos={this.state.photos} returnHome={this.returnHome.bind(this)}/>
         }
 
