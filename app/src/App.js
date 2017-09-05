@@ -14,6 +14,8 @@ import SafariView from 'react-native-safari-view';
 import Header from './components/Header';
 import Login from './components/Login';
 import Home from './components/Home';
+import Loading from './components/Loading';
+import Results from './components/Results';
 import CameraView from './components/CameraView';
 
 
@@ -22,10 +24,10 @@ export default class App extends Component {
   constructor() {
     super()
     this.state = {
-      results: null,
-      loggedIn: true,
-      loading: false,
       photos: [],
+      loading: false,
+      loggedIn: true,
+      showHome: true,
       token: '240954482.61ba2c7.63c617faf63940cfb532ad7f3879427a'
     }
   }
@@ -61,22 +63,21 @@ export default class App extends Component {
       });
   }
 
-  getRecentPics(userId) {
+  fetchPhotos(userId) {
     return fetch(`https://api.instagram.com/v1/users/${userId}/media/recent/?access_token=${this.state.token}`)
       .then(response => response.json());
   }
 
   filterForRei(data) {
-    let reiRelatedPics = [];
+    let reiRelatedPhotos = [];
     let einsteinQueue = [];
 
     for (let i = 0; i < data.length; i++) {
       let url = data[i].images.standard_resolution.url;
-      console.log('url', url)
       einsteinQueue.push(this.einsteinPredict(url)
         .then(label => {
           if (label !== 'other') {
-            reiRelatedPics.push(data[i]);
+            reiRelatedPhotos.push(data[i]);
           }
         })
       );
@@ -84,43 +85,31 @@ export default class App extends Component {
 
     return Promise.all(einsteinQueue)
       .then(() => {
-        return reiRelatedPics;
+        return reiRelatedPhotos;
       });
   }
 
   shopFor(userId) {
-    this.getRecentPics(userId)
+    this.setState({
+      loading: true
+    });
+
+    this.fetchPhotos(userId)
       .then(results => {
         this.filterForRei(results.data)
-          .then(filteredPics => {
-            console.log('these are the filtered pics', filteredPics);
+          .then(filteredPhotos => {
+            this.setState({
+              photos: filteredPhotos,
+              showHome: false,
+              loading: false
+            })
           })
           .catch(error => {
             console.log('error on filtering', error);
           });
       })
       .catch(error => {
-        console.log('error on getting recent pics', error);
-      });
-  }
-
-  generalPredict(data) {
-    let formData = new FormData();
-    formData.append('sampleBase64Content', data)
-    formData.append('modelId', 'GeneralImageClassifier')
-
-    fetch('https://api.einstein.ai/v2/vision/predict', {
-      method: 'POST',
-      headers: {
-        'Authorization': 'Bearer 00ac379db0e480ba70ea01a4e6b80bceba237663',
-        'Cache-Control': 'no-cache',
-        'Content-Type': 'multipart/form-data'
-      },
-      body: formData
-    })
-      .then(res => res.json())
-      .catch((error) => {
-        console.error(error);
+        console.log('error on getting recent photos', error);
       });
   }
 
@@ -129,6 +118,7 @@ export default class App extends Component {
     formData.append('sampleLocation', url)
     formData.append('numResults', 1)
     formData.append('modelId', '3G4636B2DHG5ID7JXDYFBIL7S4') // models for REI + Global categories 
+    // for general image, modelId is 'GeneralImageClassifier'
     
     return fetch('https://api.einstein.ai/v2/vision/predict', {
       method: 'POST',
@@ -141,7 +131,6 @@ export default class App extends Component {
     })
       .then(res => res.json())
       .then(json => {
-        console.log('label', json.probabilities[0].label);
         return json.probabilities[0].label;
       })
       .catch(error => {
@@ -149,14 +138,24 @@ export default class App extends Component {
       });
   }
 
+  returnHome() {
+    this.setState({
+      showHome: true
+    })
+  }
+
   render() {
     return (
       <View style={styles.container}>
         <Header/>
         
-        {!this.state.loggedIn 
+        {!this.state.loggedIn
           ? <Login authenticate={this.authenticate.bind(this)}/> 
-          : <Home shopFor={this.shopFor.bind(this)}/>
+          : this.state.loading 
+          ? <Loading/> 
+          : this.state.showHome
+          ? <Home shopFor={this.shopFor.bind(this)}/> 
+          : <Results photos={this.state.photos} returnHome={this.returnHome.bind(this)}/>
         }
 
         {/*<CameraView captureData={this.captureData.bind(this)}/>*/}        

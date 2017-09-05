@@ -3,9 +3,7 @@ import {
   AppRegistry,
   StyleSheet,
   Text,
-  View,
-  TouchableHighlight,
-  Dimensions
+  View
 } from 'react-native';
 
 import { Button } from 'native-base';
