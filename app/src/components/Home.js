@@ -33,7 +33,7 @@ export default class Home extends Component {
         </View>
 
         <View style={styles.inputContainer}>
-          <Button block info onPress={() => this.props.shopFor('self')}>
+          <Button block info onPress={() => this.props.shopFor(this.props.user.username)}>
             <Text style={styles.buttonText}>
               Shop for Me
             </Text>
@@ -41,8 +41,13 @@ export default class Home extends Component {
           <Text style={styles.inputContainerText}>
             or
           </Text>
+          {/*<Button block info onPress={() => this.props.shopFor('self')}>
+            <Text style={styles.buttonText}>
+              Shop for a Friend
+            </Text>
+          </Button>*/}
           <Item rounded>
-            <Input style={styles.inputField} placeholder='Shop for a Friend...' onChangeText={text => this.props.updateQuery(text)}/>
+            <Input style={styles.inputField} placeholder='Shop for a Friend...' onChangeText={text => this.props.updateQuery(text)} onSubmitEditing={() => this.props.shopFor(this.props.query)}/>
           </Item>
         </View>
       </KeyboardAvoidingView>

@@ -31,6 +31,7 @@ export default class App extends Component {
       loading: false,
       showHome: true,
       query: null,
+      
 
       loggedIn: true,
       token: '240954482.61ba2c7.63c617faf63940cfb532ad7f3879427a',
@@ -47,9 +48,10 @@ export default class App extends Component {
       showHome: true
     });
   }
-
   updateQuery(text) {
-    console.log('got text', text)
+    this.setState({
+      query: text
+    });
   }
 
   authenticate() {
@@ -73,17 +75,27 @@ export default class App extends Component {
       .catch(error => console.log('fetching user info error: ', error));
   }
 
+  // fetchUserFollowing(token) {
+  //   return fetch(`https://api.instagram.com/v1/users/self/follows?access_token=${token}`)
+  //     .then(res => res.json())
+  //     .then(following => {
+  //       return following;
+  //     })
+  //     .catch(error => console.log('fetching user info error: ', error));
+  // } 
+
   setTokenListener() {
     Linking.addEventListener('url', event => {
       var url = new URL(event.url);
       const token = url.searchParams.get('token');
-      
+
       this.fetchUserInfo(token)
-        .then(user => {
+        .then(results => {
+          console.log('results', results)
           this.setState({
-            user: user.data,
+            token: token,
             loggedIn: true,
-            token: token
+            user: results.data
           });
           SafariView.dismiss();
         })
@@ -91,6 +103,15 @@ export default class App extends Component {
     });
   }
 
+  fetchUserId(username) {
+    return fetch(`https://www.instagram.com/${username}/?__a=1`)
+      .then(res => res.json())
+      .then(json => {
+        console.log('json', json)
+        return json.user.id;
+      })
+      .catch(error => console.log('fetching user id error: ', error));
+  }
 
   fetchPhotos(userId) {
     return fetch(`https://api.instagram.com/v1/users/${userId}/media/recent/?access_token=${this.state.token}`)
@@ -121,24 +142,28 @@ export default class App extends Component {
       .catch(error => console.log('queueing einstein calls error: ', error));
   }
 
-  shopFor(userId) {
+  shopFor(username) {
     this.setState({
       loading: true
     });
+    
 
-    this.fetchPhotos(userId)
-      .then(results => {
-        this.filterForRei(results.data)
-          .then(filteredPhotos => {
-            this.setState({
-              photos: filteredPhotos,
-              showHome: false,
-              loading: false
-            })
-          })
-          .catch(error => console.log('filtering error: ', error));
+    this.fetchUserId(username)
+      .then(userId => {
+        return this.fetchPhotos(userId);
       })
-      .catch(error => console.log('fetching recent photos error: ', error));
+      .then(results => {
+        return this.filterForRei(results.data);
+      })
+      .then(filteredPhotos => {
+        this.setState({
+          photos: filteredPhotos,
+          showHome: false,
+          loading: false
+        })
+        console.log('photos', filteredPhotos)
+      })
+      .catch(error => console.log('shopping for error: ', error));
   }
 
   einsteinPredict(url) {
@@ -151,7 +176,7 @@ export default class App extends Component {
     return fetch('https://api.einstein.ai/v2/vision/predict', {
       method: 'POST',
       headers: {
-        'Authorization': 'Bearer e2772a497aafaa0224e31f4deb7b843920aa19ea',
+        'Authorization': 'Bearer 44c64cde3cb3638ce1b31ec7d60ca0121f8e0bac',
         'Cache-Control': 'no-cache',
         'Content-Type': 'multipart/form-data'
       },
@@ -176,7 +201,7 @@ export default class App extends Component {
           : this.state.loading 
           ? <Loading/> 
           : this.state.showHome
-          ? <Home user={this.state.user} shopFor={this.shopFor.bind(this)} updateQuery={this.updateQuery.bind(this)}/> 
+          ? <Home user={this.state.user} shopFor={this.shopFor.bind(this)} query={this.state.query} updateQuery={this.updateQuery.bind(this)}/> 
           : <Results photos={this.state.photos} returnHome={this.returnHome.bind(this)}/>
         }
 
