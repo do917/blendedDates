@@ -24,29 +24,21 @@ export default class App extends Component {
   constructor() {
     super()
     this.state = {
+      // user: null,
+      // token: null,
+      // loggedIn: false,
       photos: [],
       loading: false,
-      loggedIn: true,
       showHome: true,
-      token: '240954482.61ba2c7.63c617faf63940cfb532ad7f3879427a'
+
+      loggedIn: true,
+      token: '240954482.61ba2c7.63c617faf63940cfb532ad7f3879427a',
+      user: {id: "240954482", username: "davidisturtle", profile_picture: "https://scontent.cdninstagram.com/t51.2885-19/s150x150/11296795_485223351641943_1257523564_a.jpg", full_name: "david oh", bio: "🍞🍇"},
     }
   }
 
   componentDidMount() {
-    Linking.addEventListener('url', (event) => {
-      var url = new URL(event.url);
-      const code = url.searchParams.get("token");
-      const error = url.searchParams.get("error");
-
-      if (code) {
-        this.setState({
-          loggedIn: true,
-          token: code
-        });
-      }
-      
-      SafariView.dismiss();
-    });
+    this.setTokenListener() 
   }
 
   authenticate() {
@@ -58,14 +50,41 @@ export default class App extends Component {
           fromBottom: true
         });
       })
-      .catch(error => {
-        console.log('error in authentication', error);
-      });
+      .catch(error => console.log('authentication error: ', error));
   }
+
+  fetchUserInfo(token) {
+    return fetch(`https://api.instagram.com/v1/users/self/?access_token=${token}`)
+      .then(res => res.json())
+      .then(user => {
+        return user;
+      })
+      .catch(error => console.log('fetching user info error: ', error));
+  }
+
+  setTokenListener() {
+    Linking.addEventListener('url', event => {
+      var url = new URL(event.url);
+      const token = url.searchParams.get('token');
+      
+      this.fetchUserInfo(token)
+        .then(user => {
+          this.setState({
+            user: user.data,
+            loggedIn: true,
+            token: token
+          });
+          SafariView.dismiss();
+        })
+        .catch(error => console.log('setting token listener error: ', error));
+    });
+  }
+
 
   fetchPhotos(userId) {
     return fetch(`https://api.instagram.com/v1/users/${userId}/media/recent/?access_token=${this.state.token}`)
-      .then(response => response.json());
+      .then(response => response.json())
+      .catch(error => console.log('fetching photos error: ', error));
   }
 
   filterForRei(data) {
@@ -80,13 +99,15 @@ export default class App extends Component {
             reiRelatedPhotos.push(data[i]);
           }
         })
+        .catch(error => console.log('creating queue error: ', error));
       );
     }
 
     return Promise.all(einsteinQueue)
       .then(() => {
         return reiRelatedPhotos;
-      });
+      })
+      .catch(error => console.log('queueing einstein calls error: ', error));
   }
 
   shopFor(userId) {
@@ -104,13 +125,9 @@ export default class App extends Component {
               loading: false
             })
           })
-          .catch(error => {
-            console.log('error on filtering', error);
-          });
+          .catch(error => console.log('filtering error: ', error));
       })
-      .catch(error => {
-        console.log('error on getting recent photos', error);
-      });
+      .catch(error => console.log('fetching recent photos error: ', error));
   }
 
   einsteinPredict(url) {
@@ -133,9 +150,7 @@ export default class App extends Component {
       .then(json => {
         return json.probabilities[0].label;
       })
-      .catch(error => {
-        console.error(error);
-      });
+      .catch(error => console.error('einstein prediction error: ', error));
   }
 
   returnHome() {
@@ -154,7 +169,7 @@ export default class App extends Component {
           : this.state.loading 
           ? <Loading/> 
           : this.state.showHome
-          ? <Home shopFor={this.shopFor.bind(this)}/> 
+          ? <Home user={this.state.user} shopFor={this.shopFor.bind(this)}/> 
           : <Results photos={this.state.photos} returnHome={this.returnHome.bind(this)}/>
         }
 

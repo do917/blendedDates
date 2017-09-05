@@ -16,7 +16,7 @@ import {
 export default class HeaderExample extends Component {
   render() {
     return(
-      <View>
+      <View style={styles.container}>
         <View style={styles.statusBar}>
           <StatusBar barStyle="light-content"/>
         </View>
@@ -50,22 +50,20 @@ export default class HeaderExample extends Component {
 }
 
 const styles = StyleSheet.create({
-  statusBar: {
-    backgroundColor: '#000',
-    height: 18,
-    
-    borderColor: 'green',
-    borderStyle: 'solid',
-    borderWidth: 1
-  },
-  header: {
-    justifyContent: 'flex-end',
-    alignItems: 'center',
+  container: {
+    height: 90,
     backgroundColor: '#000',
 
     borderColor: 'blue',
     borderStyle: 'solid',
     borderWidth: 0.5,
+  },
+  statusBar: {
+    height: 18,
+  },
+  header: {
+    justifyContent: 'flex-end',
+    alignItems: 'center',
   },
 
 });
