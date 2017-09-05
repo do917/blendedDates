@@ -33,7 +33,7 @@ export default class App extends Component {
 
       loggedIn: true,
       token: '240954482.61ba2c7.63c617faf63940cfb532ad7f3879427a',
-      user: {id: "240954482", username: "davidisturtle", profile_picture: "https://scontent.cdninstagram.com/t51.2885-19/s150x150/11296795_485223351641943_1257523564_a.jpg", full_name: "david oh", bio: "🍞🍇"},
+      user: {id: "240954482", username: "davidisturtle", profile_picture: "https://scontent.cdninstagram.com/t51.2885-19/s150x150/11296795_485223351641943_1257523564_a.jpg", full_name: "David Oh", bio: "🍞🍇"},
     }
   }
 
@@ -99,7 +99,7 @@ export default class App extends Component {
             reiRelatedPhotos.push(data[i]);
           }
         })
-        .catch(error => console.log('creating queue error: ', error));
+        .catch(error => console.log('creating queue error: ', error))
       );
     }
 
