@@ -49,6 +49,7 @@ export default class App extends Component {
       showHome: true
     });
   }
+
   updateQuery(text) {
     this.setState({
       query: text
@@ -92,7 +93,7 @@ export default class App extends Component {
 
       this.fetchUserInfo(token)
         .then(results => {
-          console.log('results', results)
+          console.log('set token results', results)
           this.setState({
             token: token,
             loggedIn: true,
@@ -108,32 +109,43 @@ export default class App extends Component {
     return fetch(`https://www.instagram.com/${username}/?__a=1`)
       .then(res => res.json())
       .then(json => {
-        console.log('json', json)
+        console.log('fetch user json', json)
         return json.user;
       })
       .catch(error => console.log('fetching user id error: ', error));
   }
 
-  // fetchPhotos(userId) {
-  //   return fetch(`https://api.instagram.com/v1/users/${userId}/media/recent/?access_token=${this.state.token}`)
-  //     .then(response => response.json())
-  //     .catch(error => console.log('fetching photos error: ', error));
-  // }
+  fetchPhotos(userId) {
+    return fetch(`https://api.instagram.com/v1/users/${userId}/media/recent/?access_token=${this.state.token}`)
+      .then(response => response.json())
+      .catch(error => console.log('fetching photos error: ', error));
+  }
 
   filterForRei(data) {
-    let reiRelatedPhotos = [];
+    let results = {
+      photos: [],
+      categoryCount: {},
+      mostPopular: {
+        label: null,
+        count: 0
+      }
+    };
     let einsteinQueue = [];
 
     for (let i = 0; i < data.length; i++) {
       let url = data[i].display_src
       einsteinQueue.push(this.einsteinPredict(url)
         .then(label => {
-          let analyzedData = {
-            label: label,
-            url: url
-          }
+          let { categoryCount, mostPopular, photos } = results;
+          let analyzedData = { label, url };
+          
           if (label !== 'other') {
-            reiRelatedPhotos.push(analyzedData);
+            photos.push(analyzedData);
+            categoryCount[label] = categoryCount[label] + 1 || 1;
+            if (categoryCount[label] > mostPopular.count) {
+              mostPopular.count = categoryCount[label];
+              mostPopular.label = label;
+            }
           }
         })
         .catch(error => console.log('creating queue error: ', error))
@@ -142,28 +154,32 @@ export default class App extends Component {
 
     return Promise.all(einsteinQueue)
       .then(() => {
-        return reiRelatedPhotos;
+        console.log(JSON.stringify(results));
+        return results;
       })
       .catch(error => console.log('queueing einstein calls error: ', error));
+  }
+
+  recommend(data) {
+
   }
 
   shopFor(username) {
     this.setState({
       loading: true
     });
-    
 
     this.fetchUser(username)
       .then(userData => {
         return this.filterForRei(userData.media.nodes);
       })
-      .then(filteredPhotos => {
+      .then(data => {
+        console.log('this is shopfor data', data)
         this.setState({
-          photos: filteredPhotos,
+          einsteinResults: data,
           showHome: false,
           loading: false
-        })
-        console.log('photos', filteredPhotos)
+        });
       })
       .catch(error => console.log('shopping for error: ', error));
   }
@@ -178,7 +194,7 @@ export default class App extends Component {
     return fetch('https://api.einstein.ai/v2/vision/predict', {
       method: 'POST',
       headers: {
-        'Authorization': 'Bearer 44c64cde3cb3638ce1b31ec7d60ca0121f8e0bac',
+        'Authorization': 'Bearer b739c6814940d35a68038818aaa4979847e06b17',
         'Cache-Control': 'no-cache',
         'Content-Type': 'multipart/form-data'
       },
@@ -204,7 +220,7 @@ export default class App extends Component {
           ? <Loading/> 
           : this.state.showHome
           ? <Home user={this.state.user} shopFor={this.shopFor.bind(this)} query={this.state.query} updateQuery={this.updateQuery.bind(this)}/> 
-          : <Results photos={this.state.photos} returnHome={this.returnHome.bind(this)}/>
+          : <Results einsteinResults={this.state.einsteinResults} returnHome={this.returnHome.bind(this)}/>
         }
 
         {/*<CameraView captureData={this.captureData.bind(this)}/>*/}        

@@ -11,7 +11,9 @@ import {
 
 import { Button, Item, Input } from 'native-base';
 
-var {height, width} = Dimensions.get('window');
+import Einstein from './Einstein';
+
+// var {height, width} = Dimensions.get('window');
 
 export default class Home extends Component {
   render() {
@@ -21,16 +23,7 @@ export default class Home extends Component {
         behavior='padding'
         keyboardVerticalOffset={10}
       >
-        <View style={styles.einsteinContainer}>
-          <Image 
-            source={require('../static/einstein.png')}
-            resizeMode={'stretch'}
-            style={styles.einstein}
-          />
-          <Text style={styles.introText}>
-            Hi {this.props.user.full_name}! How may I assist your shopping experience today?
-          </Text>
-        </View>
+        <Einstein user={this.props.user.full_name}/>
 
         <View style={styles.inputContainer}>
           <Button block info onPress={() => this.props.shopFor(this.props.user.username)}>
@@ -59,26 +52,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     height: 90,
-  },
-  einsteinContainer: {
-    flex: 2,
-    paddingVertical: 10,
-    borderColor: 'blue',
-    borderStyle: 'solid',
-    borderWidth: 3
-  },
-  einstein: {
-    flex: 1,
-    width: undefined,
-    height: undefined,
-    alignSelf: 'stretch',
-    resizeMode: 'contain'
-  },
-  introText: {
-    paddingHorizontal: 10,
-    fontFamily: 'Gill Sans',
-    fontSize: 20,
-    textAlign: 'center',
   },
   inputContainer: {
     flex: 1,

@@ -13,8 +13,14 @@ export default class Results extends Component {
     return(
       <View>
         <Text>
-          this is results
-          {JSON.stringify(this.props.photos)}
+          you have this many photos
+          {this.props.einsteinResults.photos.length}
+
+        </Text>
+        <Text>
+          this category is the most popular: 
+          {this.props.einsteinResults.mostPopular.label + ',' + this.props.einsteinResults.mostPopular.count}
+          
         </Text>
         <Button onPress={this.props.returnHome}>
           <Text>
