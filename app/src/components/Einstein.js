@@ -4,9 +4,7 @@ import {
   StyleSheet,
   Text,
   View,
-  Image,
-  Dimensions,
-  KeyboardAvoidingView
+  Image
 } from 'react-native';
 
 export default class Einstein extends Component {
@@ -19,7 +17,7 @@ export default class Einstein extends Component {
           style={styles.einstein}
         />
         <Text style={styles.text}>
-          Hi {this.props.user.full_name}! How may I assist your shopping experience today?
+          Hi! How may I assist your shopping experience today?
         </Text>
       </View>
     )

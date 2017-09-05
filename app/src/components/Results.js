@@ -11,7 +11,7 @@ import { Button } from 'native-base';
 export default class Results extends Component {
   render() {
     return(
-      <View>
+      <View style={styles.container}>
         <Text>
           you have this many photos
           {this.props.einsteinResults.photos.length}
@@ -22,7 +22,7 @@ export default class Results extends Component {
           {this.props.einsteinResults.mostPopular.label + ',' + this.props.einsteinResults.mostPopular.count}
           
         </Text>
-        <Button onPress={this.props.returnHome}>
+        <Button onPress={this.props.showHome}>
           <Text>
             Click to go back to Home
           </Text>
@@ -31,3 +31,16 @@ export default class Results extends Component {
     )
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    // justifyContent: 'space-between',
+    // padding: 10,
+    // alignSelf: 'center',
+    alignItems: 'center',
+    borderColor: 'red',
+    borderStyle: 'solid',
+    borderWidth: 3
+  }
+});

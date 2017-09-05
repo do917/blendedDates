@@ -5,7 +5,8 @@ import {
   Text,
   View,
   StatusBar,
-  Linking
+  Linking,
+  KeyboardAvoidingView
 } from 'react-native';
 
 
@@ -14,6 +15,7 @@ import SafariView from 'react-native-safari-view';
 import Header from './components/Header';
 import Login from './components/Login';
 import Home from './components/Home';
+import Einstein from './components/Einstein';
 import Loading from './components/Loading';
 import Results from './components/Results';
 import CameraView from './components/CameraView';
@@ -44,7 +46,7 @@ export default class App extends Component {
     this.setTokenListener();
   }
 
-  returnHome() {
+  showHome() {
     this.setState({
       showHome: true
     });
@@ -188,7 +190,7 @@ export default class App extends Component {
     let formData = new FormData();
     formData.append('sampleLocation', url)
     formData.append('numResults', 1)
-    formData.append('modelId', '3G4636B2DHG5ID7JXDYFBIL7S4') // models for REI + Global categories 
+    formData.append('modelId', '5QGJG2X4DQB7AXGA47B3VSXDAE') // models for REI + Global categories 
     // for general image, modelId is 'GeneralImageClassifier'
     
     return fetch('https://api.einstein.ai/v2/vision/predict', {
@@ -211,20 +213,30 @@ export default class App extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <KeyboardAvoidingView 
+        behavior='padding'
+        style={styles.container}
+        keyboardVerticalOffset={10}
+      >
         <Header/>
+        <Einstein/>
         
         {!this.state.loggedIn
           ? <Login authenticate={this.authenticate.bind(this)}/> 
-          : this.state.loading 
-          ? <Loading/> 
           : this.state.showHome
-          ? <Home user={this.state.user} shopFor={this.shopFor.bind(this)} query={this.state.query} updateQuery={this.updateQuery.bind(this)}/> 
-          : <Results einsteinResults={this.state.einsteinResults} returnHome={this.returnHome.bind(this)}/>
+          ? <Home 
+              user={this.state.user}
+              query={this.state.query}
+              shopFor={this.shopFor.bind(this)}
+              updateQuery={this.updateQuery.bind(this)}
+            />
+          : <Results
+              showHome={this.showHome.bind(this)}
+              einsteinResults={this.state.einsteinResults}
+            />
         }
-
         {/*<CameraView captureData={this.captureData.bind(this)}/>*/}        
-      </View>
+      </KeyboardAvoidingView>
     );
   }
 }
