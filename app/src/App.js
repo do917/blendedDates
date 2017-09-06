@@ -9,9 +9,8 @@ import {
   KeyboardAvoidingView
 } from 'react-native';
 
-
 import SafariView from 'react-native-safari-view';
-import URL from 'url';
+import ImagePicker from 'react-native-image-picker';
 
 import Header from './components/Header';
 import Einstein from './components/Einstein';
@@ -31,7 +30,7 @@ export default class App extends Component {
     this.state = {
       user: {},
       query: '',
-      bodyStatus: 'login',
+      bodyStatus: 'home',
       einsteinText: phrases.login,
       einsteinResults: {
         photos: [],
@@ -39,9 +38,9 @@ export default class App extends Component {
           label: ''
         }
       },
-      // einsteinResults: {"photos":[{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/21227558_494613014236106_3681810282990010368_n.jpg"},{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/s640x640/sh0.08/e35/21224880_2358544487702994_4825951134982078464_n.jpg"},{"label":"cycle","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/s640x640/sh0.08/e35/19122202_281792375617272_571626762316808192_n.jpg"},{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/s640x640/sh0.08/e35/18646386_446623515698621_2087497716677476352_n.jpg"},{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/19050886_251722641899162_3319195467023122432_n.jpg"}],"categoryCount":{"campandhike":4,"cycle":1},"mostPopular":{"label":"campandhike","count":4}},
+      einsteinResults: {"photos":[{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/21227558_494613014236106_3681810282990010368_n.jpg"},{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/s640x640/sh0.08/e35/21224880_2358544487702994_4825951134982078464_n.jpg"},{"label":"cycle","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/s640x640/sh0.08/e35/19122202_281792375617272_571626762316808192_n.jpg"},{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/s640x640/sh0.08/e35/18646386_446623515698621_2087497716677476352_n.jpg"},{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/19050886_251722641899162_3319195467023122432_n.jpg"}],"categoryCount":{"campandhike":4,"cycle":1},"mostPopular":{"label":"campandhike","count":4}},
       // token: '240954482.61ba2c7.63c617faf63940cfb532ad7f3879427a',
-      // user: {id: "240954482", username: "davidisturtle", profile_picture: "https://scontent.cdninstagram.com/t51.2885-19/s150x150/11296795_485223351641943_1257523564_a.jpg", full_name: "David Oh", bio: "🍞🍇"},
+      user: {id: "240954482", username: "davidisturtle", profile_picture: "https://scontent.cdninstagram.com/t51.2885-19/s150x150/11296795_485223351641943_1257523564_a.jpg", full_name: "David Oh", bio: "🍞🍇"},
     }
   }
 
@@ -139,89 +138,6 @@ export default class App extends Component {
     });
   }
 
-  filterForRei(data) {
-    let results = {
-      photos: [],
-      categoryCount: {},
-      mostPopular: {
-        label: null,
-        count: 0
-      }
-    };
-    let einsteinQueue = [];
-
-    for (let i = 0; i < data.length; i++) {
-      let url = data[i].thumbnail_src;
-      einsteinQueue.push(this.einsteinPredict(url)
-        .then(label => {
-          let { categoryCount, mostPopular, photos } = results;
-          let analyzedData = { label, url };
-          
-          if (label !== 'other') {
-            photos.push(analyzedData);
-            categoryCount[label] = categoryCount[label] + 1 || 1;
-            if (categoryCount[label] > mostPopular.count) {
-              mostPopular.count = categoryCount[label];
-              mostPopular.label = label;
-            }
-          }
-        })
-        .catch(error => console.log('creating queue error: ', error))
-      );
-    }
-
-    return Promise.all(einsteinQueue)
-      .then(() => {
-        console.log(JSON.stringify(results));
-        return results;
-      })
-      .catch(error => console.log('queueing einstein calls error: ', error));
-  }
-
-  shopFor(username) {
-    this.setState({
-      bodyStatus: 'loading'
-    }, () => this.setEinsteinResponse(username));
-    
-
-    this.fetchUserData(username)
-      .then(userData => {
-        console.log('this is userData', userData)
-        return this.filterForRei(userData.media.nodes);
-      })
-      .then(data => {
-        console.log('this is shopfor data', JSON.stringify(data))
-        this.setState({
-          einsteinResults: data,
-          bodyStatus: 'results'
-        }, () => this.setEinsteinResponse());
-      })
-      .catch(error => console.log('shopping for error: ', error));
-  }
-
-  einsteinPredict(url) {
-    let formData = new FormData();
-    formData.append('sampleLocation', url);
-    formData.append('numResults', 1);
-    formData.append('modelId', '5QGJG2X4DQB7AXGA47B3VSXDAE'); // models for REI + Global categories 
-    // for general image, modelId is 'GeneralImageClassifier'
-    
-    return fetch('https://api.einstein.ai/v2/vision/predict', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${this.state.einsteinToken}`,
-        'Cache-Control': 'no-cache',
-        'Content-Type': 'multipart/form-data'
-      },
-      body: formData
-    })
-      .then(res => res.json())
-      .then(json => {
-        return json.probabilities[0].label;
-      })
-      .catch(error => console.error('einstein prediction error: ', error));
-  }
-
   setEinsteinResponse(username) {
     const { user, einsteinResults, bodyStatus } = this.state;
     let firstName = user.full_name.split(' ')[0];
@@ -240,6 +156,131 @@ export default class App extends Component {
     });
   }
 
+  einsteinPredict(data, fromCamera=false) {
+    let formData = new FormData();
+    formData.append('numResults', 1);
+    formData.append('modelId', '5QGJG2X4DQB7AXGA47B3VSXDAE');
+    if (fromCamera) {
+      formData.append('sampleBase64Content', data);
+    } else {
+      console.log('should not get here')
+      formData.append('sampleLocation', data);
+    }
+    // for general image, modelId is 'GeneralImageClassifier'
+    
+    return fetch('https://api.einstein.ai/v2/vision/predict', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${this.state.einsteinToken}`,
+        'Cache-Control': 'no-cache',
+        'Content-Type': 'multipart/form-data'
+      },
+      body: formData
+    })
+      .then(res => res.json())
+      .then(json => {
+        return json.probabilities[0].label;
+      })
+      .catch(error => console.error('einstein prediction error: ', error));
+  }
+
+  labelPhotos(urls, fromCamera=false) {
+    let results = {
+      photos: [],
+      categoryCount: {},
+      mostPopular: {
+        label: null,
+        count: 0
+      }
+    };
+    let einsteinQueue = [];
+
+    for (let i = 0; i < urls.length; i++) {
+      let url = urls[i];
+      if (!fromCamera) {
+        url = urls[i].thumbnail_src;
+      }
+
+      einsteinQueue.push(this.einsteinPredict(url, fromCamera)
+        .then(label => {
+          console.log('this is the label', label)
+          let { categoryCount, mostPopular, photos } = results;
+          let analyzedData = { label, url };
+          
+          if (label !== 'other') {
+            photos.push(analyzedData);
+            categoryCount[label] = categoryCount[label] + 1 || 1;
+            if (categoryCount[label] > mostPopular.count) {
+              mostPopular.count = categoryCount[label];
+              mostPopular.label = label;
+            }
+          }
+        })
+        .catch(error => console.log('creating queue error: ', error))
+      );
+    }
+
+    return Promise.all(einsteinQueue)
+      .then(() => {
+        // console.log('done labeling photos', JSON.stringify(results));
+        return results;
+      })
+      .catch(error => console.log('queueing einstein calls error: ', error));
+  }
+
+  shopFor(username) {
+    this.setState({
+      bodyStatus: 'loading'
+    }, () => this.setEinsteinResponse(username));
+    
+    this.fetchUserData(username)
+      .then(userData => {
+        console.log('this is userData', userData)
+        return this.labelPhotos(userData.media.nodes);
+      })
+      .then(data => {
+        console.log('this is shopfor data', JSON.stringify(data))
+        this.setState({
+          einsteinResults: data,
+          bodyStatus: 'results'
+        }, () => this.setEinsteinResponse());
+      })
+      .catch(error => console.log('shopping for error: ', error));
+  }
+
+  shopBasedOnPhoto() {
+    var options = {
+      title: 'Select',
+      storageOptions: {
+        skipBackup: true,
+        path: 'images'
+      },
+      quality: 0
+    };
+
+    ImagePicker.showImagePicker(options, (response) => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      }
+      else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      }      
+      else { 
+        this.labelPhotos([response.data], true)
+          .then(data => {
+            this.setState({
+              einsteinResults: data,
+              bodyStatus: 'results'
+            }, () => this.setEinsteinResponse());
+          });
+      }
+    });
+  }
+
+  
+
   render() {
     const { bodyStatus, user, query, einsteinResults, einsteinText, setTrainPhotoWidth, trainPhotowidth } = this.state;
     const login = <Login 
@@ -250,6 +291,7 @@ export default class App extends Component {
                   query={query}
                   shopFor={this.shopFor.bind(this)}
                   updateQuery={this.updateQuery.bind(this)}
+                  shopBasedOnPhoto={this.shopBasedOnPhoto.bind(this)}
                 />;
     const loading = <Loading/>;
     const results = <Results

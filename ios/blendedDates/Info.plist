@@ -49,7 +49,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>REI's Agent Valentine needs access to the camera to do her job!</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string></string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>REI's Agent Valentine needs access to the photo she takes to do her job!</string>
 	<key>UIAppFonts</key>
@@ -77,8 +77,6 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>

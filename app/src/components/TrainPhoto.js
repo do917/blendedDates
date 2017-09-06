@@ -17,7 +17,7 @@ export default class TrainPhoto extends Component {
         <Image
           source={{ uri: this.props.photo.url }}
           style={styles.photo}
-          borderRadius={2}
+          borderRadius={8}
         />
         <Text style={styles.text}>
           {shoppingModels.nouns[this.props.photo.label]}

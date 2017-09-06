@@ -10,7 +10,6 @@ import SafariView from 'react-native-safari-view';
 import { Button } from 'native-base';
 import shoppingModels from '../shoppingModels';
 
-
 export default class Results extends Component {
   
   takeShopping() {
