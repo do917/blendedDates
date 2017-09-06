@@ -51,9 +51,8 @@ export default class Results extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
-    justifyContent: 'space-around',
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   buttonText: {
     fontFamily: 'Gill Sans',

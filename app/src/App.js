@@ -13,12 +13,14 @@ import {
 import SafariView from 'react-native-safari-view';
 
 import Header from './components/Header';
-import Footer from './components/Footer';
+import Einstein from './components/Einstein';
 import Login from './components/Login';
 import Home from './components/Home';
-import Einstein from './components/Einstein';
-import Loading from './components/Loading';
 import Results from './components/Results';
+import Train from './components/Train';
+import Footer from './components/Footer';
+
+import Loading from './components/Loading';
 import CameraView from './components/CameraView';
 import phrases from './einsteinPhrases';
 
@@ -28,15 +30,11 @@ export default class App extends Component {
     this.state = {
       // user: null,
       // token: null,
-      // showHome: true,
-      // loggedIn: false,
       // einsteinText: null,
-      // einsteinResults: null,
-
-      loading: false,
+      // einsteinResults: null,      
+      showInBody: 'home',
       query: '',
-      
-      // einsteinText: 'no text set',
+
       einsteinResults: {
         "photos": [
             {
@@ -68,8 +66,6 @@ export default class App extends Component {
             "count": 4
          }
       },
-      showHome: false,
-      loggedIn: true,
       token: '240954482.61ba2c7.63c617faf63940cfb532ad7f3879427a',
       user: {id: "240954482", username: "davidisturtle", profile_picture: "https://scontent.cdninstagram.com/t51.2885-19/s150x150/11296795_485223351641943_1257523564_a.jpg", full_name: "David Oh", bio: "🍞🍇"},
     }
@@ -82,7 +78,7 @@ export default class App extends Component {
 
   showHome() {
     this.setState({
-      showHome: true
+      showInBody: 'home'
     }, () => this.setEinsteinResponse());
   }
 
@@ -148,7 +144,7 @@ export default class App extends Component {
           console.log('set token results', results)
           this.setState({
             token: token,
-            loggedIn: true,
+            showInBody: 'home',
             user: results.data
           }, () => this.setEinsteinResponse());
           SafariView.dismiss();
@@ -198,7 +194,7 @@ export default class App extends Component {
 
   shopFor(username) {
     this.setState({
-      loading: true
+      showInBody: 'loading'
     }, () => this.setEinsteinResponse(username));
     
 
@@ -211,8 +207,7 @@ export default class App extends Component {
         console.log('this is shopfor data', JSON.stringify(data))
         this.setState({
           einsteinResults: data,
-          showHome: false,
-          loading: false
+          showInBody: 'results'
         }, () => this.setEinsteinResponse());
       })
       .catch(error => console.log('shopping for error: ', error));
@@ -228,7 +223,7 @@ export default class App extends Component {
     return fetch('https://api.einstein.ai/v2/vision/predict', {
       method: 'POST',
       headers: {
-        'Authorization': 'Bearer 09f74b4d440fa6e5715aac39925e3c5d96b5a278',
+        'Authorization': 'Bearer 4e62f8d7b80186dd301fe8ec26fb1232b5daff04',
         'Cache-Control': 'no-cache',
         'Content-Type': 'multipart/form-data'
       },
@@ -242,31 +237,39 @@ export default class App extends Component {
   }
 
   setEinsteinResponse(username) {
-    const { user, loggedIn, showHome, loading, einsteinResults } = this.state;
-    let text;
-
-    if (!loggedIn) {
-      text = phrases.login;
-    } else if (loading) {
-      if (username === 'self') {
-        username = user.username;
-      }
-      text = phrases.loading(username);
-    } else {
-      if (showHome) {
-        text = phrases.home(user.full_name.split(' ')[0]);
-      } else {
-        text = phrases.results(einsteinResults.mostPopular.label);
-      }
-    }
+    const { user, einsteinResults, showInBody } = this.state;
+    const response = {
+      login: phrases.login,
+      loading: phrases.loading(username),
+      home: phrases.home(user.full_name.split(' ')[0]),
+      results: phrases.results(einsteinResults.mostPopular.label),
+      train: 'testing...',
+    };
     
     this.setState({
-      einsteinText: text
+      einsteinText: response[showInBody]
     });
   }
 
   render() {
-    const { user, query, loggedIn, showHome, loading, einsteinResults, einsteinText } = this.state;
+    const { user, query, einsteinResults, einsteinText, showInBody } = this.state;
+    const login = <Login 
+                    authenticate={this.authenticate.bind(this)}
+                  />;
+    const home = <Home 
+                  user={user}
+                  query={query}
+                  shopFor={this.shopFor.bind(this)}
+                  updateQuery={this.updateQuery.bind(this)}
+                />;
+    const loading = <Loading/>;
+    const results = <Results
+                      showHome={this.showHome.bind(this)}
+                      einsteinResults={einsteinResults}
+                    />;
+    const train = <Train/>;
+    const showBody = { login, home, loading, results, train };
+
 
     return (
       <KeyboardAvoidingView 
@@ -275,17 +278,16 @@ export default class App extends Component {
       >
         <Header/>
         <Einstein
-          loggedIn={loggedIn}
-          showHome={loggedIn}
+          showInBody={showInBody}
           einsteinText={einsteinText}
           einsteinResults={einsteinResults}
         />
-        
         <View style={styles.body}>
-          {!loggedIn
+          {showBody[showInBody]}
+          {/*!loggedIn
             ? <Login authenticate={this.authenticate.bind(this)}/> 
             : loading
-            ? <Loading />
+            ? <Loading/>
             : showHome 
             ? <Home 
                 user={user}
@@ -293,12 +295,13 @@ export default class App extends Component {
                 shopFor={this.shopFor.bind(this)}
                 updateQuery={this.updateQuery.bind(this)}
               /> 
+            
             : <Results
                 showHome={this.showHome.bind(this)}
                 einsteinResults={einsteinResults}
               />
-          }
-          {/*<CameraView captureData={this.captureData.bind(this)}/>*/}        
+            
+          */}{/*<CameraView captureData={this.captureData.bind(this)}/>*/}        
         </View>
         <Footer/>
       </KeyboardAvoidingView>
@@ -312,6 +315,7 @@ const styles = StyleSheet.create({
   },
   body: {
     flex: 1,
+    padding: 10,
     backgroundColor: 'rgba(132, 91, 51, .8)',
   }
 });

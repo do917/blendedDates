@@ -1,11 +1,19 @@
 export default {
   verbs: {
-    campandhike: 'hiking and camping',
+    campandhike: 'camping and hiking',
     climb: 'climbing',
     cycle: 'cycling',
     paddle: 'paddling',
     run: 'running',
     snow: 'snow sports'
+  },
+  nouns: {
+    campandhike: 'Camp and Hike',
+    climb: 'Climb',
+    cycle: 'Cycle',
+    paddle: 'Paddle',
+    run: 'Run',
+    snow: 'Snow Sports'
   },
   links: {
     campandhike: 'https://www.rei.com/h/camping-and-hiking',

@@ -49,9 +49,8 @@ export default class Home extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'space-around',
-    padding: 10,
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'space-around'
   },
   buttonText: {
     fontFamily: 'Gill Sans',
