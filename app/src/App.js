@@ -123,6 +123,10 @@ export default class App extends Component {
     });
   }
 
+  setTrainPhotoWidth(trainPhotowidth) {
+    this.setState({ trainPhotowidth });
+  }
+
   filterForRei(data) {
     let results = {
       photos: [],
@@ -213,7 +217,7 @@ export default class App extends Component {
       loading: phrases.loading(username),
       home: phrases.home(user.full_name.split(' ')[0]),
       results: phrases.results(einsteinResults.mostPopular.label),
-      train: 'testing...',
+      train: phrases.train()
     };
     
     this.setState({
@@ -222,7 +226,7 @@ export default class App extends Component {
   }
 
   render() {
-    const { user, query, einsteinResults, einsteinText, showInBody } = this.state;
+    const { showInBody, user, query, einsteinResults, einsteinText, setTrainPhotoWidth, trainPhotowidth } = this.state;
     const login = <Login 
                     authenticate={this.authenticate.bind(this)}
                   />;
@@ -238,8 +242,10 @@ export default class App extends Component {
                       einsteinResults={einsteinResults}
                     />;
     const train = <Train
-                    showHome={this.showHome.bind(this)}
                     einsteinResults={einsteinResults}
+                    trainPhotowidth={trainPhotowidth}
+                    showHome={this.showHome.bind(this)}
+                    setTrainPhotoWidth={this.setTrainPhotoWidth.bind(this)}
                   />;
     const showBody = { login, home, loading, results, train };
 
