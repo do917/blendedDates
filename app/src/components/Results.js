@@ -32,15 +32,15 @@ export default class Results extends Component {
           </Text>
         </Button>
 
-        <Button block info onPress={this.props.showHome}>
-          <Text style={styles.buttonText}>
-            Help me shop for another friend
-          </Text>
-        </Button>
-
         <Button block info onPress={() => console.log('pressed')}>
           <Text style={styles.buttonText}>
             Train Einstein's image analysis
+          </Text>
+        </Button>
+
+        <Button block info onPress={this.props.showHome}>
+          <Text style={styles.buttonText}>
+            Go back to main page
           </Text>
         </Button>
       </View>

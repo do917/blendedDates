@@ -31,41 +31,11 @@ export default class App extends Component {
       // user: null,
       // token: null,
       // einsteinText: null,
-      // einsteinResults: null,      
-      showInBody: 'home',
+      // einsteinResults: null,
+      showInBody: 'train',
       query: '',
 
-      einsteinResults: {
-        "photos": [
-            {
-               "label": "campandhike",
-               "url": "https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/21227558_494613014236106_3681810282990010368_n.jpg"
-            },
-            {
-               "label": "campandhike",
-               "url": "https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/21224880_2358544487702994_4825951134982078464_n.jpg"
-            },
-            {
-               "label": "campandhike",
-               "url": "https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/19050886_251722641899162_3319195467023122432_n.jpg"
-            },
-            {
-               "url": "https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/19122202_281792375617272_571626762316808192_n.jpg"
-            },
-            {
-               "label": "campandhike",
-               "url": "https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/18646386_446623515698621_2087497716677476352_n.jpg"
-            }
-         ],
-         "categoryCount": {
-            "campandhike": 4,
-            "undefined": 1
-         },
-         "mostPopular": {
-            "label": "campandhike",
-            "count": 4
-         }
-      },
+      einsteinResults: {"photos":[{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/21227558_494613014236106_3681810282990010368_n.jpg"},{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/s640x640/sh0.08/e35/21224880_2358544487702994_4825951134982078464_n.jpg"},{"label":"cycle","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/s640x640/sh0.08/e35/19122202_281792375617272_571626762316808192_n.jpg"},{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/s640x640/sh0.08/e35/18646386_446623515698621_2087497716677476352_n.jpg"},{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/19050886_251722641899162_3319195467023122432_n.jpg"}],"categoryCount":{"campandhike":4,"cycle":1},"mostPopular":{"label":"campandhike","count":4}},
       token: '240954482.61ba2c7.63c617faf63940cfb532ad7f3879427a',
       user: {id: "240954482", username: "davidisturtle", profile_picture: "https://scontent.cdninstagram.com/t51.2885-19/s150x150/11296795_485223351641943_1257523564_a.jpg", full_name: "David Oh", bio: "🍞🍇"},
     }
@@ -109,6 +79,16 @@ export default class App extends Component {
       .catch(error => console.log('fetching user info error: ', error));
   }
 
+  fetchUserData(username) {
+    return fetch(`https://www.instagram.com/${username}/?__a=1`)
+      .then(res => res.json())
+      .then(data => {
+        console.log('fetch user json', data)
+        return data.user;
+      })
+      .catch(error => console.log('fetching user id error: ', error));
+  }
+
   // fetchUserFollowing(token) {
   //   return fetch(`https://api.instagram.com/v1/users/self/follows?access_token=${token}`)
   //     .then(res => res.json())
@@ -123,16 +103,6 @@ export default class App extends Component {
   //     .then(response => response.json())
   //     .catch(error => console.log('fetching photos error: ', error));
   // }
-
-  fetchUserData(username) {
-    return fetch(`https://www.instagram.com/${username}/?__a=1`)
-      .then(res => res.json())
-      .then(data => {
-        console.log('fetch user json', data)
-        return data.user;
-      })
-      .catch(error => console.log('fetching user id error: ', error));
-  }
 
   setTokenListener() {
     Linking.addEventListener('url', event => {
@@ -165,7 +135,7 @@ export default class App extends Component {
     let einsteinQueue = [];
 
     for (let i = 0; i < data.length; i++) {
-      let url = data[i].display_src;
+      let url = data[i].thumbnail_src;
       einsteinQueue.push(this.einsteinPredict(url)
         .then(label => {
           let { categoryCount, mostPopular, photos } = results;
@@ -223,7 +193,7 @@ export default class App extends Component {
     return fetch('https://api.einstein.ai/v2/vision/predict', {
       method: 'POST',
       headers: {
-        'Authorization': 'Bearer 4e62f8d7b80186dd301fe8ec26fb1232b5daff04',
+        'Authorization': 'Bearer a3467359151d45a468f8fcab526a66bb49ca8600',
         'Cache-Control': 'no-cache',
         'Content-Type': 'multipart/form-data'
       },
@@ -267,7 +237,10 @@ export default class App extends Component {
                       showHome={this.showHome.bind(this)}
                       einsteinResults={einsteinResults}
                     />;
-    const train = <Train/>;
+    const train = <Train
+                    showHome={this.showHome.bind(this)}
+                    einsteinResults={einsteinResults}
+                  />;
     const showBody = { login, home, loading, results, train };
 
 

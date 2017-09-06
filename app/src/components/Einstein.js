@@ -18,18 +18,16 @@ export default class Einstein extends Component {
           source={require('../static/background.png')}
           style={styles.background}
         >
-          
-            <ImageBackground
-              source={require('../static/einstein.png')}
-              style={styles.einstein}
-            >
-              <View style={styles.textContainer} borderRadius={8}>
-                <Text style={styles.text}  adjustsFontSizeToFit={true}>
-                  {this.props.einsteinText}
-                </Text>
-              </View>
-            </ImageBackground>
-          
+          <ImageBackground
+            source={require('../static/einstein.png')}
+            style={styles.einstein}
+          >
+            <View style={styles.textContainer} borderRadius={8}>
+              <Text style={styles.text}  adjustsFontSizeToFit={true}>
+                {this.props.einsteinText}
+              </Text>
+            </View>
+          </ImageBackground>
         </ImageBackground>
       </View>
     )
