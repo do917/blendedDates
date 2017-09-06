@@ -11,6 +11,7 @@ import {
 
 
 import SafariView from 'react-native-safari-view';
+import URL from 'url';
 
 import Header from './components/Header';
 import Einstein from './components/Einstein';
@@ -38,7 +39,6 @@ export default class App extends Component {
           label: ''
         }
       },
-
       // einsteinResults: {"photos":[{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/21227558_494613014236106_3681810282990010368_n.jpg"},{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/s640x640/sh0.08/e35/21224880_2358544487702994_4825951134982078464_n.jpg"},{"label":"cycle","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/s640x640/sh0.08/e35/19122202_281792375617272_571626762316808192_n.jpg"},{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/s640x640/sh0.08/e35/18646386_446623515698621_2087497716677476352_n.jpg"},{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/19050886_251722641899162_3319195467023122432_n.jpg"}],"categoryCount":{"campandhike":4,"cycle":1},"mostPopular":{"label":"campandhike","count":4}},
       // token: '240954482.61ba2c7.63c617faf63940cfb532ad7f3879427a',
       // user: {id: "240954482", username: "davidisturtle", profile_picture: "https://scontent.cdninstagram.com/t51.2885-19/s150x150/11296795_485223351641943_1257523564_a.jpg", full_name: "David Oh", bio: "🍞🍇"},
@@ -78,10 +78,10 @@ export default class App extends Component {
 
   fetchEinsteinToken() {
     fetch('http://10.0.1.2:3000/api/einstein/getToken')
-      .then(res => res.text())
+      .then(res => res.json())
       .then(token => {
         this.setState({ 
-          token: token.token
+          einsteinToken: token.token
         });
       })
       .catch(error => console.log('fetching einstein token error: ', error));
@@ -123,14 +123,13 @@ export default class App extends Component {
 
   setTokenListener() {
     Linking.addEventListener('url', event => {
-      var url = new URL(event.url);
-      const token = url.searchParams.get('token');
+      const token = event.url.split('token=')[1];
 
       this.fetchUserInfo(token)
         .then(results => {
           console.log('set token results', results)
           this.setState({
-            token: token,
+            instaToken: token,
             bodyStatus: 'home',
             user: results.data
           }, () => this.setEinsteinResponse());
@@ -202,15 +201,15 @@ export default class App extends Component {
 
   einsteinPredict(url) {
     let formData = new FormData();
-    formData.append('sampleLocation', url)
-    formData.append('numResults', 1)
-    formData.append('modelId', '5QGJG2X4DQB7AXGA47B3VSXDAE') // models for REI + Global categories 
+    formData.append('sampleLocation', url);
+    formData.append('numResults', 1);
+    formData.append('modelId', '5QGJG2X4DQB7AXGA47B3VSXDAE'); // models for REI + Global categories 
     // for general image, modelId is 'GeneralImageClassifier'
     
     return fetch('https://api.einstein.ai/v2/vision/predict', {
       method: 'POST',
       headers: {
-        'Authorization': 'Bearer 8d5ba75391a17359e8d82f0857b23e81fd2e74b4',
+        'Authorization': `Bearer ${this.state.einsteinToken}`,
         'Cache-Control': 'no-cache',
         'Content-Type': 'multipart/form-data'
       },
