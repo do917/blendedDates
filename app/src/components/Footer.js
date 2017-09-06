@@ -4,8 +4,7 @@ import {
   StyleSheet,
   Text,
   View,
-  Image,
-  StatusBar
+  Image
 } from 'react-native';
 
 
@@ -13,24 +12,29 @@ export default class Footer extends Component {
   render() {
     return(
       <View style={styles.container}>
-        <Text style={styles.text}>
-          powered by
-        </Text>
-
+        <Image
+          source={require('../static/footer.png')}
+          style={styles.footer}
+        />
       </View>
     )
   }
-
 }
 
 const styles = StyleSheet.create({
   container: {
-    height: 30,
+    height: 25,
     backgroundColor: '#000000',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    
+    paddingVertical: 4,
   },
-  text: {
-    color: '#FFFFFF'
-  }
+  footer: {
+    flex: 1,
+    width: undefined,
+    height: undefined,
+    alignSelf: 'stretch',
+    resizeMode: 'contain'
+  },
 });

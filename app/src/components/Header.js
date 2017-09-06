@@ -9,9 +9,6 @@ import {
   StatusBar
 } from 'react-native';
 
-
-
-
 export default class HeaderExample extends Component {
   render() {
     return(
@@ -33,18 +30,14 @@ export default class HeaderExample extends Component {
 const styles = StyleSheet.create({
   container: {
     height: 90,
-    backgroundColor: '#000',
-
-    borderColor: 'blue',
-    borderStyle: 'solid',
-    borderWidth: 0.5,
+    backgroundColor: '#000'
   },
   statusBar: {
-    height: 18,
+    height: 18
   },
   header: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: 'center'
   },
   imageHeader: {
     flex: 1,
