@@ -51,11 +51,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-around',
     padding: 10,
-    alignItems: 'center',
-
-    borderColor: 'orange',
-    borderStyle: 'solid',
-    borderWidth: 1
+    alignItems: 'center'
   },
   buttonText: {
     fontFamily: 'Gill Sans',

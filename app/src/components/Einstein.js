@@ -4,7 +4,8 @@ import {
   StyleSheet,
   Text,
   View,
-  Image
+  Image,
+  ImageBackground
 } from 'react-native';
 
 import phrases from '../einsteinPhrases';
@@ -13,23 +14,19 @@ export default class Einstein extends Component {
   render() {
     return(
       <View style={styles.container}>
-        <Image 
+        <ImageBackground
           source={require('../static/background.png')}
-          // resizeMode={'stretch'}
           style={styles.background}
         >
-          <Image 
+          <Image
             source={require('../static/einstein.png')}
             style={styles.einstein}
           >
-            <Text style={styles.text}
-              adjustsFontSizeToFit={true}
-              
-            >
+            <Text style={styles.text} adjustsFontSizeToFit={true}>
               {this.props.einsteinText}
             </Text>
           </Image>
-        </Image>
+        </ImageBackground>
       </View>
     )
   }
@@ -37,18 +34,10 @@ export default class Einstein extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 2,
-    
-    borderColor: 'blue',
-    borderStyle: 'solid',
-    borderWidth: 1
+    flex: 2
   },
   background: {
     flex: 1,
-    alignSelf: 'stretch',
-    resizeMode: 'cover',
-    width: undefined,
-    height: undefined,
   },
   einstein: {
     flex: 1,

@@ -29,12 +29,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    // justifyContent: 'space-between',
-    // padding: 10,
-    // alignSelf: 'center',
-    alignItems: 'center',
-    borderColor: 'red',
-    borderStyle: 'solid',
-    borderWidth: 3
+    alignItems: 'center'
   }
 });

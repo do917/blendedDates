@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-// import { Container, Header, Left, Body, Right, Button, Icon, Title } from 'native-base';
 
 import {
   AppRegistry,
@@ -29,24 +28,6 @@ export default class HeaderExample extends Component {
       </View>
     )
   }
-
-  // render() {
-  //   return (
-  //     <Container >
-  //       <Header>
-  //         <Left>
-
-  //         </Left>
-  //         <Body>
-  //           <Title>Header</Title>
-  //         </Body>
-  //         <Right>
-
-  //         </Right>
-  //       </Header>
-  //     </Container>
-  //   );
-  // }
 }
 
 const styles = StyleSheet.create({
@@ -62,8 +43,14 @@ const styles = StyleSheet.create({
     height: 18,
   },
   header: {
-    justifyContent: 'flex-end',
+    flex: 1,
     alignItems: 'center',
   },
-
+  imageHeader: {
+    flex: 1,
+    width: undefined,
+    height: undefined,
+    alignSelf: 'stretch',
+    resizeMode: 'contain'
+  }
 });

@@ -13,9 +13,10 @@ export default class Footer extends Component {
   render() {
     return(
       <View style={styles.container}>
-        <Text>
-          THIS IS THE FOOTER
+        <Text style={styles.text}>
+          powered by
         </Text>
+
       </View>
     )
   }
@@ -25,10 +26,11 @@ export default class Footer extends Component {
 const styles = StyleSheet.create({
   container: {
     height: 30,
-    backgroundColor: '#8ab338',
-
-    borderColor: 'blue',
-    borderStyle: 'solid',
-    borderWidth: 0.5,
+    backgroundColor: '#000000',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  text: {
+    color: '#FFFFFF'
   }
 });

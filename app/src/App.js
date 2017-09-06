@@ -281,23 +281,25 @@ export default class App extends Component {
           einsteinResults={einsteinResults}
         />
         
-        {!loggedIn
-          ? <Login authenticate={this.authenticate.bind(this)}/> 
-          : loading
-          ? <Loading />
-          : showHome 
-          ? <Home 
-              user={user}
-              query={query}
-              shopFor={this.shopFor.bind(this)}
-              updateQuery={this.updateQuery.bind(this)}
-            /> 
-          : <Results
-              showHome={this.showHome.bind(this)}
-              einsteinResults={einsteinResults}
-            />
-        }
-        {/*<CameraView captureData={this.captureData.bind(this)}/>*/}        
+        <View style={styles.body}>
+          {!loggedIn
+            ? <Login authenticate={this.authenticate.bind(this)}/> 
+            : loading
+            ? <Loading />
+            : showHome 
+            ? <Home 
+                user={user}
+                query={query}
+                shopFor={this.shopFor.bind(this)}
+                updateQuery={this.updateQuery.bind(this)}
+              /> 
+            : <Results
+                showHome={this.showHome.bind(this)}
+                einsteinResults={einsteinResults}
+              />
+          }
+          {/*<CameraView captureData={this.captureData.bind(this)}/>*/}        
+        </View>
         <Footer/>
       </KeyboardAvoidingView>
     );
@@ -306,11 +308,11 @@ export default class App extends Component {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1
+  },
+  body: {
     flex: 1,
-
-    borderColor: 'brown',
-    borderStyle: 'solid',
-    borderWidth: 1
+    backgroundColor: 'rgba(132, 91, 51, .8)',
   }
 });
 
