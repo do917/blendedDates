@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-// import { Container, Header, Left, Body, Right, Button, Icon, Title } from 'native-base';
 
 import {
   AppRegistry,
@@ -9,9 +8,6 @@ import {
   Image,
   StatusBar
 } from 'react-native';
-
-
-
 
 export default class HeaderExample extends Component {
   render() {
@@ -29,41 +25,25 @@ export default class HeaderExample extends Component {
       </View>
     )
   }
-
-  // render() {
-  //   return (
-  //     <Container >
-  //       <Header>
-  //         <Left>
-
-  //         </Left>
-  //         <Body>
-  //           <Title>Header</Title>
-  //         </Body>
-  //         <Right>
-
-  //         </Right>
-  //       </Header>
-  //     </Container>
-  //   );
-  // }
 }
 
 const styles = StyleSheet.create({
   container: {
     height: 90,
-    backgroundColor: '#000',
-
-    borderColor: 'blue',
-    borderStyle: 'solid',
-    borderWidth: 0.5,
+    backgroundColor: '#000'
   },
   statusBar: {
-    height: 18,
+    height: 18
   },
   header: {
-    justifyContent: 'flex-end',
-    alignItems: 'center',
+    flex: 1,
+    alignItems: 'center'
   },
-
+  imageHeader: {
+    flex: 1,
+    width: undefined,
+    height: undefined,
+    alignSelf: 'stretch',
+    resizeMode: 'contain'
+  }
 });

@@ -20,10 +20,10 @@ export default class Home extends Component {
             Shop for Me!
           </Text>
         </Button>
-        <Text style={styles.inputContainerText}>
+        {/*<Text style={styles.inputContainerText}>
           or
         </Text>
-        {/*<Button block info onPress={() => this.props.shopFor('self')}>
+        <Button block info onPress={() => this.props.shopFor('self')}>
           <Text style={styles.buttonText}>
             Shop for a Friend
           </Text>
@@ -49,27 +49,23 @@ export default class Home extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'space-around',
-    padding: 10,
-    // alignSelf: 'center',
     alignItems: 'center',
-    borderColor: 'orange',
-    borderStyle: 'solid',
-    borderWidth: 1
+    justifyContent: 'space-around'
   },
   buttonText: {
     fontFamily: 'Gill Sans',
     fontSize: 18,
     color: 'white'
   },
-  inputContainerText: {
-    fontFamily: 'Gill Sans',
-    fontSize: 18,
-    textAlign: 'center',
-  },
+  // inputContainerText: {
+  //   fontFamily: 'Gill Sans',
+  //   fontSize: 18,
+  //   textAlign: 'center',
+  // },
   inputField: {
     fontFamily: 'Gill Sans',
     fontSize: 18,
+    color: 'white',
     textAlign: 'center',
     height: 40
   }

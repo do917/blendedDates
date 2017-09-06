@@ -14,12 +14,11 @@ export default class Login extends Component {
   render() {
     return(
       <View style={styles.container}>
-        <Button onPress={this.props.authenticate}>
-          <Text>Login with Instagram</Text>
+        <Button block info onPress={this.props.authenticate}>
+          <Text style={styles.buttonText}>
+            Login with Instagram
+          </Text>
         </Button>
-        <Text>
-          this is login component
-        </Text>
       </View>
     )
   }
@@ -28,13 +27,11 @@ export default class Login extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
-    // justifyContent: 'space-between',
-    // padding: 10,
-    // alignSelf: 'center',
-    alignItems: 'center',
-    borderColor: 'red',
-    borderStyle: 'solid',
-    borderWidth: 3
-  }
+    justifyContent: 'center'
+  },
+  buttonText: {
+    fontFamily: 'Gill Sans',
+    fontSize: 18,
+    color: 'white'
+  },
 });

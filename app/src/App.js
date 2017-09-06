@@ -13,12 +13,14 @@ import {
 import SafariView from 'react-native-safari-view';
 
 import Header from './components/Header';
-import Footer from './components/Footer';
+import Einstein from './components/Einstein';
 import Login from './components/Login';
 import Home from './components/Home';
-import Einstein from './components/Einstein';
-import Loading from './components/Loading';
 import Results from './components/Results';
+import Train from './components/Train';
+import Footer from './components/Footer';
+
+import Loading from './components/Loading';
 import CameraView from './components/CameraView';
 import phrases from './einsteinPhrases';
 
@@ -26,70 +28,40 @@ export default class App extends Component {
   constructor() {
     super()
     this.state = {
-      // user: null,
-      // token: null,
-      // showHome: true,
-      // loggedIn: false,
-      // einsteinText: null,
-      // einsteinResults: null,
-
-      loading: false,
+      user: {},
       query: '',
-      
-      // einsteinText: 'no text set',
+      bodyStatus: 'login',
+      einsteinText: phrases.login,
       einsteinResults: {
-        "photos": [
-            {
-               "label": "campandhike",
-               "url": "https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/21227558_494613014236106_3681810282990010368_n.jpg"
-            },
-            {
-               "label": "campandhike",
-               "url": "https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/21224880_2358544487702994_4825951134982078464_n.jpg"
-            },
-            {
-               "label": "campandhike",
-               "url": "https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/19050886_251722641899162_3319195467023122432_n.jpg"
-            },
-            {
-               "url": "https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/19122202_281792375617272_571626762316808192_n.jpg"
-            },
-            {
-               "label": "campandhike",
-               "url": "https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/18646386_446623515698621_2087497716677476352_n.jpg"
-            }
-         ],
-         "categoryCount": {
-            "campandhike": 4,
-            "undefined": 1
-         },
-         "mostPopular": {
-            "label": "campandhike",
-            "count": 4
-         }
+        photos: [],
+        mostPopular: {
+          label: ''
+        }
       },
-      showHome: false,
-      loggedIn: true,
-      token: '240954482.61ba2c7.63c617faf63940cfb532ad7f3879427a',
-      user: {id: "240954482", username: "davidisturtle", profile_picture: "https://scontent.cdninstagram.com/t51.2885-19/s150x150/11296795_485223351641943_1257523564_a.jpg", full_name: "David Oh", bio: "🍞🍇"},
+
+      // einsteinResults: {"photos":[{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/21227558_494613014236106_3681810282990010368_n.jpg"},{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/s640x640/sh0.08/e35/21224880_2358544487702994_4825951134982078464_n.jpg"},{"label":"cycle","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/s640x640/sh0.08/e35/19122202_281792375617272_571626762316808192_n.jpg"},{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/s640x640/sh0.08/e35/18646386_446623515698621_2087497716677476352_n.jpg"},{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/19050886_251722641899162_3319195467023122432_n.jpg"}],"categoryCount":{"campandhike":4,"cycle":1},"mostPopular":{"label":"campandhike","count":4}},
+      // token: '240954482.61ba2c7.63c617faf63940cfb532ad7f3879427a',
+      // user: {id: "240954482", username: "davidisturtle", profile_picture: "https://scontent.cdninstagram.com/t51.2885-19/s150x150/11296795_485223351641943_1257523564_a.jpg", full_name: "David Oh", bio: "🍞🍇"},
     }
   }
 
   componentWillMount() {
     this.setTokenListener();
-    this.setEinsteinResponse();
+    this.fetchEinsteinToken();
   }
 
-  showHome() {
+  showBody(which) {
     this.setState({
-      showHome: true
+      bodyStatus: which
     }, () => this.setEinsteinResponse());
   }
 
-  updateQuery(text) {
-    this.setState({
-      query: text
-    });
+  updateQuery(query) {
+    this.setState({ query });
+  }
+
+  setTrainPhotoWidth(trainPhotowidth) {
+    this.setState({ trainPhotowidth });
   }
 
   authenticate() {
@@ -104,6 +76,17 @@ export default class App extends Component {
       .catch(error => console.log('authentication error: ', error));
   }
 
+  fetchEinsteinToken() {
+    fetch('http://10.0.1.2:3000/api/einstein/getToken')
+      .then(res => res.text())
+      .then(token => {
+        this.setState({ 
+          token: token.token
+        });
+      })
+      .catch(error => console.log('fetching einstein token error: ', error));
+  }
+
   fetchUserInfo(token) {
     return fetch(`https://api.instagram.com/v1/users/self/?access_token=${token}`)
       .then(res => res.json())
@@ -111,6 +94,16 @@ export default class App extends Component {
         return data;
       })
       .catch(error => console.log('fetching user info error: ', error));
+  }
+
+  fetchUserData(username) {
+    return fetch(`https://www.instagram.com/${username}/?__a=1`)
+      .then(res => res.json())
+      .then(data => {
+        console.log('fetch user json', data)
+        return data.user;
+      })
+      .catch(error => console.log('fetching user id error: ', error));
   }
 
   // fetchUserFollowing(token) {
@@ -128,16 +121,6 @@ export default class App extends Component {
   //     .catch(error => console.log('fetching photos error: ', error));
   // }
 
-  fetchUserData(username) {
-    return fetch(`https://www.instagram.com/${username}/?__a=1`)
-      .then(res => res.json())
-      .then(data => {
-        console.log('fetch user json', data)
-        return data.user;
-      })
-      .catch(error => console.log('fetching user id error: ', error));
-  }
-
   setTokenListener() {
     Linking.addEventListener('url', event => {
       var url = new URL(event.url);
@@ -148,7 +131,7 @@ export default class App extends Component {
           console.log('set token results', results)
           this.setState({
             token: token,
-            loggedIn: true,
+            bodyStatus: 'home',
             user: results.data
           }, () => this.setEinsteinResponse());
           SafariView.dismiss();
@@ -169,7 +152,7 @@ export default class App extends Component {
     let einsteinQueue = [];
 
     for (let i = 0; i < data.length; i++) {
-      let url = data[i].display_src;
+      let url = data[i].thumbnail_src;
       einsteinQueue.push(this.einsteinPredict(url)
         .then(label => {
           let { categoryCount, mostPopular, photos } = results;
@@ -198,7 +181,7 @@ export default class App extends Component {
 
   shopFor(username) {
     this.setState({
-      loading: true
+      bodyStatus: 'loading'
     }, () => this.setEinsteinResponse(username));
     
 
@@ -211,8 +194,7 @@ export default class App extends Component {
         console.log('this is shopfor data', JSON.stringify(data))
         this.setState({
           einsteinResults: data,
-          showHome: false,
-          loading: false
+          bodyStatus: 'results'
         }, () => this.setEinsteinResponse());
       })
       .catch(error => console.log('shopping for error: ', error));
@@ -228,7 +210,7 @@ export default class App extends Component {
     return fetch('https://api.einstein.ai/v2/vision/predict', {
       method: 'POST',
       headers: {
-        'Authorization': 'Bearer 09f74b4d440fa6e5715aac39925e3c5d96b5a278',
+        'Authorization': 'Bearer 8d5ba75391a17359e8d82f0857b23e81fd2e74b4',
         'Cache-Control': 'no-cache',
         'Content-Type': 'multipart/form-data'
       },
@@ -242,31 +224,47 @@ export default class App extends Component {
   }
 
   setEinsteinResponse(username) {
-    const { user, loggedIn, showHome, loading, einsteinResults } = this.state;
-    let text;
+    const { user, einsteinResults, bodyStatus } = this.state;
+    let firstName = user.full_name.split(' ')[0];
+    let label = einsteinResults.mostPopular.label;
 
-    if (!loggedIn) {
-      text = phrases.login;
-    } else if (loading) {
-      if (username === 'self') {
-        username = user.username;
-      }
-      text = phrases.loading(username);
-    } else {
-      if (showHome) {
-        text = phrases.home(user.full_name.split(' ')[0]);
-      } else {
-        text = phrases.results(einsteinResults.mostPopular.label);
-      }
-    }
+    const response = {
+      login: phrases.login,
+      home: phrases.home(firstName),
+      loading: phrases.loading(username),
+      results: phrases.results(label),
+      train: phrases.train()
+    };
     
     this.setState({
-      einsteinText: text
+      einsteinText: response[bodyStatus]
     });
   }
 
   render() {
-    const { user, query, loggedIn, showHome, loading, einsteinResults, einsteinText } = this.state;
+    const { bodyStatus, user, query, einsteinResults, einsteinText, setTrainPhotoWidth, trainPhotowidth } = this.state;
+    const login = <Login 
+                    authenticate={this.authenticate.bind(this)}
+                  />;
+    const home = <Home 
+                  user={user}
+                  query={query}
+                  shopFor={this.shopFor.bind(this)}
+                  updateQuery={this.updateQuery.bind(this)}
+                />;
+    const loading = <Loading/>;
+    const results = <Results
+                      showBody={this.showBody.bind(this)}
+                      einsteinResults={einsteinResults}
+                    />;
+    const train = <Train
+                    einsteinResults={einsteinResults}
+                    trainPhotowidth={trainPhotowidth}
+                    showBody={this.showBody.bind(this)}
+                    setTrainPhotoWidth={this.setTrainPhotoWidth.bind(this)}
+                  />;
+    const bodies = { login, home, loading, results, train };
+
 
     return (
       <KeyboardAvoidingView 
@@ -275,29 +273,11 @@ export default class App extends Component {
       >
         <Header/>
         <Einstein
-          loggedIn={loggedIn}
-          showHome={loggedIn}
           einsteinText={einsteinText}
-          einsteinResults={einsteinResults}
         />
-        
-        {!loggedIn
-          ? <Login authenticate={this.authenticate.bind(this)}/> 
-          : loading
-          ? <Loading />
-          : showHome 
-          ? <Home 
-              user={user}
-              query={query}
-              shopFor={this.shopFor.bind(this)}
-              updateQuery={this.updateQuery.bind(this)}
-            /> 
-          : <Results
-              showHome={this.showHome.bind(this)}
-              einsteinResults={einsteinResults}
-            />
-        }
-        {/*<CameraView captureData={this.captureData.bind(this)}/>*/}        
+        <View style={styles.body}>
+          {bodies[bodyStatus]}
+        </View>
         <Footer/>
       </KeyboardAvoidingView>
     );
@@ -306,11 +286,12 @@ export default class App extends Component {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1
+  },
+  body: {
     flex: 1,
-
-    borderColor: 'brown',
-    borderStyle: 'solid',
-    borderWidth: 1
+    padding: 10,
+    backgroundColor: 'rgba(132, 91, 51, .8)',
   }
 });
 

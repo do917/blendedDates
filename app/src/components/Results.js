@@ -32,15 +32,15 @@ export default class Results extends Component {
           </Text>
         </Button>
 
-        <Button block info onPress={this.props.showHome}>
+        <Button block info onPress={() => this.props.showBody('train')}>
           <Text style={styles.buttonText}>
-            Help me shop for another friend
+            Train Einstein's image analysis
           </Text>
         </Button>
 
-        <Button block info onPress={() => console.log('pressed')}>
+        <Button block info onPress={() => this.props.showBody('home')}>
           <Text style={styles.buttonText}>
-            Train Einstein's image analysis
+            Go back to main page
           </Text>
         </Button>
       </View>
@@ -51,13 +51,8 @@ export default class Results extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
-    justifyContent: 'space-around',
     alignItems: 'center',
-
-    borderColor: 'red',
-    borderStyle: 'solid',
-    borderWidth: 1
+    justifyContent: 'space-between',
   },
   buttonText: {
     fontFamily: 'Gill Sans',
