@@ -51,8 +51,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-around',
     padding: 10,
-    // alignSelf: 'center',
     alignItems: 'center',
+
     borderColor: 'orange',
     borderStyle: 'solid',
     borderWidth: 1

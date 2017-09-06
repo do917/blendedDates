@@ -14,13 +14,22 @@ export default class Einstein extends Component {
     return(
       <View style={styles.container}>
         <Image 
-          source={require('../static/einstein.png')}
-          resizeMode={'stretch'}
-          style={styles.einstein}
-        />
-        <Text style={styles.text}>
-          {this.props.einsteinText}
-        </Text>
+          source={require('../static/background.png')}
+          // resizeMode={'stretch'}
+          style={styles.background}
+        >
+          <Image 
+            source={require('../static/einstein.png')}
+            style={styles.einstein}
+          >
+            <Text style={styles.text}
+              adjustsFontSizeToFit={true}
+              
+            >
+              {this.props.einsteinText}
+            </Text>
+          </Image>
+        </Image>
       </View>
     )
   }
@@ -29,24 +38,36 @@ export default class Einstein extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 2,
-    paddingVertical: 10,
+    
     borderColor: 'blue',
     borderStyle: 'solid',
     borderWidth: 1
   },
+  background: {
+    flex: 1,
+    alignSelf: 'stretch',
+    resizeMode: 'cover',
+    width: undefined,
+    height: undefined,
+  },
   einstein: {
     flex: 1,
+    justifyContent: 'flex-end',
     width: undefined,
     height: undefined,
     alignSelf: 'stretch',
     resizeMode: 'contain'
   },
   text: {
-    paddingHorizontal: 10,
     fontFamily: 'Gill Sans',
+    height: 75,
+    paddingVertical: 2,
+    paddingHorizontal: 10,
     fontSize: 20,
-    textAlign: 'center',
-    textAlignVertical: 'bottom',
-    height: 60
+    textAlign: 'left',
+    textAlignVertical: 'center',
+    
+    color: '#FFFFFF',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)'
   },
 });
