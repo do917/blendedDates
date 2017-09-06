@@ -38,7 +38,7 @@ export default class Results extends Component {
           </Text>
         </Button>
 
-        <Button block info onPress={this.props.showHome}>
+        <Button block info onPress={() => this.props.showBody('home')}>
           <Text style={styles.buttonText}>
             Go back to main page
           </Text>

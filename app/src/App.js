@@ -32,7 +32,7 @@ export default class App extends Component {
       // token: null,
       // einsteinText: null,
       // einsteinResults: null,
-      showInBody: 'train',
+      bodyStatus: 'train',
       query: '',
 
       einsteinResults: {"photos":[{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/21227558_494613014236106_3681810282990010368_n.jpg"},{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/s640x640/sh0.08/e35/21224880_2358544487702994_4825951134982078464_n.jpg"},{"label":"cycle","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/s640x640/sh0.08/e35/19122202_281792375617272_571626762316808192_n.jpg"},{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/s640x640/sh0.08/e35/18646386_446623515698621_2087497716677476352_n.jpg"},{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/19050886_251722641899162_3319195467023122432_n.jpg"}],"categoryCount":{"campandhike":4,"cycle":1},"mostPopular":{"label":"campandhike","count":4}},
@@ -46,9 +46,9 @@ export default class App extends Component {
     this.setEinsteinResponse();
   }
 
-  showHome() {
+  showBody(which) {
     this.setState({
-      showInBody: 'home'
+      bodyStatus: which
     }, () => this.setEinsteinResponse());
   }
 
@@ -114,7 +114,7 @@ export default class App extends Component {
           console.log('set token results', results)
           this.setState({
             token: token,
-            showInBody: 'home',
+            bodyStatus: 'home',
             user: results.data
           }, () => this.setEinsteinResponse());
           SafariView.dismiss();
@@ -168,7 +168,7 @@ export default class App extends Component {
 
   shopFor(username) {
     this.setState({
-      showInBody: 'loading'
+      bodyStatus: 'loading'
     }, () => this.setEinsteinResponse(username));
     
 
@@ -181,7 +181,7 @@ export default class App extends Component {
         console.log('this is shopfor data', JSON.stringify(data))
         this.setState({
           einsteinResults: data,
-          showInBody: 'results'
+          bodyStatus: 'results'
         }, () => this.setEinsteinResponse());
       })
       .catch(error => console.log('shopping for error: ', error));
@@ -211,7 +211,7 @@ export default class App extends Component {
   }
 
   setEinsteinResponse(username) {
-    const { user, einsteinResults, showInBody } = this.state;
+    const { user, einsteinResults, bodyStatus } = this.state;
     const response = {
       login: phrases.login,
       loading: phrases.loading(username),
@@ -221,12 +221,12 @@ export default class App extends Component {
     };
     
     this.setState({
-      einsteinText: response[showInBody]
+      einsteinText: response[bodyStatus]
     });
   }
 
   render() {
-    const { showInBody, user, query, einsteinResults, einsteinText, setTrainPhotoWidth, trainPhotowidth } = this.state;
+    const { bodyStatus, user, query, einsteinResults, einsteinText, setTrainPhotoWidth, trainPhotowidth } = this.state;
     const login = <Login 
                     authenticate={this.authenticate.bind(this)}
                   />;
@@ -238,16 +238,16 @@ export default class App extends Component {
                 />;
     const loading = <Loading/>;
     const results = <Results
-                      showHome={this.showHome.bind(this)}
+                      showBody={this.showBody.bind(this)}
                       einsteinResults={einsteinResults}
                     />;
     const train = <Train
                     einsteinResults={einsteinResults}
                     trainPhotowidth={trainPhotowidth}
-                    showHome={this.showHome.bind(this)}
+                    showBody={this.showBody.bind(this)}
                     setTrainPhotoWidth={this.setTrainPhotoWidth.bind(this)}
                   />;
-    const showBody = { login, home, loading, results, train };
+    const bodies = { login, home, loading, results, train };
 
 
     return (
@@ -257,30 +257,12 @@ export default class App extends Component {
       >
         <Header/>
         <Einstein
-          showInBody={showInBody}
+          
           einsteinText={einsteinText}
           einsteinResults={einsteinResults}
         />
         <View style={styles.body}>
-          {showBody[showInBody]}
-          {/*!loggedIn
-            ? <Login authenticate={this.authenticate.bind(this)}/> 
-            : loading
-            ? <Loading/>
-            : showHome 
-            ? <Home 
-                user={user}
-                query={query}
-                shopFor={this.shopFor.bind(this)}
-                updateQuery={this.updateQuery.bind(this)}
-              /> 
-            
-            : <Results
-                showHome={this.showHome.bind(this)}
-                einsteinResults={einsteinResults}
-              />
-            
-          */}{/*<CameraView captureData={this.captureData.bind(this)}/>*/}        
+          {bodies[bodyStatus]}
         </View>
         <Footer/>
       </KeyboardAvoidingView>
