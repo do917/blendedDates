@@ -28,22 +28,26 @@ export default class App extends Component {
   constructor() {
     super()
     this.state = {
-      // user: null,
-      // token: null,
-      // einsteinText: null,
-      // einsteinResults: null,
-      bodyStatus: 'train',
+      user: {},
       query: '',
+      bodyStatus: 'login',
+      einsteinText: phrases.login,
+      einsteinResults: {
+        photos: [],
+        mostPopular: {
+          label: ''
+        }
+      },
 
-      einsteinResults: {"photos":[{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/21227558_494613014236106_3681810282990010368_n.jpg"},{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/s640x640/sh0.08/e35/21224880_2358544487702994_4825951134982078464_n.jpg"},{"label":"cycle","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/s640x640/sh0.08/e35/19122202_281792375617272_571626762316808192_n.jpg"},{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/s640x640/sh0.08/e35/18646386_446623515698621_2087497716677476352_n.jpg"},{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/19050886_251722641899162_3319195467023122432_n.jpg"}],"categoryCount":{"campandhike":4,"cycle":1},"mostPopular":{"label":"campandhike","count":4}},
-      token: '240954482.61ba2c7.63c617faf63940cfb532ad7f3879427a',
-      user: {id: "240954482", username: "davidisturtle", profile_picture: "https://scontent.cdninstagram.com/t51.2885-19/s150x150/11296795_485223351641943_1257523564_a.jpg", full_name: "David Oh", bio: "🍞🍇"},
+      // einsteinResults: {"photos":[{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/21227558_494613014236106_3681810282990010368_n.jpg"},{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/s640x640/sh0.08/e35/21224880_2358544487702994_4825951134982078464_n.jpg"},{"label":"cycle","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/s640x640/sh0.08/e35/19122202_281792375617272_571626762316808192_n.jpg"},{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/s640x640/sh0.08/e35/18646386_446623515698621_2087497716677476352_n.jpg"},{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/19050886_251722641899162_3319195467023122432_n.jpg"}],"categoryCount":{"campandhike":4,"cycle":1},"mostPopular":{"label":"campandhike","count":4}},
+      // token: '240954482.61ba2c7.63c617faf63940cfb532ad7f3879427a',
+      // user: {id: "240954482", username: "davidisturtle", profile_picture: "https://scontent.cdninstagram.com/t51.2885-19/s150x150/11296795_485223351641943_1257523564_a.jpg", full_name: "David Oh", bio: "🍞🍇"},
     }
   }
 
   componentWillMount() {
     this.setTokenListener();
-    this.setEinsteinResponse();
+    this.fetchEinsteinToken();
   }
 
   showBody(which) {
@@ -52,10 +56,12 @@ export default class App extends Component {
     }, () => this.setEinsteinResponse());
   }
 
-  updateQuery(text) {
-    this.setState({
-      query: text
-    });
+  updateQuery(query) {
+    this.setState({ query });
+  }
+
+  setTrainPhotoWidth(trainPhotowidth) {
+    this.setState({ trainPhotowidth });
   }
 
   authenticate() {
@@ -68,6 +74,17 @@ export default class App extends Component {
         });
       })
       .catch(error => console.log('authentication error: ', error));
+  }
+
+  fetchEinsteinToken() {
+    fetch('http://10.0.1.2:3000/api/einstein/getToken')
+      .then(res => res.text())
+      .then(token => {
+        this.setState({ 
+          token: token.token
+        });
+      })
+      .catch(error => console.log('fetching einstein token error: ', error));
   }
 
   fetchUserInfo(token) {
@@ -121,10 +138,6 @@ export default class App extends Component {
         })
         .catch(error => console.log('setting token listener error: ', error));
     });
-  }
-
-  setTrainPhotoWidth(trainPhotowidth) {
-    this.setState({ trainPhotowidth });
   }
 
   filterForRei(data) {
@@ -197,7 +210,7 @@ export default class App extends Component {
     return fetch('https://api.einstein.ai/v2/vision/predict', {
       method: 'POST',
       headers: {
-        'Authorization': 'Bearer a3467359151d45a468f8fcab526a66bb49ca8600',
+        'Authorization': 'Bearer 8d5ba75391a17359e8d82f0857b23e81fd2e74b4',
         'Cache-Control': 'no-cache',
         'Content-Type': 'multipart/form-data'
       },
@@ -212,11 +225,14 @@ export default class App extends Component {
 
   setEinsteinResponse(username) {
     const { user, einsteinResults, bodyStatus } = this.state;
+    let firstName = user.full_name.split(' ')[0];
+    let label = einsteinResults.mostPopular.label;
+
     const response = {
       login: phrases.login,
+      home: phrases.home(firstName),
       loading: phrases.loading(username),
-      home: phrases.home(user.full_name.split(' ')[0]),
-      results: phrases.results(einsteinResults.mostPopular.label),
+      results: phrases.results(label),
       train: phrases.train()
     };
     
@@ -257,9 +273,7 @@ export default class App extends Component {
       >
         <Header/>
         <Einstein
-          
           einsteinText={einsteinText}
-          einsteinResults={einsteinResults}
         />
         <View style={styles.body}>
           {bodies[bodyStatus]}
