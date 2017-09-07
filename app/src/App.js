@@ -24,7 +24,7 @@ export default class App extends Component {
     this.state = {
       user: { full_name: 'not logged in' },
       query: '',
-      bodyStatus: 'home',
+      bodyStatus: 'login',
       einsteinResults: {
         samples: [],
         mostPopular: {
@@ -206,7 +206,7 @@ export default class App extends Component {
       samples: [],
       categoryCount: {},
       mostPopular: {
-        label: 'home',
+        label: 'other',
         count: 0,
       },
     };
@@ -254,15 +254,12 @@ export default class App extends Component {
       .then((data) => {
         if (!data) {
           throw userInvalid;
-        } else {
-          return this.labelSamples(data.user.media.nodes);
+          return;
         }
+        return this.labelSamples(data.user.media.nodes);
       })
       .then(data => this.setEinsteinResults(data))
-      .catch(userInvalid => {
-        this.setEinsteinResponse();
-        this.showBody('home');
-      })
+      .catch(userInvalid => this.showBody('home'))
       .catch(error => console.log('shopping for error: ', error));
   }
 

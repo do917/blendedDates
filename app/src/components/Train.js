@@ -26,9 +26,9 @@ export default class Train extends Component {
           </ScrollView>
         </View>
         <View style={styles.navigation}>
-          <Button block info onPress={() => this.props.showBody('home')}>
+          <Button block info onPress={() => this.props.showBody('results')}>
             <Text style={styles.buttonText}>
-              Go back to main page
+              Go back to results
             </Text>
           </Button>
         </View>
