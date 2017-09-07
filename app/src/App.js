@@ -28,7 +28,7 @@ export default class App extends Component {
       einsteinResults: {
         samples: [],
         mostPopular: {
-          label: '',
+          label: 'other',
           count: 0,
         },
       },
@@ -38,7 +38,7 @@ export default class App extends Component {
       // DUMMY DATA BELOW
       // einsteinResults: {"photos":[{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/21227558_494613014236106_3681810282990010368_n.jpg"},{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/s640x640/sh0.08/e35/21224880_2358544487702994_4825951134982078464_n.jpg"},{"label":"cycle","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/s640x640/sh0.08/e35/19122202_281792375617272_571626762316808192_n.jpg"},{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/s640x640/sh0.08/e35/18646386_446623515698621_2087497716677476352_n.jpg"},{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/19050886_251722641899162_3319195467023122432_n.jpg"}],"categoryCount":{"campandhike":4,"cycle":1},"mostPopular":{"label":"campandhike","count":4}},
       // token: '240954482.61ba2c7.63c617faf63940cfb532ad7f3879427a',
-      // user: {id: "240954482", username: "davidisturtle", profile_picture: "https://scontent.cdninstagram.com/t51.2885-19/s150x150/11296795_485223351641943_1257523564_a.jpg", full_name: "David Oh", bio: "🍞🍇"},
+      user: {id: "240954482", username: "davidisturtle", profile_picture: "https://scontent.cdninstagram.com/t51.2885-19/s150x150/11296795_485223351641943_1257523564_a.jpg", full_name: "David Oh", bio: "🍞🍇"},
     };
   }
 
@@ -105,7 +105,21 @@ export default class App extends Component {
     };
     const response = responses[bodyStatus];
     let counter = 0;
+    const setCaretInt = () => {
+      let set = true;
+      let caret = {
+        false: '',
+        true: '_',
+      }
+      this.caretInterval = setInterval(() => {
+        this.setState({
+          einsteinText: response + caret[set],
+        });
+        set = !set;
+      }, 300);
+    };
 
+    clearInterval(this.caretInterval);
     clearInterval(this.typingInterval);
     this.typingInterval = setInterval(() => {
       this.setState({
@@ -114,6 +128,7 @@ export default class App extends Component {
       counter += 1;
       if (counter > response.length) {
         clearInterval(this.typingInterval);
+        setCaretInt();
       }
     }, 25);
   }
@@ -155,21 +170,6 @@ export default class App extends Component {
       .catch(error => console.log('fetching user id error: ', error));
   }
 
-  // fetchUserFollowing(token) {
-  //   return fetch(`https://api.instagram.com/v1/users/self/follows?access_token=${token}`)
-  //     .then(res => res.json())
-  //     .then(following => {
-  //       return following;
-  //     })
-  //     .catch(error => console.log('fetching user info error: ', error));
-  // }
-
-  // fetchPhotos(userId) {
-  //   return fetch(`https://api.instagram.com/v1/users/${userId}/media/recent/?access_token=${this.state.token}`)
-  //     .then(response => response.json())
-  //     .catch(error => console.log('fetching photos error: ', error));
-  // }
-
   einsteinPredict(sample) {
     const formData = new FormData();
     formData.append('numResults', 1);
@@ -207,7 +207,7 @@ export default class App extends Component {
       samples: [],
       categoryCount: {},
       mostPopular: {
-        label: null,
+        label: 'other',
         count: 0,
       },
     };
@@ -224,6 +224,8 @@ export default class App extends Component {
 
           if (label === 'other') {
             sample.isGeneralImage = true;
+            // if an image doesn't match one of REI's model,
+            // it will be queued again to be analyzed with Salesforce's GeneralImageClassifier
             einsteinQueueForGeneral.push(this.einsteinPredict(sample)
               .then((generalLabel) => {
                 sample.label = generalLabel;
@@ -256,7 +258,7 @@ export default class App extends Component {
 
   shopBasedOnPhoto() {
     const options = {
-      quality: 0, // set low to meet 5mb limit of Einstein API
+      quality: 0, // set low to meet 5mb limitation of Einstein API
     };
 
     ImagePicker.launchCamera(options, (response) => {

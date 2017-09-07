@@ -17,7 +17,7 @@ export default class TrainPhoto extends Component {
     const { label } = this.props.sample;
     let displayLabel = shoppingModels.nouns[label];
     if (this.props.sample.isGeneralImage) {
-      displayLabel = label;
+      displayLabel = label.split(', ')[0].replace(/\b\w/g, l => l.toUpperCase());
     }
 
     return (

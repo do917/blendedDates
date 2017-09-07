@@ -18,7 +18,7 @@ export default class Home extends Component {
 
         <Button block info onPress={this.props.shopBasedOnPhoto}>
           <Text style={styles.buttonText}>
-            Shop based on a photo
+            Shop from a snapped photo
           </Text>
         </Button>
 

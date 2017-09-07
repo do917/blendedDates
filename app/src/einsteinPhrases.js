@@ -10,13 +10,13 @@ export default {
     }
   },
   home: (name) => {
-    return `Welcome ${name}! How may I assist your shopping experience for today?`;
+    return `Welcome ${name.replace(/\b\w/g, l => l.toUpperCase())}! How may I assist your shopping experience for today?`;
   },
   results: (label) => {
     if (label !== 'other') {
       return `Ah, I recommend ${shoppingModels.verbs[label]} gear!`;
     } else {
-      return `Hm... I don't see anything that is related to any of REI's products...`
+      return `Hm... I don't see anything in the photo that is related to any of REI's products...`
     }
   },
   train: () => {

@@ -24,7 +24,7 @@ export default class Results extends Component {
       <View style={styles.container}>
         <Button block info onPress={this.takeShopping.bind(this)}>
           <Text style={styles.buttonText}>
-            {label !== 'Other'
+            {label !== 'other'
               ? 'Get ' + label + ' gear from REI'
               : 'See whats cool at REI!'
             }
@@ -33,7 +33,7 @@ export default class Results extends Component {
 
         <Button block info onPress={() => this.props.showBody('train')}>
           <Text style={styles.buttonText}>
-            See how Einstein did
+            See Einstein's analysis
           </Text>
         </Button>
 
