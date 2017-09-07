@@ -16,9 +16,9 @@ export default class Train extends Component {
     return(
       <View style={styles.container}>
         <View style={styles.photos} onLayout={e => this.props.setTrainPhotoWidth(e.nativeEvent.layout.height)}>
-          <ScrollView horizontal={true}>
-            {this.props.einsteinResults.photos.map((photo, i) => {
-              return <TrainPhoto key={i} photo={photo} trainPhotowidth={this.props.trainPhotowidth}/>;
+          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+            {this.props.einsteinResults.samples.map((sample, i) => {
+              return <TrainPhoto key={i} sample={sample} trainPhotowidth={this.props.trainPhotowidth}/>;
             })}
           </ScrollView>
         </View>

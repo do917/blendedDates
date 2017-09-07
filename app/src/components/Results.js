@@ -10,7 +10,6 @@ import SafariView from 'react-native-safari-view';
 import { Button } from 'native-base';
 import shoppingModels from '../shoppingModels';
 
-
 export default class Results extends Component {
   
   takeShopping() {
@@ -28,13 +27,16 @@ export default class Results extends Component {
       <View style={styles.container}>
         <Button block info onPress={this.takeShopping.bind(this)}>
           <Text style={styles.buttonText}>
-            Get {label} gear from REI
+            {label !== 'Other'
+              ? 'Get ' + label + ' gear from REI'
+              : 'See whats cool at REI!'
+            }
           </Text>
         </Button>
 
         <Button block info onPress={() => this.props.showBody('train')}>
           <Text style={styles.buttonText}>
-            Train Einstein's image analysis
+            See how Einstein did
           </Text>
         </Button>
 

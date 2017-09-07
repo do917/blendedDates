@@ -6,33 +6,34 @@ import {
   View,
   Image,
   Dimensions,
-  
 } from 'react-native';
 
 import { Button, Item, Input } from 'native-base';
 
+
+
 export default class Home extends Component {
   render() {
     return(
-      <View style={styles.container}>
+      <View style={styles.container}> 
         <Button block info onPress={() => this.props.shopFor(this.props.user.username)}>
           <Text style={styles.buttonText}>
-            Shop for Me!
+            Shop for me
           </Text>
         </Button>
-        {/*<Text style={styles.inputContainerText}>
-          or
-        </Text>
-        <Button block info onPress={() => this.props.shopFor('self')}>
+        
+        <Button block info onPress={this.props.shopBasedOnPhoto}>
           <Text style={styles.buttonText}>
-            Shop for a Friend
+            Shop based on a photo
           </Text>
-        </Button>*/}
-        <Item rounded>
+        </Button>
+
+        <Item rounded >
           <Input
             style={styles.inputField}
-            placeholder='Shop for a Friend...'
             autoCapitalize='none'
+            placeholder='Shop for a friend...'
+            placeholderTextColor='#FFFFFF'
             onChangeText={text => this.props.updateQuery(text)}
             onSubmitEditing={() => {
               if (this.props.query !== '') {
@@ -41,6 +42,7 @@ export default class Home extends Component {
             }}
           />
         </Item>
+        
       </View>
     )
   }
@@ -55,7 +57,7 @@ const styles = StyleSheet.create({
   buttonText: {
     fontFamily: 'Gill Sans',
     fontSize: 18,
-    color: 'white'
+    color: '#FFFFFF'
   },
   // inputContainerText: {
   //   fontFamily: 'Gill Sans',
@@ -65,7 +67,7 @@ const styles = StyleSheet.create({
   inputField: {
     fontFamily: 'Gill Sans',
     fontSize: 18,
-    color: 'white',
+    color: '#FFFFFF',
     textAlign: 'center',
     height: 40
   }

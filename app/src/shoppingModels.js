@@ -5,7 +5,8 @@ export default {
     cycle: 'cycling',
     paddle: 'paddling',
     run: 'running',
-    snow: 'snow sports'
+    snow: 'snow sports',
+    other: 'Other'
   },
   nouns: {
     campandhike: 'Camp and Hike',
@@ -13,7 +14,8 @@ export default {
     cycle: 'Cycle',
     paddle: 'Paddle',
     run: 'Run',
-    snow: 'Snow Sports'
+    snow: 'Snow Sports',
+    other: 'Other'
   },
   links: {
     campandhike: 'https://www.rei.com/h/camping-and-hiking',
@@ -21,6 +23,7 @@ export default {
     cycle: 'https://www.rei.com/h/cycling',
     paddle: 'https://www.rei.com/h/paddling',
     run: 'https://www.rei.com/h/running',
-    snow: 'https://www.rei.com/h/snowsports'
+    snow: 'https://www.rei.com/h/snowsports',
+    other: 'https://www.rei.com/'
   }
 }

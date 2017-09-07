@@ -22,8 +22,8 @@ export default class Einstein extends Component {
             source={require('../static/einstein.png')}
             style={styles.einstein}
           >
-            <View style={styles.textContainer} borderRadius={8}>
-              <Text style={styles.text}  adjustsFontSizeToFit={true}>
+            <View style={styles.textContainer}>
+              <Text style={styles.text} adjustsFontSizeToFit={true}>
                 {this.props.einsteinText}
               </Text>
             </View>
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
   },
   background: {
     flex: 1,
-    padding: 10
+    // padding: 10
   },
   einstein: {
     flex: 1,
@@ -49,14 +49,19 @@ const styles = StyleSheet.create({
   textContainer: {
     backgroundColor: 'rgba(0, 0, 0, 0.3)',
     paddingVertical: 2,
-    paddingHorizontal: 10
+    paddingHorizontal: 15
   },
   text: {
-    fontFamily: 'Gill Sans',
-    height: 75,
-    fontSize: 20,
+    fontFamily: 'Courier',
+    height: 85,
+    fontSize: 18,
     textAlign: 'left',
     textAlignVertical: 'center',
     color: '#FFFFFF'
   },
+  caret: {
+    fontFamily: 'Courier',
+    fontSize: 18,
+    color: '#bff442'
+  }
 });

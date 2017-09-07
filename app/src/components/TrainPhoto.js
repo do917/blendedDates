@@ -12,15 +12,26 @@ import shoppingModels from '../shoppingModels';
 
 export default class TrainPhoto extends Component {
   render() {
+    let uri = this.props.sample.thumbnail_src;
+    if (this.props.sample.fromCamera) {
+      uri = `data:image/gif;base64,${this.props.sample.data}`;
+    }
+
+    let label = this.props.sample.label;
+    let displayLabel = shoppingModels.nouns[label]
+    if (this.props.sample.isGeneralImage) {
+      displayLabel = label;
+    }
+
     return(
       <View style={[styles.container, { width: this.props.trainPhotowidth }]}>
         <Image
-          source={{ uri: this.props.photo.url }}
+          source={{ uri: uri }}
           style={styles.photo}
-          borderRadius={2}
+          borderRadius={8}
         />
         <Text style={styles.text}>
-          {shoppingModels.nouns[this.props.photo.label]}
+          {displayLabel}
         </Text>
       </View>
     )

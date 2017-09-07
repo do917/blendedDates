@@ -9,18 +9,18 @@ import {
   KeyboardAvoidingView
 } from 'react-native';
 
-
 import SafariView from 'react-native-safari-view';
+import ImagePicker from 'react-native-image-picker';
 
 import Header from './components/Header';
 import Einstein from './components/Einstein';
 import Login from './components/Login';
 import Home from './components/Home';
+import Loading from './components/Loading';
 import Results from './components/Results';
 import Train from './components/Train';
 import Footer from './components/Footer';
 
-import Loading from './components/Loading';
 import CameraView from './components/CameraView';
 import phrases from './einsteinPhrases';
 
@@ -31,23 +31,29 @@ export default class App extends Component {
       user: {},
       query: '',
       bodyStatus: 'login',
-      einsteinText: phrases.login,
       einsteinResults: {
-        photos: [],
+        samples: [],
         mostPopular: {
-          label: ''
+          label: '',
+          count: 0
         }
       },
+      einsteinText: null,
+      trainPhotowidth: null,
+      setTrainPhotoWidth: null,
+      user: { full_name: 'not logged in'},
+      //bodyStatus, user, query, einsteinResults, einsteinText, setTrainPhotoWidth, trainPhotowidth
 
       // einsteinResults: {"photos":[{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/21227558_494613014236106_3681810282990010368_n.jpg"},{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/s640x640/sh0.08/e35/21224880_2358544487702994_4825951134982078464_n.jpg"},{"label":"cycle","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/s640x640/sh0.08/e35/19122202_281792375617272_571626762316808192_n.jpg"},{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/s640x640/sh0.08/e35/18646386_446623515698621_2087497716677476352_n.jpg"},{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/19050886_251722641899162_3319195467023122432_n.jpg"}],"categoryCount":{"campandhike":4,"cycle":1},"mostPopular":{"label":"campandhike","count":4}},
       // token: '240954482.61ba2c7.63c617faf63940cfb532ad7f3879427a',
-      // user: {id: "240954482", username: "davidisturtle", profile_picture: "https://scontent.cdninstagram.com/t51.2885-19/s150x150/11296795_485223351641943_1257523564_a.jpg", full_name: "David Oh", bio: "🍞🍇"},
+      user: {id: "240954482", username: "davidisturtle", profile_picture: "https://scontent.cdninstagram.com/t51.2885-19/s150x150/11296795_485223351641943_1257523564_a.jpg", full_name: "David Oh", bio: "🍞🍇"},
     }
   }
 
   componentWillMount() {
     this.setTokenListener();
     this.fetchEinsteinToken();
+    this.setEinsteinResponse();
   }
 
   showBody(which) {
@@ -60,8 +66,66 @@ export default class App extends Component {
     this.setState({ query });
   }
 
+  setTokenListener() {
+    Linking.addEventListener('url', event => {
+      const token = event.url.split('token=')[1];
+
+      this.fetchUserInfo(token)
+        .then(results => {
+          console.log('set token results', results)
+          this.setState({
+            instaToken: token,
+            bodyStatus: 'home',
+            user: results.data
+          }, () => this.setEinsteinResponse());
+          SafariView.dismiss();
+        })
+        .catch(error => console.log('setting token listener error: ', error));
+    });
+  }
+
   setTrainPhotoWidth(trainPhotowidth) {
     this.setState({ trainPhotowidth });
+  }
+
+  setLoading(username) {
+    this.setState({
+      bodyStatus: 'loading'
+    }, () => this.setEinsteinResponse(username));
+  }
+
+  setEinsteinResults(data) {
+    this.setState({
+      einsteinResults: data,
+      bodyStatus: 'results'
+    }, () => this.setEinsteinResponse());
+  }
+
+  setEinsteinResponse(username) {
+    const { user, einsteinResults, bodyStatus } = this.state;
+    let firstName = user.full_name.split(' ')[0];
+    let label = einsteinResults.mostPopular.label;
+    const responses = {
+      login: phrases.login,
+      home: phrases.home(firstName),
+      loading: phrases.loading(username),
+      results: phrases.results(label),
+      train: phrases.train()
+    };
+    let response = responses[bodyStatus];
+    let counter = 0;
+    
+    clearInterval(this.typingInterval);
+    this.typingInterval = setInterval(() => {
+      this.setState({
+        einsteinText: response.slice(0, counter)
+      });
+      counter++;
+      if (counter > response.length) {
+        console.log('clearing!!')
+        clearInterval(this.typingInterval);
+      }
+    }, 25);
   }
 
   authenticate() {
@@ -78,10 +142,10 @@ export default class App extends Component {
 
   fetchEinsteinToken() {
     fetch('http://10.0.1.2:3000/api/einstein/getToken')
-      .then(res => res.text())
+      .then(res => res.json())
       .then(token => {
         this.setState({ 
-          token: token.token
+          einsteinToken: token.token
         });
       })
       .catch(error => console.log('fetching einstein token error: ', error));
@@ -121,96 +185,29 @@ export default class App extends Component {
   //     .catch(error => console.log('fetching photos error: ', error));
   // }
 
-  setTokenListener() {
-    Linking.addEventListener('url', event => {
-      var url = new URL(event.url);
-      const token = url.searchParams.get('token');
 
-      this.fetchUserInfo(token)
-        .then(results => {
-          console.log('set token results', results)
-          this.setState({
-            token: token,
-            bodyStatus: 'home',
-            user: results.data
-          }, () => this.setEinsteinResponse());
-          SafariView.dismiss();
-        })
-        .catch(error => console.log('setting token listener error: ', error));
-    });
-  }
-
-  filterForRei(data) {
-    let results = {
-      photos: [],
-      categoryCount: {},
-      mostPopular: {
-        label: null,
-        count: 0
-      }
-    };
-    let einsteinQueue = [];
-
-    for (let i = 0; i < data.length; i++) {
-      let url = data[i].thumbnail_src;
-      einsteinQueue.push(this.einsteinPredict(url)
-        .then(label => {
-          let { categoryCount, mostPopular, photos } = results;
-          let analyzedData = { label, url };
-          
-          if (label !== 'other') {
-            photos.push(analyzedData);
-            categoryCount[label] = categoryCount[label] + 1 || 1;
-            if (categoryCount[label] > mostPopular.count) {
-              mostPopular.count = categoryCount[label];
-              mostPopular.label = label;
-            }
-          }
-        })
-        .catch(error => console.log('creating queue error: ', error))
-      );
-    }
-
-    return Promise.all(einsteinQueue)
-      .then(() => {
-        console.log(JSON.stringify(results));
-        return results;
-      })
-      .catch(error => console.log('queueing einstein calls error: ', error));
-  }
-
-  shopFor(username) {
-    this.setState({
-      bodyStatus: 'loading'
-    }, () => this.setEinsteinResponse(username));
-    
-
-    this.fetchUserData(username)
-      .then(userData => {
-        console.log('this is userData', userData)
-        return this.filterForRei(userData.media.nodes);
-      })
-      .then(data => {
-        console.log('this is shopfor data', JSON.stringify(data))
-        this.setState({
-          einsteinResults: data,
-          bodyStatus: 'results'
-        }, () => this.setEinsteinResponse());
-      })
-      .catch(error => console.log('shopping for error: ', error));
-  }
-
-  einsteinPredict(url) {
+  einsteinPredict(sample) {
     let formData = new FormData();
-    formData.append('sampleLocation', url)
-    formData.append('numResults', 1)
-    formData.append('modelId', '5QGJG2X4DQB7AXGA47B3VSXDAE') // models for REI + Global categories 
-    // for general image, modelId is 'GeneralImageClassifier'
+    formData.append('numResults', 1);
+    
+    if (!sample.isGeneralImage) {
+      //test against REI models:
+      formData.append('modelId', 'DAKLH55EDPC2ROXNNNAJV6C2VM'); 
+    } else {
+      //test against Salesforce's general image models:
+      formData.append('modelId', 'GeneralImageClassifier');
+    }
+    
+    if (sample.fromCamera) {
+      formData.append('sampleBase64Content', sample.data);
+    } else {
+      formData.append('sampleLocation', sample.display_src);
+    }
     
     return fetch('https://api.einstein.ai/v2/vision/predict', {
       method: 'POST',
       headers: {
-        'Authorization': 'Bearer 8d5ba75391a17359e8d82f0857b23e81fd2e74b4',
+        'Authorization': `Bearer ${this.state.einsteinToken}`,
         'Cache-Control': 'no-cache',
         'Content-Type': 'multipart/form-data'
       },
@@ -223,23 +220,86 @@ export default class App extends Component {
       .catch(error => console.error('einstein prediction error: ', error));
   }
 
-  setEinsteinResponse(username) {
-    const { user, einsteinResults, bodyStatus } = this.state;
-    let firstName = user.full_name.split(' ')[0];
-    let label = einsteinResults.mostPopular.label;
-
-    const response = {
-      login: phrases.login,
-      home: phrases.home(firstName),
-      loading: phrases.loading(username),
-      results: phrases.results(label),
-      train: phrases.train()
+  labelSamples(givenSamples) {
+    let results = {
+      samples: [],
+      categoryCount: {},
+      mostPopular: {
+        label: null,
+        count: 0
+      }
     };
+    let { categoryCount, mostPopular, samples } = results;
+    let einsteinQueue = [];
+    let einsteinQueueForGeneral = [];
+
+    for (let i = 0; i < givenSamples.length; i++) {
+      let sample = givenSamples[i];
+
+      einsteinQueue.push(this.einsteinPredict(sample)
+        .then(label => {
+          sample.label = label;
+
+          if (label === 'other') {
+            sample.isGeneralImage = true;
+            einsteinQueueForGeneral.push(this.einsteinPredict(sample)
+              .then(label => {
+                sample.label = label;
+                // samples.push(sample);
+              })
+            );
+          } else {
+            categoryCount[label] = categoryCount[label] + 1 || 1;
+            if (categoryCount[label] > mostPopular.count) {
+              mostPopular.count = categoryCount[label];
+              mostPopular.label = label;
+            }
+          }
+            samples.push(sample);
+        })
+        .catch(error => console.log('creating queue error: ', error))
+      );
+    }
+
+    return Promise.all(einsteinQueue)
+      .then(() => Promise.all(einsteinQueueForGeneral))
+      .then(() => results)
+      .catch(error => console.log('queueing einstein calls error: ', error));
+  }
+
+  shopFor(username) {
+    this.setLoading(username);
+    this.fetchUserData(username)
+      .then(userData => {
+        console.log('this is userData', userData)
+        return this.labelSamples(userData.media.nodes);
+      })
+      .then(data => {
+        // console.log('this is shopfor data', JSON.stringify(data))
+        this.setEinsteinResults(data);
+      })
+      .catch(error => console.log('shopping for error: ', error));
+  }  
+
+  shopBasedOnPhoto() {
+    const options = {
+      quality: 0 //set low to meet 5mb limit of Einstein API
+    };
+
+    ImagePicker.launchCamera(options, response  => {
+      if (response.data) {
+        this.setLoading();
     
-    this.setState({
-      einsteinText: response[bodyStatus]
+        response.fromCamera = true;
+        console.log('DA RESPONSE', response)
+        this.labelSamples([response])
+          .then(data => {
+            this.setEinsteinResults(data);
+          });
+      }
     });
   }
+  
 
   render() {
     const { bodyStatus, user, query, einsteinResults, einsteinText, setTrainPhotoWidth, trainPhotowidth } = this.state;
@@ -251,6 +311,7 @@ export default class App extends Component {
                   query={query}
                   shopFor={this.shopFor.bind(this)}
                   updateQuery={this.updateQuery.bind(this)}
+                  shopBasedOnPhoto={this.shopBasedOnPhoto.bind(this)}
                 />;
     const loading = <Loading/>;
     const results = <Results
