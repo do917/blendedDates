@@ -26,7 +26,7 @@ export default class Results extends Component {
           <Text style={styles.buttonText}>
             {label !== 'other'
               ? 'Get ' + label + ' gear from REI'
-              : 'See whats cool at REI!'
+              : 'See what else is cool at REI!'
             }
           </Text>
         </Button>

@@ -24,7 +24,7 @@ export default class App extends Component {
     this.state = {
       user: { full_name: 'not logged in' },
       query: '',
-      bodyStatus: 'login',
+      bodyStatus: 'home',
       einsteinResults: {
         samples: [],
         mostPopular: {
@@ -48,9 +48,9 @@ export default class App extends Component {
     this.setEinsteinResponse();
   }
 
-  showBody(which) {
+  showBody(body) {
     this.setState({
-      bodyStatus: which,
+      bodyStatus: body,
     }, () => this.setEinsteinResponse());
   }
 
@@ -104,7 +104,6 @@ export default class App extends Component {
       train: phrases.train(),
     };
     const response = responses[bodyStatus];
-    let counter = 0;
     const setCaretInt = () => {
       let set = true;
       let caret = {
@@ -118,6 +117,7 @@ export default class App extends Component {
         set = !set;
       }, 300);
     };
+    let counter = 0;
 
     clearInterval(this.caretInterval);
     clearInterval(this.typingInterval);
@@ -213,7 +213,7 @@ export default class App extends Component {
     };
     const { categoryCount, mostPopular, samples } = results;
     const einsteinQueue = [];
-    const einsteinQueueForGeneral = [];
+    const einsteinQueueGeneral = [];
 
     for (let i = 0; i < givenSamples.length; i++) {
       let sample = givenSamples[i];
@@ -226,7 +226,7 @@ export default class App extends Component {
             sample.isGeneralImage = true;
             // if an image doesn't match one of REI's model,
             // it will be queued again to be analyzed with Salesforce's GeneralImageClassifier
-            einsteinQueueForGeneral.push(this.einsteinPredict(sample)
+            einsteinQueueGeneral.push(this.einsteinPredict(sample)
               .then((generalLabel) => {
                 sample.label = generalLabel;
               }));
@@ -243,7 +243,7 @@ export default class App extends Component {
     }
 
     return Promise.all(einsteinQueue)
-      .then(() => Promise.all(einsteinQueueForGeneral))
+      .then(() => Promise.all(einsteinQueueGeneral))
       .then(() => results)
       .catch(error => console.log('queueing einstein calls error: ', error));
   }

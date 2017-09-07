@@ -18,7 +18,7 @@ export default class Home extends Component {
 
         <Button block info onPress={this.props.shopBasedOnPhoto}>
           <Text style={styles.buttonText}>
-            Shop from a snapped photo
+            Shop from snapping a photo
           </Text>
         </Button>
 
@@ -31,7 +31,7 @@ export default class Home extends Component {
             onChangeText={text => this.props.updateQuery(text)}
             onSubmitEditing={() => {
               if (this.props.query !== '') {
-                this.props.shopFor(this.props.query);
+                this.props.shopFor(this.props.query.split(' ').join(''));
               }
             }}
           />
