@@ -63,6 +63,37 @@ export default class App extends Component {
     this.setState({ trainPhotowidth });
   }
 
+  setLoading(username) {
+    this.setState({
+      bodyStatus: 'loading'
+    }, () => this.setEinsteinResponse(username));
+  }
+
+  setEinsteinResults(data) {
+    this.setState({
+      einsteinResults: data,
+      bodyStatus: 'results'
+    }, () => this.setEinsteinResponse());
+  }
+
+  setEinsteinResponse(username) {
+    const { user, einsteinResults, bodyStatus } = this.state;
+    let firstName = user.full_name.split(' ')[0];
+    let label = einsteinResults.mostPopular.label;
+
+    const response = {
+      login: phrases.login,
+      home: phrases.home(firstName),
+      loading: phrases.loading(username),
+      results: phrases.results(label),
+      train: phrases.train()
+    };
+    
+    this.setState({
+      einsteinText: response[bodyStatus]
+    });
+  }
+
   authenticate() {
     fetch('http://10.0.1.2:3000/authorize_user', { method: 'POST' })
       .then(res => res.json())
@@ -138,30 +169,6 @@ export default class App extends Component {
     });
   }
 
-  setLoading(username) {
-    this.setState({
-      bodyStatus: 'loading'
-    }, () => this.setEinsteinResponse(username));
-  }
-
-  setEinsteinResponse(username) {
-    const { user, einsteinResults, bodyStatus } = this.state;
-    let firstName = user.full_name.split(' ')[0];
-    let label = einsteinResults.mostPopular.label;
-
-    const response = {
-      login: phrases.login,
-      home: phrases.home(firstName),
-      loading: phrases.loading(username),
-      results: phrases.results(label),
-      train: phrases.train()
-    };
-    
-    this.setState({
-      einsteinText: response[bodyStatus]
-    });
-  }
-
   einsteinPredict(data, fromCamera=false) {
     let formData = new FormData();
     formData.append('numResults', 1);
@@ -213,14 +220,14 @@ export default class App extends Component {
           let { categoryCount, mostPopular, photos } = results;
           let analyzedData = { label, url };
           
-          if (label !== 'other') {
+          // if (label !== 'other') {
             photos.push(analyzedData);
             categoryCount[label] = categoryCount[label] + 1 || 1;
             if (categoryCount[label] > mostPopular.count) {
               mostPopular.count = categoryCount[label];
               mostPopular.label = label;
             }
-          }
+          // }
         })
         .catch(error => console.log('creating queue error: ', error))
       );
@@ -235,8 +242,7 @@ export default class App extends Component {
   }
 
   shopFor(username) {
-    this.setLoading();
-    
+    this.setLoading(username);
     this.fetchUserData(username)
       .then(userData => {
         console.log('this is userData', userData)
@@ -244,17 +250,13 @@ export default class App extends Component {
       })
       .then(data => {
         console.log('this is shopfor data', JSON.stringify(data))
-        this.setState({
-          einsteinResults: data,
-          bodyStatus: 'results'
-        }, () => this.setEinsteinResponse());
+        this.setEinsteinResults(data);
       })
       .catch(error => console.log('shopping for error: ', error));
-  }
+  }  
 
   shopBasedOnPhoto() {
     this.setLoading();
-
     var options = {
       storageOptions: {
         skipBackup: true,
@@ -266,10 +268,7 @@ export default class App extends Component {
     ImagePicker.launchCamera(options, (response)  => {
       this.labelPhotos([response.data], true)
         .then(data => {
-          this.setState({
-            einsteinResults: data,
-            bodyStatus: 'results'
-          }, () => this.setEinsteinResponse());
+          this.setEinsteinResults(data);
         });
     });
   }

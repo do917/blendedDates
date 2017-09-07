@@ -18,7 +18,7 @@ export default class Home extends Component {
       <View style={styles.container}> 
         <Button block info onPress={() => this.props.shopFor(this.props.user.username)}>
           <Text style={styles.buttonText}>
-            Shop for Me
+            Shop for me
           </Text>
         </Button>
         
@@ -32,7 +32,7 @@ export default class Home extends Component {
           <Input
             style={styles.inputField}
             autoCapitalize='none'
-            placeholder='Shop for a Friend...'
+            placeholder='Shop for a friend...'
             placeholderTextColor='#FFFFFF'
             onChangeText={text => this.props.updateQuery(text)}
             onSubmitEditing={() => {

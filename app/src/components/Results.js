@@ -33,7 +33,7 @@ export default class Results extends Component {
 
         <Button block info onPress={() => this.props.showBody('train')}>
           <Text style={styles.buttonText}>
-            Train Einstein's image analysis
+            See how Einstein did
           </Text>
         </Button>
 

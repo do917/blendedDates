@@ -13,7 +13,11 @@ export default {
     return `Welcome ${name}! How may I assist your shopping experience for today?`;
   },
   results: (label) => {
-    return `Ah, I recommend ${shoppingModels.verbs[label]} gear!`;
+    if (label !== 'other') {
+      return `Ah, I recommend ${shoppingModels.verbs[label]} gear!`;
+    } else {
+      return `Hm... I don't see anything that is related to any of REI's product...`
+    }
   },
   train: () => {
     return 'Here\'s how I categorized each picture...'; 
