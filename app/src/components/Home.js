@@ -22,10 +22,11 @@ export default class Home extends Component {
           </Text>
         </Button>
 
-        <Item rounded >
+        <Item rounded>
           <Input
             style={styles.inputField}
             autoCapitalize='none'
+            autoCorrect={false}
             placeholder='Shop for a friend...'
             placeholderTextColor='#FFFFFF'
             onChangeText={text => this.props.updateQuery(text)}

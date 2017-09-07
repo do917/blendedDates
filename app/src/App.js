@@ -24,7 +24,7 @@ export default class App extends Component {
     this.state = {
       user: { full_name: 'not logged in' },
       query: '',
-      bodyStatus: 'home',
+      bodyStatus: 'login',
       einsteinResults: {
         samples: [],
         mostPopular: {
@@ -38,7 +38,7 @@ export default class App extends Component {
       // DUMMY DATA BELOW
       // einsteinResults: {"photos":[{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/21227558_494613014236106_3681810282990010368_n.jpg"},{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/s640x640/sh0.08/e35/21224880_2358544487702994_4825951134982078464_n.jpg"},{"label":"cycle","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/s640x640/sh0.08/e35/19122202_281792375617272_571626762316808192_n.jpg"},{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/s640x640/sh0.08/e35/18646386_446623515698621_2087497716677476352_n.jpg"},{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/19050886_251722641899162_3319195467023122432_n.jpg"}],"categoryCount":{"campandhike":4,"cycle":1},"mostPopular":{"label":"campandhike","count":4}},
       // token: '240954482.61ba2c7.63c617faf63940cfb532ad7f3879427a',
-      user: {id: "240954482", username: "davidisturtle", profile_picture: "https://scontent.cdninstagram.com/t51.2885-19/s150x150/11296795_485223351641943_1257523564_a.jpg", full_name: "David Oh", bio: "🍞🍇"},
+      // user: {id: "240954482", username: "davidisturtle", profile_picture: "https://scontent.cdninstagram.com/t51.2885-19/s150x150/11296795_485223351641943_1257523564_a.jpg", full_name: "David Oh", bio: "🍞🍇"},
     };
   }
 
@@ -107,7 +107,7 @@ export default class App extends Component {
     const setCaretInt = () => {
       let set = true;
       let caret = {
-        false: '',
+        false: ' ',
         true: '_',
       }
       this.caretInterval = setInterval(() => {
@@ -134,7 +134,7 @@ export default class App extends Component {
   }
 
   authenticate() {
-    fetch('http://10.0.1.2:3000/authorize_user', { method: 'POST' })
+    fetch('https://floating-everglades-83969.herokuapp.com/api/auth', { method: 'POST' })
       .then(res => res.json())
       .then((json) => {
         SafariView.show({
@@ -146,7 +146,7 @@ export default class App extends Component {
   }
 
   fetchEinsteinToken() {
-    fetch('http://10.0.1.2:3000/api/einstein/getToken')
+    fetch('https://floating-everglades-83969.herokuapp.com/api/einstein/getToken')
       .then(res => res.json())
       .then((data) => {
         this.setState({
@@ -166,7 +166,7 @@ export default class App extends Component {
   fetchUserData(username) {
     return fetch(`https://www.instagram.com/${username}/?__a=1`)
       .then(res => res.json())
-      .then(data => data.user)
+      .then(data => data)
       .catch(error => console.log('fetching user id error: ', error));
   }
 
@@ -176,7 +176,7 @@ export default class App extends Component {
 
     if (!sample.isGeneralImage) {
       // test against REI models:
-      formData.append('modelId', 'DAKLH55EDPC2ROXNNNAJV6C2VM');
+      formData.append('modelId', 'BI2ENFQSB4KFD2DDMUPAM75AM4');
     } else {
       // test against Salesforce's general image models:
       formData.append('modelId', 'GeneralImageClassifier');
@@ -198,7 +198,7 @@ export default class App extends Component {
       body: formData,
     })
       .then(res => res.json())
-      .then(json => json.probabilities[0].label)
+      .then(data => data)
       .catch(error => console.error('einstein prediction error: ', error));
   }
 
@@ -219,7 +219,8 @@ export default class App extends Component {
       let sample = givenSamples[i];
 
       einsteinQueue.push(this.einsteinPredict(sample)
-        .then((label) => {
+        .then((data) => {
+          let { label } = data.probabilities[0];
           sample.label = label;
 
           if (label === 'other') {
@@ -251,8 +252,18 @@ export default class App extends Component {
   shopFor(username) {
     this.setLoading(username);
     this.fetchUserData(username)
-      .then(userData => this.labelSamples(userData.media.nodes))
+      .then((data) => {
+        if (!data) {
+          throw userInvalid;
+        } else {
+          return this.labelSamples(data.user.media.nodes);
+        }
+      })
       .then(data => this.setEinsteinResults(data))
+      .catch(userInvalid => {
+        this.setEinsteinResponse();
+        this.showBody('home');
+      })
       .catch(error => console.log('shopping for error: ', error));
   }
 
