@@ -138,6 +138,12 @@ export default class App extends Component {
     });
   }
 
+  setLoading(username) {
+    this.setState({
+      bodyStatus: 'loading'
+    }, () => this.setEinsteinResponse(username));
+  }
+
   setEinsteinResponse(username) {
     const { user, einsteinResults, bodyStatus } = this.state;
     let firstName = user.full_name.split(' ')[0];
@@ -229,9 +235,7 @@ export default class App extends Component {
   }
 
   shopFor(username) {
-    this.setState({
-      bodyStatus: 'loading'
-    }, () => this.setEinsteinResponse(username));
+    this.setLoading();
     
     this.fetchUserData(username)
       .then(userData => {
@@ -249,33 +253,24 @@ export default class App extends Component {
   }
 
   shopBasedOnPhoto() {
+    this.setLoading();
+
     var options = {
-      title: 'Select',
       storageOptions: {
         skipBackup: true,
         path: 'images'
       },
-      quality: 0
+      quality: 0 //set low to meet 5mb limit of Einstein API
     };
 
-    ImagePicker.showImagePicker(options, (response) => {
-      console.log('Response = ', response);
-
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      }
-      else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      }      
-      else { 
-        this.labelPhotos([response.data], true)
-          .then(data => {
-            this.setState({
-              einsteinResults: data,
-              bodyStatus: 'results'
-            }, () => this.setEinsteinResponse());
-          });
-      }
+    ImagePicker.launchCamera(options, (response)  => {
+      this.labelPhotos([response.data], true)
+        .then(data => {
+          this.setState({
+            einsteinResults: data,
+            bodyStatus: 'results'
+          }, () => this.setEinsteinResponse());
+        });
     });
   }
 
