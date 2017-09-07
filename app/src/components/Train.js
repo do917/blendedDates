@@ -1,28 +1,30 @@
 import React, { Component } from 'react';
 import {
-  AppRegistry,
   StyleSheet,
   Text,
   View,
-  ScrollView
+  ScrollView,
 } from 'react-native';
-
 import { Button } from 'native-base';
 import TrainPhoto from './TrainPhoto';
 
-
 export default class Train extends Component {
   render() {
-    return(
+    return (
       <View style={styles.container}>
-        <View style={styles.photos} onLayout={e => this.props.setTrainPhotoWidth(e.nativeEvent.layout.height)}>
+        <View style={styles.photos}
+              onLayout={e => this.props.setTrainPhotoWidth(e.nativeEvent.layout.height)}
+        >
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
             {this.props.einsteinResults.samples.map((sample, i) => {
-              return <TrainPhoto key={i} sample={sample} trainPhotowidth={this.props.trainPhotowidth}/>;
+              return <TrainPhoto
+                       key={i}
+                       sample={sample}
+                       trainPhotowidth={this.props.trainPhotowidth}
+                     />;
             })}
           </ScrollView>
         </View>
-        
         <View style={styles.navigation}>
           <Button block info onPress={() => this.props.showBody('home')}>
             <Text style={styles.buttonText}>
@@ -31,25 +33,25 @@ export default class Train extends Component {
           </Button>
         </View>
       </View>
-    )
+    );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
   },
   photos: {
     flex: 2,
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   navigation: {
     flex: 1,
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
   },
   buttonText: {
     fontFamily: 'Gill Sans',
     fontSize: 18,
-    color: 'white'
-  }
+    color: 'white',
+  },
 });

@@ -1,25 +1,21 @@
 import React, { Component } from 'react';
 import {
-  AppRegistry,
   StyleSheet,
   Text,
   View,
-  Image,
-  Dimensions,
 } from 'react-native';
-
 import { Button, Item, Input } from 'native-base';
 
 export default class Home extends Component {
   render() {
-    return(
-      <View style={styles.container}> 
+    return (
+      <View style={styles.container}>
         <Button block info onPress={() => this.props.shopFor(this.props.user.username)}>
           <Text style={styles.buttonText}>
             Shop for me
           </Text>
         </Button>
-        
+
         <Button block info onPress={this.props.shopBasedOnPhoto}>
           <Text style={styles.buttonText}>
             Shop based on a photo
@@ -40,9 +36,8 @@ export default class Home extends Component {
             }}
           />
         </Item>
-        
       </View>
-    )
+    );
   }
 }
 
@@ -50,18 +45,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'space-around'
+    justifyContent: 'space-around',
   },
   buttonText: {
     fontFamily: 'Gill Sans',
     fontSize: 18,
-    color: '#FFFFFF'
+    color: '#FFFFFF',
   },
   inputField: {
     fontFamily: 'Gill Sans',
     fontSize: 18,
     color: '#FFFFFF',
     textAlign: 'center',
-    height: 40
-  }
+    height: 40,
+  },
 });
