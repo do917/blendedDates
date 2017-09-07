@@ -6,12 +6,13 @@ import {
   View,
   Image
 } from 'react-native';
-let width;
+
 
 import shoppingModels from '../shoppingModels';
 
 export default class TrainPhoto extends Component {
   render() {
+    let width;
     let uri = this.props.sample.thumbnail_src;
     if (this.props.sample.fromCamera) {
       uri = `data:image/gif;base64,${this.props.sample.data}`;
@@ -47,7 +48,7 @@ const styles = StyleSheet.create({
     width: undefined,
     height: undefined,
     alignSelf: 'stretch',
-    resizeMode: 'cover',
+    resizeMode: 'cover'
   },
   text: {
     fontFamily: 'Gill Sans',

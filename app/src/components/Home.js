@@ -10,8 +10,6 @@ import {
 
 import { Button, Item, Input } from 'native-base';
 
-
-
 export default class Home extends Component {
   render() {
     return(
@@ -59,11 +57,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#FFFFFF'
   },
-  // inputContainerText: {
-  //   fontFamily: 'Gill Sans',
-  //   fontSize: 18,
-  //   textAlign: 'center',
-  // },
   inputField: {
     fontFamily: 'Gill Sans',
     fontSize: 18,

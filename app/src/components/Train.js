@@ -37,25 +37,15 @@ export default class Train extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    // borderColor: 'blue',
-    // borderWidth: 1,
-    // borderStyle: 'solid'
+    flex: 1
   },
   photos: {
     flex: 2,
-    flexDirection: 'row',
-    
-    // borderColor: 'green',
-    // borderWidth: 1,
-    // borderStyle: 'solid'
+    flexDirection: 'row'
   },
   navigation: {
     flex: 1,
-    justifyContent: 'flex-end',
-    // borderColor: 'red',
-    // borderWidth: 1,
-    // borderStyle: 'solid'
+    justifyContent: 'flex-end'
   },
   buttonText: {
     fontFamily: 'Gill Sans',

@@ -39,8 +39,7 @@ const styles = StyleSheet.create({
     flex: 2
   },
   background: {
-    flex: 1,
-    // padding: 10
+    flex: 1
   },
   einstein: {
     flex: 1,
