@@ -1,49 +1,48 @@
 import React, { Component } from 'react';
-
 import {
-  AppRegistry,
   StyleSheet,
-  Text,
   View,
   Image,
-  StatusBar
+  StatusBar,
 } from 'react-native';
+
+const imageHeader = require('../static/header.png');
 
 export default class HeaderExample extends Component {
   render() {
-    return(
+    return (
       <View style={styles.container}>
         <View style={styles.statusBar}>
           <StatusBar barStyle="light-content"/>
         </View>
         <View style={styles.header}>
           <Image
-            source={require('../static/header.png')}
+            source={imageHeader}
             style={styles.imageHeader}
           />
         </View>
       </View>
-    )
+    );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
     height: 90,
-    backgroundColor: '#000'
+    backgroundColor: '#000',
   },
   statusBar: {
-    height: 18
+    height: 18,
   },
   header: {
     flex: 1,
-    alignItems: 'center'
+    alignItems: 'center',
   },
   imageHeader: {
     flex: 1,
     width: undefined,
     height: undefined,
     alignSelf: 'stretch',
-    resizeMode: 'contain'
-  }
+    resizeMode: 'contain',
+  },
 });

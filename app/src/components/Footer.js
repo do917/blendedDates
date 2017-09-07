@@ -1,23 +1,22 @@
 import React, { Component } from 'react';
 import {
-  AppRegistry,
   StyleSheet,
-  Text,
   View,
-  Image
+  Image,
 } from 'react-native';
 
+const imageFooter = require('../static/footer.png');
 
 export default class Footer extends Component {
   render() {
-    return(
+    return (
       <View style={styles.container}>
         <Image
-          source={require('../static/footer.png')}
+          source={imageFooter}
           style={styles.footer}
         />
       </View>
-    )
+    );
   }
 }
 
@@ -27,7 +26,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#000000',
     justifyContent: 'center',
     alignItems: 'center',
-    
     paddingVertical: 4,
   },
   footer: {
@@ -35,6 +33,6 @@ const styles = StyleSheet.create({
     width: undefined,
     height: undefined,
     alignSelf: 'stretch',
-    resizeMode: 'contain'
+    resizeMode: 'contain',
   },
 });

@@ -1,25 +1,24 @@
 import React, { Component } from 'react';
 import {
-  AppRegistry,
   StyleSheet,
   Text,
   View,
-  Image,
-  ImageBackground
+  ImageBackground,
 } from 'react-native';
 
-import phrases from '../einsteinPhrases';
+const imageBackground = require('../static/background.png');
+const imageEinstein = require('../static/einstein.png');
 
 export default class Einstein extends Component {
   render() {
-    return(
+    return (
       <View style={styles.container}>
         <ImageBackground
-          source={require('../static/background.png')}
+          source={imageBackground}
           style={styles.background}
         >
           <ImageBackground
-            source={require('../static/einstein.png')}
+            source={imageEinstein}
             style={styles.einstein}
           >
             <View style={styles.textContainer}>
@@ -30,26 +29,25 @@ export default class Einstein extends Component {
           </ImageBackground>
         </ImageBackground>
       </View>
-    )
+    );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 2
+    flex: 2,
   },
   background: {
     flex: 1,
-    // padding: 10
   },
   einstein: {
     flex: 1,
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
   },
   textContainer: {
     backgroundColor: 'rgba(0, 0, 0, 0.3)',
     paddingVertical: 2,
-    paddingHorizontal: 15
+    paddingHorizontal: 15,
   },
   text: {
     fontFamily: 'Courier',
@@ -57,11 +55,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: 'left',
     textAlignVertical: 'center',
-    color: '#FFFFFF'
+    color: '#FFFFFF',
   },
   caret: {
     fontFamily: 'Courier',
     fontSize: 18,
-    color: '#bff442'
-  }
+    color: '#bff442',
+  },
 });

@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
 import {
-  AppRegistry,
   StyleSheet,
   Text,
   View,
-  Image
+  Image,
 } from 'react-native';
-let width;
-
 import shoppingModels from '../shoppingModels';
 
 export default class TrainPhoto extends Component {
@@ -17,16 +14,16 @@ export default class TrainPhoto extends Component {
       uri = `data:image/gif;base64,${this.props.sample.data}`;
     }
 
-    let label = this.props.sample.label;
-    let displayLabel = shoppingModels.nouns[label]
+    const { label } = this.props.sample;
+    let displayLabel = shoppingModels.nouns[label];
     if (this.props.sample.isGeneralImage) {
-      displayLabel = label;
+      displayLabel = label.split(', ')[0].replace(/\b\w/g, l => l.toUpperCase());
     }
 
-    return(
+    return (
       <View style={[styles.container, { width: this.props.trainPhotowidth }]}>
         <Image
-          source={{ uri: uri }}
+          source={{ uri }}
           style={styles.photo}
           borderRadius={8}
         />
@@ -34,13 +31,13 @@ export default class TrainPhoto extends Component {
           {displayLabel}
         </Text>
       </View>
-    )
+    );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 2
+    paddingHorizontal: 2,
   },
   photo: {
     flex: 1,
@@ -52,6 +49,6 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: 'Gill Sans',
     textAlign: 'center',
-    color: '#FFFFFF'
-  }
+    color: '#FFFFFF',
+  },
 });
