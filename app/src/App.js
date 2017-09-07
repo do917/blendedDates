@@ -12,16 +12,15 @@ import {
 import SafariView from 'react-native-safari-view';
 import ImagePicker from 'react-native-image-picker';
 
-
 import Header from './components/Header';
 import Einstein from './components/Einstein';
 import Login from './components/Login';
 import Home from './components/Home';
+import Loading from './components/Loading';
 import Results from './components/Results';
 import Train from './components/Train';
 import Footer from './components/Footer';
 
-import Loading from './components/Loading';
 import CameraView from './components/CameraView';
 import phrases from './einsteinPhrases';
 
@@ -32,14 +31,20 @@ export default class App extends Component {
       user: {},
       query: '',
       bodyStatus: 'login',
-      einsteinText: phrases.login,
       einsteinResults: {
-        photos: [],
+        samples: [],
         mostPopular: {
-          label: ''
+          label: '',
+          count: 0
         }
       },
-      einsteinResults: {"photos":[{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/21227558_494613014236106_3681810282990010368_n.jpg"},{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/s640x640/sh0.08/e35/21224880_2358544487702994_4825951134982078464_n.jpg"},{"label":"cycle","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/s640x640/sh0.08/e35/19122202_281792375617272_571626762316808192_n.jpg"},{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/s640x640/sh0.08/e35/18646386_446623515698621_2087497716677476352_n.jpg"},{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/19050886_251722641899162_3319195467023122432_n.jpg"}],"categoryCount":{"campandhike":4,"cycle":1},"mostPopular":{"label":"campandhike","count":4}},
+      einsteinText: null,
+      trainPhotowidth: null,
+      setTrainPhotoWidth: null,
+      user: { full_name: 'not logged in'},
+      //bodyStatus, user, query, einsteinResults, einsteinText, setTrainPhotoWidth, trainPhotowidth
+
+      // einsteinResults: {"photos":[{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/21227558_494613014236106_3681810282990010368_n.jpg"},{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/s640x640/sh0.08/e35/21224880_2358544487702994_4825951134982078464_n.jpg"},{"label":"cycle","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/s640x640/sh0.08/e35/19122202_281792375617272_571626762316808192_n.jpg"},{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/s640x640/sh0.08/e35/18646386_446623515698621_2087497716677476352_n.jpg"},{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/19050886_251722641899162_3319195467023122432_n.jpg"}],"categoryCount":{"campandhike":4,"cycle":1},"mostPopular":{"label":"campandhike","count":4}},
       // token: '240954482.61ba2c7.63c617faf63940cfb532ad7f3879427a',
       user: {id: "240954482", username: "davidisturtle", profile_picture: "https://scontent.cdninstagram.com/t51.2885-19/s150x150/11296795_485223351641943_1257523564_a.jpg", full_name: "David Oh", bio: "🍞🍇"},
     }
@@ -59,6 +64,24 @@ export default class App extends Component {
 
   updateQuery(query) {
     this.setState({ query });
+  }
+
+  setTokenListener() {
+    Linking.addEventListener('url', event => {
+      const token = event.url.split('token=')[1];
+
+      this.fetchUserInfo(token)
+        .then(results => {
+          console.log('set token results', results)
+          this.setState({
+            instaToken: token,
+            bodyStatus: 'home',
+            user: results.data
+          }, () => this.setEinsteinResponse());
+          SafariView.dismiss();
+        })
+        .catch(error => console.log('setting token listener error: ', error));
+    });
   }
 
   setTrainPhotoWidth(trainPhotowidth) {
@@ -82,7 +105,6 @@ export default class App extends Component {
     const { user, einsteinResults, bodyStatus } = this.state;
     let firstName = user.full_name.split(' ')[0];
     let label = einsteinResults.mostPopular.label;
-
     const responses = {
       login: phrases.login,
       home: phrases.home(firstName),
@@ -91,20 +113,19 @@ export default class App extends Component {
       train: phrases.train()
     };
     let response = responses[bodyStatus];
-
-
     let counter = 0;
-    let typing = setInterval(() => {
+    
+    clearInterval(this.typingInterval);
+    this.typingInterval = setInterval(() => {
       this.setState({
         einsteinText: response.slice(0, counter)
       });
       counter++;
       if (counter > response.length) {
-        clearInterval(typing);
+        console.log('clearing!!')
+        clearInterval(this.typingInterval);
       }
-    }, 40);
-    
-    
+    }, 25);
   }
 
   authenticate() {
@@ -164,39 +185,23 @@ export default class App extends Component {
   //     .catch(error => console.log('fetching photos error: ', error));
   // }
 
-  setTokenListener() {
-    Linking.addEventListener('url', event => {
-      const token = event.url.split('token=')[1];
 
-      this.fetchUserInfo(token)
-        .then(results => {
-          console.log('set token results', results)
-          this.setState({
-            instaToken: token,
-            bodyStatus: 'home',
-            user: results.data
-          }, () => this.setEinsteinResponse());
-          SafariView.dismiss();
-        })
-        .catch(error => console.log('setting token listener error: ', error));
-    });
-  }
-
-  einsteinPredict(data, fromCamera=false, generalImage=false) {
+  einsteinPredict(sample) {
     let formData = new FormData();
     formData.append('numResults', 1);
     
-    if (!generalImage) {
-      formData.append('modelId', 'DAKLH55EDPC2ROXNNNAJV6C2VM');
+    if (!sample.isGeneralImage) {
+      //test against REI models:
+      formData.append('modelId', 'DAKLH55EDPC2ROXNNNAJV6C2VM'); 
     } else {
+      //test against Salesforce's general image models:
       formData.append('modelId', 'GeneralImageClassifier');
     }
     
-    if (fromCamera) {
-      // formData.append('sampleBase64Content', data);
-      formData.append('sampleContent', data);
+    if (sample.fromCamera) {
+      formData.append('sampleBase64Content', sample.data);
     } else {
-      formData.append('sampleLocation', data);
+      formData.append('sampleLocation', sample.display_src);
     }
     
     return fetch('https://api.einstein.ai/v2/vision/predict', {
@@ -210,61 +215,54 @@ export default class App extends Component {
     })
       .then(res => res.json())
       .then(json => {
-        let firstLabel = json.probabilities[0].label;
-
-          return json.probabilities[0].label;
-        // if (firstLabel === 'other' && !generalImage) {
-        //   return einsteinPredict(data, fromCamera, true);
-        // } else {
-        // }
-
+        return json.probabilities[0].label;
       })
       .catch(error => console.error('einstein prediction error: ', error));
   }
 
-  labelPhotos(urls, fromCamera=false) {
+  labelSamples(givenSamples) {
     let results = {
-      photos: [],
+      samples: [],
       categoryCount: {},
       mostPopular: {
         label: null,
         count: 0
       }
     };
+    let { categoryCount, mostPopular, samples } = results;
     let einsteinQueue = [];
+    let einsteinQueueForGeneral = [];
 
-    for (let i = 0; i < urls.length; i++) {
-      let url = urls[i];
-      if (!fromCamera) {
-        url = urls[i].thumbnail_src;
-      }
+    for (let i = 0; i < givenSamples.length; i++) {
+      let sample = givenSamples[i];
 
-      einsteinQueue.push(this.einsteinPredict(url, fromCamera)
+      einsteinQueue.push(this.einsteinPredict(sample)
         .then(label => {
-          let { categoryCount, mostPopular, photos } = results;
-          let analyzedData = { label, url };
-          
-          categoryCount[label] = categoryCount[label] + 1 || 1;
-          if (categoryCount[label] > mostPopular.count) {
-            mostPopular.count = categoryCount[label];
-            mostPopular.label = label;
+          sample.label = label;
+
+          if (label === 'other') {
+            sample.isGeneralImage = true;
+            einsteinQueueForGeneral.push(this.einsteinPredict(sample)
+              .then(label => {
+                sample.label = label;
+                // samples.push(sample);
+              })
+            );
+          } else {
+            categoryCount[label] = categoryCount[label] + 1 || 1;
+            if (categoryCount[label] > mostPopular.count) {
+              mostPopular.count = categoryCount[label];
+              mostPopular.label = label;
+            }
           }
-          
-          // if (label !== 'other') {
-            photos.push(analyzedData);
-          // } else {
-          //   einsteinPredict(url, fromCamera, true) // use Salesforce's general model to predict
-          //     .then(label => {
-          //       console.log('general label', label)
-          //       photos.push(analyzedData);
-          //     });
-          // }
+            samples.push(sample);
         })
         .catch(error => console.log('creating queue error: ', error))
       );
     }
 
     return Promise.all(einsteinQueue)
+      .then(() => Promise.all(einsteinQueueForGeneral))
       .then(() => results)
       .catch(error => console.log('queueing einstein calls error: ', error));
   }
@@ -274,10 +272,10 @@ export default class App extends Component {
     this.fetchUserData(username)
       .then(userData => {
         console.log('this is userData', userData)
-        return this.labelPhotos(userData.media.nodes);
+        return this.labelSamples(userData.media.nodes);
       })
       .then(data => {
-        console.log('this is shopfor data', JSON.stringify(data))
+        // console.log('this is shopfor data', JSON.stringify(data))
         this.setEinsteinResults(data);
       })
       .catch(error => console.log('shopping for error: ', error));
@@ -285,18 +283,16 @@ export default class App extends Component {
 
   shopBasedOnPhoto() {
     const options = {
-      storageOptions: {
-        skipBackup: true,
-        path: 'images'
-      },
       quality: 0 //set low to meet 5mb limit of Einstein API
     };
 
     ImagePicker.launchCamera(options, response  => {
       if (response.data) {
-        console.log('THE RESPONSES', response.uri)
         this.setLoading();
-        this.labelPhotos([response.uri], true)
+    
+        response.fromCamera = true;
+        console.log('DA RESPONSE', response)
+        this.labelSamples([response])
           .then(data => {
             this.setEinsteinResults(data);
           });

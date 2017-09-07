@@ -16,7 +16,7 @@ export default {
     if (label !== 'other') {
       return `Ah, I recommend ${shoppingModels.verbs[label]} gear!`;
     } else {
-      return `Hm... I don't see anything that is related to any of REI's product...`
+      return `Hm... I don't see anything that is related to any of REI's products...`
     }
   },
   train: () => {

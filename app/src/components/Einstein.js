@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
   textContainer: {
     backgroundColor: 'rgba(0, 0, 0, 0.3)',
     paddingVertical: 2,
-    paddingHorizontal: 10
+    paddingHorizontal: 15
   },
   text: {
     fontFamily: 'Courier',
