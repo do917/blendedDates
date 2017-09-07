@@ -107,7 +107,7 @@ export default class App extends Component {
     const setCaretInt = () => {
       let set = true;
       let caret = {
-        false: '',
+        false: ' ',
         true: '_',
       }
       this.caretInterval = setInterval(() => {
@@ -134,7 +134,7 @@ export default class App extends Component {
   }
 
   authenticate() {
-    fetch('http://10.0.1.2:3000/authorize_user', { method: 'POST' })
+    fetch('https://floating-everglades-83969.herokuapp.com/api/auth', { method: 'POST' })
       .then(res => res.json())
       .then((json) => {
         SafariView.show({
@@ -146,7 +146,7 @@ export default class App extends Component {
   }
 
   fetchEinsteinToken() {
-    fetch('http://10.0.1.2:3000/api/einstein/getToken')
+    fetch('https://floating-everglades-83969.herokuapp.com/api/einstein/getToken')
       .then(res => res.json())
       .then((data) => {
         this.setState({
@@ -166,7 +166,7 @@ export default class App extends Component {
   fetchUserData(username) {
     return fetch(`https://www.instagram.com/${username}/?__a=1`)
       .then(res => res.json())
-      .then(data => data.user)
+      .then(data => data)
       .catch(error => console.log('fetching user id error: ', error));
   }
 
@@ -176,7 +176,7 @@ export default class App extends Component {
 
     if (!sample.isGeneralImage) {
       // test against REI models:
-      formData.append('modelId', 'DAKLH55EDPC2ROXNNNAJV6C2VM');
+      formData.append('modelId', 'BI2ENFQSB4KFD2DDMUPAM75AM4');
     } else {
       // test against Salesforce's general image models:
       formData.append('modelId', 'GeneralImageClassifier');
@@ -198,7 +198,7 @@ export default class App extends Component {
       body: formData,
     })
       .then(res => res.json())
-      .then(json => json.probabilities[0].label)
+      .then(data => data)
       .catch(error => console.error('einstein prediction error: ', error));
   }
 
@@ -219,7 +219,8 @@ export default class App extends Component {
       let sample = givenSamples[i];
 
       einsteinQueue.push(this.einsteinPredict(sample)
-        .then((label) => {
+        .then((data) => {
+          let { label } = data.probabilities[0];
           sample.label = label;
 
           if (label === 'other') {
@@ -227,8 +228,8 @@ export default class App extends Component {
             // if an image doesn't match one of REI's model,
             // it will be queued again to be analyzed with Salesforce's GeneralImageClassifier
             einsteinQueueGeneral.push(this.einsteinPredict(sample)
-              .then((generalLabel) => {
-                sample.label = generalLabel;
+              .then((data) => {
+                sample.label = data.probabilities[0].label;
               }));
           } else {
             categoryCount[label] = categoryCount[label] + 1 || 1;
@@ -251,8 +252,18 @@ export default class App extends Component {
   shopFor(username) {
     this.setLoading(username);
     this.fetchUserData(username)
-      .then(userData => this.labelSamples(userData.media.nodes))
+      .then((data) => {
+        if (!data) {
+          throw userInvalid;
+        } else {
+          return this.labelSamples(data.user.media.nodes);
+        }
+      })
       .then(data => this.setEinsteinResults(data))
+      .catch(userInvalid => {
+        this.setEinsteinResponse();
+        this.showBody('home');
+      })
       .catch(error => console.log('shopping for error: ', error));
   }
 

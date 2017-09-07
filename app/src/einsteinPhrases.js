@@ -10,7 +10,11 @@ export default {
     }
   },
   home: (name) => {
-    return `Welcome ${name.replace(/\b\w/g, l => l.toUpperCase())}! How may I assist your shopping experience for today?`;
+    if (name === 'invalidUser') {
+      return `Sorry... it looks like I can't find that user on Instagram...`;
+    } else {
+      return `Welcome ${name.replace(/\b\w/g, l => l.toUpperCase())}! How may I assist your shopping experience for today?`;
+    }
   },
   results: (label) => {
     if (label !== 'other') {
