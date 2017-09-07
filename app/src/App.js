@@ -12,6 +12,7 @@ import {
 import SafariView from 'react-native-safari-view';
 import ImagePicker from 'react-native-image-picker';
 
+
 import Header from './components/Header';
 import Einstein from './components/Einstein';
 import Login from './components/Login';
@@ -30,7 +31,7 @@ export default class App extends Component {
     this.state = {
       user: {},
       query: '',
-      bodyStatus: 'home',
+      bodyStatus: 'login',
       einsteinText: phrases.login,
       einsteinResults: {
         photos: [],
@@ -47,6 +48,7 @@ export default class App extends Component {
   componentWillMount() {
     this.setTokenListener();
     this.fetchEinsteinToken();
+    this.setEinsteinResponse();
   }
 
   showBody(which) {
@@ -81,17 +83,28 @@ export default class App extends Component {
     let firstName = user.full_name.split(' ')[0];
     let label = einsteinResults.mostPopular.label;
 
-    const response = {
+    const responses = {
       login: phrases.login,
       home: phrases.home(firstName),
       loading: phrases.loading(username),
       results: phrases.results(label),
       train: phrases.train()
     };
+    let response = responses[bodyStatus];
+
+
+    let counter = 0;
+    let typing = setInterval(() => {
+      this.setState({
+        einsteinText: response.slice(0, counter)
+      });
+      counter++;
+      if (counter > response.length) {
+        clearInterval(typing);
+      }
+    }, 40);
     
-    this.setState({
-      einsteinText: response[bodyStatus]
-    });
+    
   }
 
   authenticate() {
@@ -169,17 +182,22 @@ export default class App extends Component {
     });
   }
 
-  einsteinPredict(data, fromCamera=false) {
+  einsteinPredict(data, fromCamera=false, generalImage=false) {
     let formData = new FormData();
     formData.append('numResults', 1);
-    formData.append('modelId', '5QGJG2X4DQB7AXGA47B3VSXDAE');
-    if (fromCamera) {
-      formData.append('sampleBase64Content', data);
+    
+    if (!generalImage) {
+      formData.append('modelId', 'DAKLH55EDPC2ROXNNNAJV6C2VM');
     } else {
-      console.log('should not get here')
+      formData.append('modelId', 'GeneralImageClassifier');
+    }
+    
+    if (fromCamera) {
+      // formData.append('sampleBase64Content', data);
+      formData.append('sampleContent', data);
+    } else {
       formData.append('sampleLocation', data);
     }
-    // for general image, modelId is 'GeneralImageClassifier'
     
     return fetch('https://api.einstein.ai/v2/vision/predict', {
       method: 'POST',
@@ -192,7 +210,14 @@ export default class App extends Component {
     })
       .then(res => res.json())
       .then(json => {
-        return json.probabilities[0].label;
+        let firstLabel = json.probabilities[0].label;
+
+          return json.probabilities[0].label;
+        // if (firstLabel === 'other' && !generalImage) {
+        //   return einsteinPredict(data, fromCamera, true);
+        // } else {
+        // }
+
       })
       .catch(error => console.error('einstein prediction error: ', error));
   }
@@ -216,17 +241,23 @@ export default class App extends Component {
 
       einsteinQueue.push(this.einsteinPredict(url, fromCamera)
         .then(label => {
-          console.log('this is the label', label)
           let { categoryCount, mostPopular, photos } = results;
           let analyzedData = { label, url };
           
+          categoryCount[label] = categoryCount[label] + 1 || 1;
+          if (categoryCount[label] > mostPopular.count) {
+            mostPopular.count = categoryCount[label];
+            mostPopular.label = label;
+          }
+          
           // if (label !== 'other') {
             photos.push(analyzedData);
-            categoryCount[label] = categoryCount[label] + 1 || 1;
-            if (categoryCount[label] > mostPopular.count) {
-              mostPopular.count = categoryCount[label];
-              mostPopular.label = label;
-            }
+          // } else {
+          //   einsteinPredict(url, fromCamera, true) // use Salesforce's general model to predict
+          //     .then(label => {
+          //       console.log('general label', label)
+          //       photos.push(analyzedData);
+          //     });
           // }
         })
         .catch(error => console.log('creating queue error: ', error))
@@ -234,10 +265,7 @@ export default class App extends Component {
     }
 
     return Promise.all(einsteinQueue)
-      .then(() => {
-        // console.log('done labeling photos', JSON.stringify(results));
-        return results;
-      })
+      .then(() => results)
       .catch(error => console.log('queueing einstein calls error: ', error));
   }
 
@@ -256,8 +284,7 @@ export default class App extends Component {
   }  
 
   shopBasedOnPhoto() {
-    this.setLoading();
-    var options = {
+    const options = {
       storageOptions: {
         skipBackup: true,
         path: 'images'
@@ -265,14 +292,17 @@ export default class App extends Component {
       quality: 0 //set low to meet 5mb limit of Einstein API
     };
 
-    ImagePicker.launchCamera(options, (response)  => {
-      this.labelPhotos([response.data], true)
-        .then(data => {
-          this.setEinsteinResults(data);
-        });
+    ImagePicker.launchCamera(options, response  => {
+      if (response.data) {
+        console.log('THE RESPONSES', response.uri)
+        this.setLoading();
+        this.labelPhotos([response.uri], true)
+          .then(data => {
+            this.setEinsteinResults(data);
+          });
+      }
     });
   }
-
   
 
   render() {

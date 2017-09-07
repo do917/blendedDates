@@ -27,7 +27,10 @@ export default class Results extends Component {
       <View style={styles.container}>
         <Button block info onPress={this.takeShopping.bind(this)}>
           <Text style={styles.buttonText}>
-            Get {label} gear from REI
+            {label !== 'Other'
+              ? 'Get ' + label + ' gear from REI'
+              : 'See whats cool at REI!'
+            }
           </Text>
         </Button>
 

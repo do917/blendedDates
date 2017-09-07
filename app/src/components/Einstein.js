@@ -23,7 +23,7 @@ export default class Einstein extends Component {
             style={styles.einstein}
           >
             <View style={styles.textContainer}>
-              <Text style={styles.text}  adjustsFontSizeToFit={true}>
+              <Text style={styles.text} adjustsFontSizeToFit={true}>
                 {this.props.einsteinText}
               </Text>
             </View>
@@ -52,11 +52,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10
   },
   text: {
-    fontFamily: 'Gill Sans',
-    height: 75,
-    fontSize: 20,
+    fontFamily: 'Courier',
+    height: 85,
+    fontSize: 18,
     textAlign: 'left',
     textAlignVertical: 'center',
     color: '#FFFFFF'
   },
+  caret: {
+    fontFamily: 'Courier',
+    fontSize: 18,
+    color: '#bff442'
+  }
 });
