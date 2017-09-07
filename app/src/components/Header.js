@@ -29,10 +29,11 @@ export default class HeaderExample extends Component {
 const styles = StyleSheet.create({
   container: {
     height: 90,
-    backgroundColor: '#000',
+    backgroundColor: '#141414',
   },
   statusBar: {
     height: 18,
+    backgroundColor: '#141414',
   },
   header: {
     flex: 1,
