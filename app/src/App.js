@@ -35,9 +35,6 @@ export default class App extends Component {
       einsteinText: null,
       trainPhotowidth: null,
       setTrainPhotoWidth: null,
-      // DUMMY DATA BELOW
-      // einsteinResults: {"photos":[{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/21227558_494613014236106_3681810282990010368_n.jpg"},{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/s640x640/sh0.08/e35/21224880_2358544487702994_4825951134982078464_n.jpg"},{"label":"cycle","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/s640x640/sh0.08/e35/19122202_281792375617272_571626762316808192_n.jpg"},{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/s640x640/sh0.08/e35/18646386_446623515698621_2087497716677476352_n.jpg"},{"label":"campandhike","url":"https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/19050886_251722641899162_3319195467023122432_n.jpg"}],"categoryCount":{"campandhike":4,"cycle":1},"mostPopular":{"label":"campandhike","count":4}},
-      // user: {id: "240954482", username: "davidisturtle", profile_picture: "https://scontent.cdninstagram.com/t51.2885-19/s150x150/11296795_485223351641943_1257523564_a.jpg", full_name: "David Oh", bio: "🍞🍇"},
     };
   }
 
@@ -105,10 +102,10 @@ export default class App extends Component {
     const response = responses[bodyStatus];
     const setCaretInt = () => {
       let set = true;
-      let caret = {
+      const caret = {
         false: ' ',
         true: '_',
-      }
+      };
       this.caretInterval = setInterval(() => {
         this.setState({
           einsteinText: response + caret[set],
@@ -219,7 +216,7 @@ export default class App extends Component {
 
       einsteinQueue.push(this.einsteinPredict(sample)
         .then((data) => {
-          let { label } = data.probabilities[0];
+          const { label } = data.probabilities[0];
           sample.label = label;
 
           if (label === 'other') {
@@ -227,8 +224,8 @@ export default class App extends Component {
             // if an image doesn't match one of REI's model,
             // it will be queued again to be analyzed with Salesforce's GeneralImageClassifier
             einsteinQueueGeneral.push(this.einsteinPredict(sample)
-              .then((data) => {
-                sample.label = data.probabilities[0].label;
+              .then((generalData) => {
+                sample.label = generalData.probabilities[0].label;
               }));
           } else {
             categoryCount[label] = categoryCount[label] + 1 || 1;
