@@ -3,6 +3,8 @@ package com.blendeddates;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import cl.json.RNSharePackage;
+import com.BV.LinearGradient.LinearGradientPackage;
 import com.imagepicker.ImagePickerPackage;
 import com.react.rnspinkit.RNSpinkitPackage;
 import com.lwansbrough.RCTCamera.RCTCameraPackage;
@@ -26,6 +28,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNSharePackage(),
+            new LinearGradientPackage(),
             new ImagePickerPackage(),
             new RNSpinkitPackage(),
             new RCTCameraPackage()
