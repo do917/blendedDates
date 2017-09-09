@@ -35,8 +35,7 @@ export default class App extends Component {
       einsteinText: null,
       trainPhotowidth: null,
       setTrainPhotoWidth: null,
-
-      scanning: 'test',
+      scanning: null,
     };
   }
 
