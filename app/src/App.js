@@ -35,6 +35,8 @@ export default class App extends Component {
       einsteinText: null,
       trainPhotowidth: null,
       setTrainPhotoWidth: null,
+
+      scanning: 'test',
     };
   }
 
@@ -172,7 +174,7 @@ export default class App extends Component {
 
     if (!sample.isGeneralImage) {
       // test against REI models:
-      formData.append('modelId', 'BI2ENFQSB4KFD2DDMUPAM75AM4');
+      formData.append('modelId', 'DE6BIURXD7STLKA3S5LGGRFZ4Q');
     } else {
       // test against Salesforce's general image models:
       formData.append('modelId', 'GeneralImageClassifier');
@@ -183,6 +185,10 @@ export default class App extends Component {
     } else {
       formData.append('sampleLocation', sample.display_src);
     }
+
+    this.setState({
+      scanning: sample
+    });
 
     return fetch('https://api.einstein.ai/v2/vision/predict', {
       method: 'POST',
@@ -285,6 +291,8 @@ export default class App extends Component {
       einsteinText,
       trainPhotowidth,
       einsteinResults,
+
+      scanning,
     } = this.state;
 
     const login = <Login
@@ -297,7 +305,7 @@ export default class App extends Component {
                   updateQuery={this.updateQuery.bind(this)}
                   shopBasedOnPhoto={this.shopBasedOnPhoto.bind(this)}
                  />;
-    const loading = <Loading/>;
+    const loading = <Loading scanning={scanning}/>;
     const results = <Results
                       showBody={this.showBody.bind(this)}
                       einsteinResults={einsteinResults}
