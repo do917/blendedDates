@@ -286,12 +286,11 @@ export default class App extends Component {
     const {
       user,
       query,
+      scanning,
       bodyStatus,
       einsteinText,
       trainPhotowidth,
       einsteinResults,
-
-      scanning,
     } = this.state;
 
     const login = <Login
