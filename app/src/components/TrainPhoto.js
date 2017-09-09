@@ -4,6 +4,7 @@ import {
   Text,
   View,
   Image,
+  TouchableHighlight,
 } from 'react-native';
 import shoppingModels from '../shoppingModels';
 
@@ -21,16 +22,18 @@ export default class TrainPhoto extends Component {
     }
 
     return (
-      <View style={[styles.container, { width: this.props.trainPhotowidth }]}>
-        <Image
-          source={{ uri }}
-          style={styles.photo}
-          borderRadius={8}
-        />
-        <Text style={styles.text}>
-          {displayLabel}
-        </Text>
-      </View>
+      <TouchableHighlight>
+        <View style={[styles.container, { width: this.props.trainPhotowidth }]}>
+          <Image
+            source={{ uri }}
+            style={styles.photo}
+            borderRadius={8}
+          />
+          <Text style={styles.text}>
+            {displayLabel}
+          </Text>
+        </View>
+      <TouchableHighlight>
     );
   }
 }
