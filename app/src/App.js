@@ -79,6 +79,7 @@ export default class App extends Component {
   setLoading(username) {
     this.setState({
       bodyStatus: 'loading',
+      scanning: {},
     }, () => this.setEinsteinResponse(username));
   }
 
