@@ -32,10 +32,10 @@ export default class App extends Component {
           count: 0,
         },
       },
+      scanning: {},
       einsteinText: null,
       trainPhotowidth: null,
       setTrainPhotoWidth: null,
-      scanning: null,
     };
   }
 

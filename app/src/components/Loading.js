@@ -6,7 +6,6 @@ import {
   Image,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-
 import Spinner from 'react-native-spinkit';
 
 export default class Loading extends Component {
@@ -43,9 +42,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    // borderColor: 'green',
-    // borderWidth: 1,
-    // borderStyle: 'solid',
   },
   image: {
     flex: 1,

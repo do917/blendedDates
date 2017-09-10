@@ -4,10 +4,32 @@ import {
   Text,
   View,
   Image,
+  TouchableOpacity,
 } from 'react-native';
+import Modal from 'react-native-modal';
 import shoppingModels from '../shoppingModels';
+import TrainModal from './TrainModal';
 
 export default class TrainPhoto extends Component {
+  constructor() {
+    super()
+    this.state = {
+      modalVisibility: false,
+    };
+  }
+
+  showModal() {
+    this.setState({
+      modalVisibility: true,
+    });
+  }
+
+  hideModal() {
+    this.setState({
+      modalVisibility: false,
+    });
+  }
+
   render() {
     let uri = this.props.sample.thumbnail_src;
     if (this.props.sample.fromCamera) {
@@ -21,16 +43,25 @@ export default class TrainPhoto extends Component {
     }
 
     return (
-      <View style={[styles.container, { width: this.props.trainPhotowidth }]}>
-        <Image
-          source={{ uri }}
-          style={styles.photo}
-          borderRadius={8}
-        />
-        <Text style={styles.text}>
-          {displayLabel}
-        </Text>
-      </View>
+        <View style={[styles.container, { width: this.props.trainPhotowidth }]}>
+          <TouchableOpacity
+            style={styles.touchable}
+            activeOpacity={0.3}
+            onPress={this.showModal.bind(this)}
+          >
+            <Image
+              style={styles.photo}
+              source={{ uri }}
+            />
+          </TouchableOpacity>
+          <TrainModal style={{ borderRadius: 10}}
+            modalVisibility={this.state.modalVisibility}
+            hideModal={this.hideModal.bind(this)}
+          />
+          <Text style={styles.text}>
+            {displayLabel}
+          </Text>
+        </View>
     );
   }
 }
@@ -39,7 +70,11 @@ const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 2,
   },
+  touchable: {
+    flex: 1,
+  },
   photo: {
+    borderRadius: 4,
     flex: 1,
     width: undefined,
     height: undefined,
