@@ -12,7 +12,7 @@ import TrainModal from './TrainModal';
 
 export default class TrainPhoto extends Component {
   constructor() {
-    super()
+    super();
     this.state = {
       modalVisibility: false,
     };

@@ -255,6 +255,7 @@ export default class App extends Component {
     this.setLoading(username);
     this.fetchUserData(username)
       .then((data) => {
+        this.setState({ query: '' });
         if (!data) {
           throw userInvalid;
           return;
