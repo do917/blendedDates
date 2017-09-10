@@ -319,11 +319,13 @@ export default class App extends Component {
     };
 
     return (
-      <KeyboardAvoidingView
-        behavior='padding'
-        style={styles.container}
-      >
+      <View style={styles.container}>
         <Header />
+        <KeyboardAvoidingView
+          behavior='position'
+          contentContainerStyle={styles.container}
+          style={styles.container}
+        >
         <Einstein
           einsteinText={einsteinText}
         />
@@ -331,7 +333,8 @@ export default class App extends Component {
           {bodies[bodyStatus]}
         </View>
         <Footer />
-      </KeyboardAvoidingView>
+        </KeyboardAvoidingView>
+      </View>
     );
   }
 }

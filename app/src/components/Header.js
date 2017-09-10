@@ -30,6 +30,7 @@ const styles = StyleSheet.create({
   container: {
     height: 90,
     backgroundColor: '#141414',
+    zIndex: 1,
   },
   statusBar: {
     height: 18,
