@@ -24,6 +24,6 @@ export default {
     }
   },
   train: () => {
-    return 'Here\'s how I categorized each photo, click on them if you think I made a mistake...';
+    return 'Here\'s how I categorized each photo, tap on one if you think I made a mistake...';
   },
 };

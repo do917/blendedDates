@@ -41,7 +41,6 @@ export default class Train extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'space-around',
   },
   photos: {
     flex: 2,

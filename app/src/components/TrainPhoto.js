@@ -19,14 +19,12 @@ export default class TrainPhoto extends Component {
   }
 
   showModal() {
-    console.log('pressed image')
     this.setState({
       modalVisibility: true,
     });
   }
 
   hideModal() {
-    console.log('pressed image2')
     this.setState({
       modalVisibility: false,
     });

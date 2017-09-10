@@ -23,7 +23,6 @@ export default class TrainModal extends Component {
             blurType='light'
             blurAmount={10}
           />
-
           
           <Text style={styles.text}>
             What should the correct REI label be?

@@ -30,7 +30,6 @@ export default class Results extends Component {
             }
           </Text>
         </Button>
-
         <Button block info onPress={() => this.props.showBody('train')}>
           <Text style={styles.buttonText}>
             See Einstein's analysis
