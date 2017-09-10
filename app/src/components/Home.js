@@ -25,10 +25,11 @@ export default class Home extends Component {
         <Item rounded>
           <Input
             style={styles.inputField}
-            autoCapitalize='none'
+            autoCapitalize={'none'}
             autoCorrect={false}
-            placeholder='Shop for a friend...'
-            placeholderTextColor='#FFFFFF'
+            returnKeyType={'search'}
+            placeholder={'Shop for a friend...'}
+            placeholderTextColor={'#FFFFFF'}
             onChangeText={text => this.props.updateQuery(text)}
             onSubmitEditing={() => {
               if (this.props.query !== '') {
