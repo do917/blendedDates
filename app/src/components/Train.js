@@ -11,7 +11,7 @@ import TrainPhoto from './TrainPhoto';
 export default class Train extends Component {
   render() {
     return (
-      <View style={styles.container}>
+      <View style={styles.container} ref={train => this.appViewRef = train}>
         <View style={styles.photos}
               onLayout={e => this.props.setTrainPhotoWidth(e.nativeEvent.layout.height)}
         >
@@ -20,6 +20,7 @@ export default class Train extends Component {
               return <TrainPhoto
                        key={i}
                        sample={sample}
+                       appViewRef={this.appViewRef}
                        trainPhotowidth={this.props.trainPhotowidth}
                      />;
             })}
@@ -40,6 +41,7 @@ export default class Train extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'space-around',
   },
   photos: {
     flex: 2,

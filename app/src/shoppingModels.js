@@ -6,7 +6,7 @@ export default {
     paddle: 'paddling',
     run: 'running',
     snow: 'snow sports',
-    other: 'other',
+    other: 'Other',
   },
   nouns: {
     campandhike: 'Camp and Hike',
@@ -15,7 +15,7 @@ export default {
     paddle: 'Paddle',
     run: 'Run',
     snow: 'Snow Sports',
-    other: 'other',
+    other: 'Other',
   },
   links: {
     campandhike: 'https://www.rei.com/h/camping-and-hiking',

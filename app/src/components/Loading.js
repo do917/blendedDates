@@ -6,7 +6,6 @@ import {
   Image,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-
 import Spinner from 'react-native-spinkit';
 
 export default class Loading extends Component {
