@@ -24,7 +24,7 @@ export default class App extends Component {
     this.state = {
       user: { full_name: 'not logged in' },
       query: '',
-      bodyStatus: 'home',
+      bodyStatus: 'login',
       einsteinResults: {
         samples: [],
         mostPopular: {
