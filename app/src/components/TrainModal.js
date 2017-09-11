@@ -2,20 +2,19 @@ import React, { Component } from 'react';
 import {
   StyleSheet,
   View,
-  Image,
   Text,
 } from 'react-native';
 import Modal from 'react-native-modal';
-import { Button, Item, Input } from 'native-base';
+import { Button } from 'native-base';
 import { BlurView } from 'react-native-blur';
 import shoppingModels from '../shoppingModels';
 
 export default class TrainModal extends Component {
   render() {
-    let modelKeys = Object.keys(shoppingModels.nouns);
+    const modelKeys = Object.keys(shoppingModels.nouns);
 
     return (
-      <Modal isVisible={this.props.modalVisibility} backdropOpacity={.80}>
+      <Modal isVisible={this.props.modalVisibility} backdropOpacity={0.8}>
         <View style={styles.modal} borderRadius={3}>
           <BlurView
             style={styles.absolute}
@@ -23,7 +22,6 @@ export default class TrainModal extends Component {
             blurType='light'
             blurAmount={10}
           />
-          
           <Text style={styles.text}>
             What should the correct REI label be?
           </Text>
@@ -43,7 +41,7 @@ export default class TrainModal extends Component {
                       {shoppingModels.nouns[modelKey]}
                     </Text>
                   </Button>
-                )
+                );
               })
             }
             <Button block info onPress={this.props.hideModal} style={styles.button}>
@@ -90,6 +88,9 @@ const styles = StyleSheet.create({
   },
   absolute: {
     position: 'absolute',
-    top: 0, left: 0, bottom: 0, right: 0,
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
   },
 });

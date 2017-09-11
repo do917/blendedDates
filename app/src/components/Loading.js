@@ -2,15 +2,12 @@ import React, { Component } from 'react';
 import {
   StyleSheet,
   View,
-  Text,
   Image,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import Spinner from 'react-native-spinkit';
 
 export default class Loading extends Component {
-
-
   render() {
     let uri = this.props.scanning.thumbnail_src;
     if (this.props.scanning.fromCamera) {

@@ -176,7 +176,7 @@ export default class App extends Component {
 
     if (!sample.isGeneralImage) {
       // test against REI models:
-      formData.append('modelId', 'DE6BIURXD7STLKA3S5LGGRFZ4Q');
+      formData.append('modelId', 'LM6JQ5FZMI545K67PJ4T2TPZCA');
     } else {
       // test against Salesforce's general image models:
       formData.append('modelId', 'GeneralImageClassifier');
@@ -189,7 +189,7 @@ export default class App extends Component {
     }
 
     this.setState({
-      scanning: sample
+      scanning: sample,
     });
 
     return fetch('https://api.einstein.ai/v2/vision/predict', {
@@ -299,11 +299,11 @@ export default class App extends Component {
         body,
       })
         .then(res => res.json())
-        .then(data => this.showBody('train'))
-        .catch(error => console.error('einstein feedback error: ', error)); 
-    }
+        .then(() => this.showBody('train'))
+        .catch(error => console.error('einstein feedback error: ', error));
+    };
     const formData = new FormData();
-    formData.append('modelId', 'DE6BIURXD7STLKA3S5LGGRFZ4Q');
+    formData.append('modelId', 'LM6JQ5FZMI545K67PJ4T2TPZCA');
     formData.append('expectedLabel', expectedLabel);
 
     if (sample.fromCamera) {
@@ -329,7 +329,7 @@ export default class App extends Component {
           return einsteinFeedback(formData);
         })
         .catch(error => console.log('downloading file error', error));
-    } 
+    }
   }
 
   render() {

@@ -6,7 +6,6 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
-import Modal from 'react-native-modal';
 import shoppingModels from '../shoppingModels';
 import TrainModal from './TrainModal';
 
@@ -31,19 +30,25 @@ export default class TrainPhoto extends Component {
   }
 
   render() {
-    let uri = this.props.sample.thumbnail_src;
-    if (this.props.sample.fromCamera) {
-      uri = `data:image/gif;base64,${this.props.sample.data}`;
+    const {
+      sample,
+      trainEinstein,
+      trainPhotowidth,
+    } = this.props;
+
+    let uri = sample.thumbnail_src;
+    if (sample.fromCamera) {
+      uri = `data:image/gif;base64,${sample.data}`;
     }
 
-    const { label } = this.props.sample;
+    const { label } = sample;
     let displayLabel = shoppingModels.nouns[label];
-    if (this.props.sample.isGeneralImage) {
+    if (sample.isGeneralImage) {
       displayLabel = label.split(', ')[0].replace(/\b\w/g, l => l.toUpperCase());
     }
 
     return (
-        <View style={[styles.container, { width: this.props.trainPhotowidth }]}>
+        <View style={[styles.container, { width: trainPhotowidth }]}>
           <TouchableOpacity
             style={styles.touchable}
             activeOpacity={0.3}
@@ -54,10 +59,10 @@ export default class TrainPhoto extends Component {
               source={{ uri }}
             />
           </TouchableOpacity>
-          <TrainModal style={{ borderRadius: 10}}
-            sample={this.props.sample}
+          <TrainModal style={{ borderRadius: 10 }}
+            sample={sample}
+            trainEinstein={trainEinstein}
             hideModal={this.hideModal.bind(this)}
-            trainEinstein={this.props.trainEinstein}
             modalVisibility={this.state.modalVisibility}
           />
           <Text style={styles.text}>
