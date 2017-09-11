@@ -31,7 +31,14 @@ export default class TrainModal extends Component {
             {
               modelKeys.map((modelKey, i) => {
                 return (
-                  <Button block info key={i} onPress={this.props.hideModal} style={styles.button}>
+                  <Button block info
+                    key={i}
+                    style={styles.button}
+                    onPress={() => {
+                      this.props.trainEinstein(this.props.sample, modelKey);
+                      this.props.hideModal();
+                    }}
+                  >
                     <Text style={styles.buttonText}>
                       {shoppingModels.nouns[modelKey]}
                     </Text>

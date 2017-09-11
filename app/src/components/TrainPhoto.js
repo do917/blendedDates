@@ -55,8 +55,10 @@ export default class TrainPhoto extends Component {
             />
           </TouchableOpacity>
           <TrainModal style={{ borderRadius: 10}}
-            modalVisibility={this.state.modalVisibility}
+            sample={this.props.sample}
             hideModal={this.hideModal.bind(this)}
+            trainEinstein={this.props.trainEinstein}
+            modalVisibility={this.state.modalVisibility}
           />
           <Text style={styles.text}>
             {displayLabel}

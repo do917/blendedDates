@@ -21,6 +21,7 @@ export default class Train extends Component {
                        key={i}
                        sample={sample}
                        appViewRef={this.appViewRef}
+                       trainEinstein={this.props.trainEinstein}
                        trainPhotowidth={this.props.trainPhotowidth}
                      />;
             })}

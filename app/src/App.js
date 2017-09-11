@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import SafariView from 'react-native-safari-view';
 import ImagePicker from 'react-native-image-picker';
+import RNFS from 'react-native-fs';
 import Header from './components/Header';
 import Einstein from './components/Einstein';
 import Login from './components/Login';
@@ -100,6 +101,7 @@ export default class App extends Component {
       loading: phrases.loading(username),
       results: phrases.results(label),
       train: phrases.train(),
+      training: phrases.training(),
     };
     const response = responses[bodyStatus];
     const setCaretInt = () => {
@@ -284,6 +286,52 @@ export default class App extends Component {
     });
   }
 
+  trainEinstein(sample, expectedLabel) {
+    this.showBody('training');
+    const einsteinFeedback = (body) => {
+      return fetch('https://api.einstein.ai/v2/vision/feedback', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${this.state.einsteinToken}`,
+          'Cache-Control': 'no-cache',
+          'Content-Type': 'multipart/form-data',
+        },
+        body,
+      })
+        .then(res => res.json())
+        .then(data => this.showBody('train'))
+        .catch(error => console.error('einstein feedback error: ', error)); 
+    }
+    const formData = new FormData();
+    formData.append('modelId', 'DE6BIURXD7STLKA3S5LGGRFZ4Q');
+    formData.append('expectedLabel', expectedLabel);
+
+    if (sample.fromCamera) {
+      formData.append('data', {
+        uri: sample.uri,
+        type: 'image/jpeg',
+        name: 'sample.jpg',
+      });
+      return einsteinFeedback(formData);
+    } else {
+      const photoTempDirectory = RNFS.TemporaryDirectoryPath + 'trainingphoto.jpg';
+      const options = {
+        fromUrl: sample.display_src,
+        toFile: photoTempDirectory,
+      };
+      return RNFS.downloadFile(options).promise
+        .then((result) => {
+          formData.append('data', {
+            uri: photoTempDirectory,
+            type: 'image/jpeg',
+            name: 'sample.jpg',
+          });
+          return einsteinFeedback(formData);
+        })
+        .catch(error => console.log('downloading file error', error));
+    } 
+  }
+
   render() {
     const {
       user,
@@ -314,6 +362,7 @@ export default class App extends Component {
                     einsteinResults={einsteinResults}
                     trainPhotowidth={trainPhotowidth}
                     showBody={this.showBody.bind(this)}
+                    trainEinstein={this.trainEinstein.bind(this)}
                     setTrainPhotoWidth={this.setTrainPhotoWidth.bind(this)}
                   />;
     const bodies = {
