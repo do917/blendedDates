@@ -5,7 +5,7 @@ import {
   Image,
 } from 'react-native';
 
-const imageFooter = require('../static/footer.png');
+const imageFooter = require('../../static/footer.png');
 
 export default class Footer extends Component {
   render() {

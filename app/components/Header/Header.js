@@ -6,9 +6,9 @@ import {
   StatusBar,
 } from 'react-native';
 
-const imageHeader = require('../static/header.png');
+const imageHeader = require('../../static/header.png');
 
-export default class HeaderExample extends Component {
+export default class Header extends Component {
   render() {
     return (
       <View style={styles.container}>
