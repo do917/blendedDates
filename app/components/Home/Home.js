@@ -1,22 +1,39 @@
 import React, { Component } from 'react';
 import {
-  StyleSheet,
   Text,
   View,
 } from 'react-native';
 import { Button, Item, Input } from 'native-base';
+import PropTypes from 'prop-types';
+import styles from './styles';
 
 export default class Home extends Component {
+  static propTypes = {
+    user: PropTypes.object,
+    query: PropTypes.string,
+    shopFor: PropTypes.func,
+    shopBasedOnPhoto: PropTypes.func,
+    updateQuery: PropTypes.func,
+  }
+
   render() {
+    const {
+      user,
+      query,
+      shopFor,
+      shopBasedOnPhoto,
+      updateQuery,
+    } = this.props;
+
     return (
       <View style={styles.container}>
-        <Button block info onPress={() => this.props.shopFor(this.props.user.username)}>
+        <Button block info onPress={() => shopFor(user.username)}>
           <Text style={styles.buttonText}>
             Shop for me
           </Text>
         </Button>
 
-        <Button block info onPress={this.props.shopBasedOnPhoto}>
+        <Button block info onPress={shopBasedOnPhoto}>
           <Text style={styles.buttonText}>
             Shop from snapping a photo
           </Text>
@@ -30,10 +47,10 @@ export default class Home extends Component {
             returnKeyType={'search'}
             placeholder={'Shop for a friend...'}
             placeholderTextColor={'#FFFFFF'}
-            onChangeText={text => this.props.updateQuery(text)}
+            onChangeText={text => updateQuery(text)}
             onSubmitEditing={() => {
-              if (this.props.query !== '') {
-                this.props.shopFor(this.props.query.split(' ').join(''));
+              if (query !== '') {
+                shopFor(query.split(' ').join(''));
               }
             }}
           />
@@ -42,23 +59,3 @@ export default class Home extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'space-around',
-  },
-  buttonText: {
-    fontFamily: 'Gill Sans',
-    fontSize: 18,
-    color: '#FFFFFF',
-  },
-  inputField: {
-    fontFamily: 'Gill Sans',
-    fontSize: 18,
-    color: '#FFFFFF',
-    textAlign: 'center',
-    height: 40,
-  },
-});

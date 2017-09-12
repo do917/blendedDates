@@ -1,14 +1,20 @@
 import React, { Component } from 'react';
 import {
-  StyleSheet,
   Text,
   View,
 } from 'react-native';
 import SafariView from 'react-native-safari-view';
 import { Button } from 'native-base';
+import PropTypes from 'prop-types';
+import styles from './styles';
 import shoppingModels from '../../shoppingModels';
 
 export default class Results extends Component {
+  static propTypes = {
+    einsteinResults: PropTypes.object,
+    showBody: PropTypes.func,
+  }
+
   takeShopping() {
     const { label } = this.props.einsteinResults.mostPopular;
     SafariView.show({
@@ -45,16 +51,3 @@ export default class Results extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  buttonText: {
-    fontFamily: 'Gill Sans',
-    fontSize: 18,
-    color: 'white',
-  },
-});

@@ -6,7 +6,7 @@ export default {
     if (name) {
       return `Analyzing ${name}'s photos...`;
     } else {
-      return 'Analyzing photo...'
+      return 'Analyzing photo...';
     }
   },
   home: (name) => {
@@ -20,13 +20,9 @@ export default {
     if (label !== 'other') {
       return `Ah, I recommend ${shoppingModels.verbs[label]} gear!`;
     } else {
-      return 'Hm... I don\'t see anything in the photo that is related to any of REI\'s products...'
+      return 'Hm... I don\'t see anything in the photo that is related to any of REI\'s products...';
     }
   },
-  train: () => {
-    return 'Here\'s how I categorized each photo, tap on one if you think I made a mistake...';
-  },
-  training: () => {
-    return 'Memorizing...'
-  }
+  train: () => 'Here\'s how I categorized each photo, tap on one if you think I made a mistake...',
+  training: () => 'Memorizing...',
 };

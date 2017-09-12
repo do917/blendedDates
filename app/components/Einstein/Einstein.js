@@ -1,15 +1,20 @@
 import React, { Component } from 'react';
 import {
-  StyleSheet,
   Text,
   View,
   ImageBackground,
 } from 'react-native';
+import PropTypes from 'prop-types';
+import styles from './styles';
 
-const imageBackground = require('../../static/background.png');
-const imageEinstein = require('../../static/einstein.png');
+const imageBackground = require('./images/background.png');
+const imageEinstein = require('./images/einstein.png');
 
 export default class Einstein extends Component {
+  static propTypes = {
+    einsteinText: PropTypes.string,
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -33,33 +38,3 @@ export default class Einstein extends Component {
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 2,
-  },
-  background: {
-    flex: 1,
-  },
-  einstein: {
-    flex: 1,
-    justifyContent: 'flex-end',
-  },
-  textContainer: {
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
-    paddingVertical: 2,
-    paddingHorizontal: 15,
-  },
-  text: {
-    fontFamily: 'Courier',
-    height: 85,
-    fontSize: 18,
-    textAlign: 'left',
-    textAlignVertical: 'center',
-    color: '#FFFFFF',
-  },
-  caret: {
-    fontFamily: 'Courier',
-    fontSize: 18,
-    color: '#bff442',
-  },
-});

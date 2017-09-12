@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import {
-  StyleSheet,
   View,
   Image,
 } from 'react-native';
+import styles from './styles';
 
-const imageFooter = require('../../static/footer.png');
+const imageFooter = require('./images/footer.png');
 
 export default class Footer extends Component {
   render() {
@@ -19,20 +19,3 @@ export default class Footer extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    height: 25,
-    backgroundColor: '#141414',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 4,
-  },
-  footer: {
-    flex: 1,
-    width: undefined,
-    height: undefined,
-    alignSelf: 'stretch',
-    resizeMode: 'contain',
-  },
-});
