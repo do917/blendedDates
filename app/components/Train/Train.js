@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {
-  StyleSheet,
   Text,
   View,
   ScrollView,
@@ -31,21 +30,23 @@ export default class Train extends Component {
     return (
       <View
         style={styles.container}
-        ref={train => this.appViewRef = train}
+        ref={(train) => {
+          this.appViewRef = train;
+        }}
       >
         <View style={styles.photos}
               onLayout={e => setTrainPhotoWidth(e.nativeEvent.layout.height)}
         >
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            {einsteinResults.samples.map((sample, i) => {
-              return <TrainPhoto
-                       key={i}
-                       sample={sample}
-                       appViewRef={this.appViewRef}
-                       trainEinstein={trainEinstein}
-                       trainPhotowidth={trainPhotowidth}
-                     />;
-            })}
+            {einsteinResults.samples.map((sample, i) =>
+              <TrainPhoto
+                key={i}
+                sample={sample}
+                appViewRef={this.appViewRef}
+                trainEinstein={trainEinstein}
+                trainPhotowidth={trainPhotowidth}
+             />)
+            }
           </ScrollView>
         </View>
         <View style={styles.navigation}>

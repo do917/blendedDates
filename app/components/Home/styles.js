@@ -18,4 +18,4 @@ export default EStyleSheet.create({
     textAlign: 'center',
     height: 40,
   },
-})
+});

@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import {
-  StyleSheet,
   View,
   Image,
   StatusBar,
 } from 'react-native';
 import styles from './styles';
+
 const imageHeader = require('./images/header.png');
 
 export default class Header extends Component {

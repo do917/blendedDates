@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {
-  StyleSheet,
   Text,
   View,
 } from 'react-native';
@@ -10,11 +9,11 @@ import styles from './styles';
 
 export default class Home extends Component {
   static propTypes = {
-    user:PropTypes.object,
-    query:PropTypes.string,
-    shopFor:PropTypes.func,
-    shopBasedOnPhoto:PropTypes.func,
-    updateQuery:PropTypes.func,
+    user: PropTypes.object,
+    query: PropTypes.string,
+    shopFor: PropTypes.func,
+    shopBasedOnPhoto: PropTypes.func,
+    updateQuery: PropTypes.func,
   }
 
   render() {
@@ -25,7 +24,7 @@ export default class Home extends Component {
       shopBasedOnPhoto,
       updateQuery,
     } = this.props;
-    
+
     return (
       <View style={styles.container}>
         <Button block info onPress={() => shopFor(user.username)}>

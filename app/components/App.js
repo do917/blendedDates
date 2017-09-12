@@ -77,7 +77,7 @@ export default class App extends Component {
           }, () => this.setEinsteinResponse());
           SafariView.dismiss();
         })
-        .catch(error => console.log('setting token listener error: ', error));
+        .catch(error => console.error('setting token listener error: ', error));
     });
   }
 
@@ -150,7 +150,7 @@ export default class App extends Component {
           fromBottom: true,
         });
       })
-      .catch(error => console.log('authentication error: ', error));
+      .catch(error => console.error('authentication error: ', error));
   }
 
   fetchEinsteinToken() {
@@ -161,21 +161,21 @@ export default class App extends Component {
           einsteinToken: data.token,
         });
       })
-      .catch(error => console.log('fetching einstein token error: ', error));
+      .catch(error => console.error('fetching einstein token error: ', error));
   }
 
   fetchUserInfo(token) {
     return fetch(INSTAGRAM_API + `users/self/?access_token=${token}`)
       .then(res => res.json())
       .then(data => data)
-      .catch(error => console.log('fetching user info error: ', error));
+      .catch(error => console.error('fetching user info error: ', error));
   }
 
   fetchUserData(username) {
     return fetch(INSTAGRAM_WEB_API + `${username}/?__a=1`)
       .then(res => res.json())
       .then(data => data)
-      .catch(error => console.log('fetching user id error: ', error));
+      .catch(error => console.error('fetching user id error: ', error));
   }
 
   einsteinPredict(sample) {
@@ -252,13 +252,13 @@ export default class App extends Component {
           }
           samples.push(sample);
         })
-        .catch(error => console.log('creating queue error: ', error)));
+        .catch(error => console.error('creating queue error: ', error)));
     }
 
     return Promise.all(einsteinQueue)
       .then(() => Promise.all(einsteinQueueGeneral))
       .then(() => results)
-      .catch(error => console.log('queueing einstein calls error: ', error));
+      .catch(error => console.error('queueing einstein calls error: ', error));
   }
 
   shopFor(username) {
@@ -274,7 +274,7 @@ export default class App extends Component {
       })
       .then(data => this.setEinsteinResults(data))
       .catch(userInvalid => this.showBody('home'))
-      .catch(error => console.log('shopping for error: ', error));
+      .catch(error => console.error('shopping for error: ', error));
   }
 
   shopBasedOnPhoto() {
@@ -328,7 +328,7 @@ export default class App extends Component {
         toFile: photoTempDirectory,
       };
       return RNFS.downloadFile(options).promise
-        .then((result) => {
+        .then(() => {
           formData.append('data', {
             uri: photoTempDirectory,
             type: 'image/jpeg',
@@ -336,7 +336,7 @@ export default class App extends Component {
           });
           return einsteinFeedback(formData);
         })
-        .catch(error => console.log('downloading file error', error));
+        .catch(error => console.error('downloading file error', error));
     }
   }
 

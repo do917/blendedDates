@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {
-  StyleSheet,
   Text,
   View,
   Image,
@@ -15,7 +14,7 @@ export default class TrainPhoto extends Component {
   state = {
     modalVisibility: false,
   };
-  
+
   static propTypes = {
     sample: PropTypes.object,
     trainEinstein: PropTypes.func,

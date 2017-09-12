@@ -1,7 +1,5 @@
-import './components/App.js';
-
-import React from 'React';
 import EStyleSheet from 'react-native-extended-stylesheet';
+import './components/App';
 
 EStyleSheet.build({
   $primaryBlack: '#141414',

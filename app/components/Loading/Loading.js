@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {
-  StyleSheet,
   View,
   Image,
 } from 'react-native';
@@ -23,13 +22,15 @@ export default class Loading extends Component {
 
     return (
       <View style={styles.container} >
-        {/*<Animatable.Image  // ANIMATION LOADING, LIVE SCANNING FEATURE IN PROGRESS
-          animation={'zoomIn'}
-          easing={'ease-in'}
-          duration={200}
-          style={styles.image}
-          source={{ uri: 'https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/20987213_356930694738588_1168838296923537408_n.jpg'}}
-        />*/}
+        {/*
+          <Animatable.Image  // ANIMATION LOADING, LIVE SCANNING FEATURE IN PROGRESS
+            animation={'zoomIn'}
+            easing={'ease-in'}
+            duration={200}
+            style={styles.image}
+            source={{ uri: 'https://instagram.fsnc1-2.fna.fbcdn.net/t51.2885-15/e35/20987213_356930694738588_1168838296923537408_n.jpg'}}
+          />
+        */}
         <Image
           style={styles.image}
           source={{ uri }}

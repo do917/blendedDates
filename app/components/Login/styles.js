@@ -10,4 +10,4 @@ export default EStyleSheet.create({
     fontSize: 18,
     color: 'white',
   },
-})
+});

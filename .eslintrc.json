@@ -15,7 +15,8 @@
     "plugin:react/recommended",
     "airbnb-base"
   ],
-  "rules" : {
-    
+  "globals": {
+    "fetch": false,
+    "FormData": false
   }
 }

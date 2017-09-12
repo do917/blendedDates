@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
 import {
-  StyleSheet,
   View,
   Text,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import { Button } from 'native-base';
 import { BlurView } from 'react-native-blur';
-import shoppingModels from '../../shoppingModels';
-import styles from './stylesModal';
 import PropTypes from 'prop-types';
+import styles from './stylesModal';
+import shoppingModels from '../../shoppingModels';
 
 export default class TrainModal extends Component {
   static propTypes = {
@@ -24,7 +23,6 @@ export default class TrainModal extends Component {
     const {
       sample,
       hideModal,
-      appViewRef,
       trainEinstein,
       modalVisibility,
     } = this.props;
@@ -49,23 +47,19 @@ export default class TrainModal extends Component {
             What should the correct REI label be?
           </Text>
           <View style={styles.options}>
-            {
-              modelKeys.map((modelKey, i) => {
-                return (
-                  <Button block info
-                    key={i}
-                    style={styles.button}
-                    onPress={() => {
-                      trainEinstein(sample, modelKey);
-                      hideModal();
-                    }}
-                  >
-                    <Text style={styles.buttonText}>
-                      {shoppingModels.nouns[modelKey]}
-                    </Text>
-                  </Button>
-                );
-              })
+            {modelKeys.map((modelKey, i) =>
+              <Button block info
+                key={i}
+                style={styles.button}
+                onPress={() => {
+                  trainEinstein(sample, modelKey);
+                  hideModal();
+                }}
+              >
+                <Text style={styles.buttonText}>
+                  {shoppingModels.nouns[modelKey]}
+                </Text>
+              </Button>)
             }
             <Button block info onPress={hideModal} style={styles.button}>
               <Text style={styles.buttonText}>

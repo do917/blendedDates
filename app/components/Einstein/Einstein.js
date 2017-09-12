@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import {
-  StyleSheet,
   Text,
   View,
   ImageBackground,
 } from 'react-native';
 import PropTypes from 'prop-types';
 import styles from './styles';
+
 const imageBackground = require('./images/background.png');
 const imageEinstein = require('./images/einstein.png');
 

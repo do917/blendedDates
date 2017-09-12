@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import {
-  StyleSheet,
   Text,
   View,
 } from 'react-native';
 import SafariView from 'react-native-safari-view';
 import { Button } from 'native-base';
-import shoppingModels from '../../shoppingModels';
 import PropTypes from 'prop-types';
 import styles from './styles';
+import shoppingModels from '../../shoppingModels';
 
 export default class Results extends Component {
   static propTypes = {
