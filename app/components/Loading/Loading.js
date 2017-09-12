@@ -6,12 +6,19 @@ import {
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import Spinner from 'react-native-spinkit';
+import PropTypes from 'prop-types';
+import styles from './styles';
 
 export default class Loading extends Component {
+  static propTypes = {
+    scanning: PropTypes.object,
+  }
+
   render() {
-    let uri = this.props.scanning.thumbnail_src;
-    if (this.props.scanning.fromCamera) {
-      uri = `data:image/gif;base64,${this.props.scanning.data}`;
+    const { scanning } = this.props;
+    let uri = scanning.thumbnail_src;
+    if (scanning.fromCamera) {
+      uri = `data:image/gif;base64,${scanning.data}`;
     }
 
     return (
@@ -34,17 +41,3 @@ export default class Loading extends Component {
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  image: {
-    flex: 1,
-    width: undefined,
-    height: undefined,
-    alignSelf: 'stretch',
-    resizeMode: 'contain',
-  },
-});

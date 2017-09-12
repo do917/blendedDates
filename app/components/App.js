@@ -6,7 +6,8 @@ import {
   Linking,
   KeyboardAvoidingView,
 } from 'react-native';
-import { TOKEN_API,
+import {
+  TOKEN_API,
   REI_MODEL_ID,
   INSTAGRAM_API,
   GENERAL_MODEL_ID,
@@ -17,14 +18,13 @@ import SafariView from 'react-native-safari-view';
 import ImagePicker from 'react-native-image-picker';
 import RNFS from 'react-native-fs';
 import { Header } from './Header';
-import { Einstein,
-  Login,
-  Home,
-  Loading,
-  Results,
-  Train,
-} from './Body';
+import { Results } from './Results';
+import { Loading } from './Loading';
+import { Einstein } from './Einstein';
+import { Train } from './Train';
 import { Footer } from './Footer';
+import { Home } from './Home';
+import { Login } from './Login';
 import phrases from '../einsteinPhrases';
 
 export default class App extends Component {

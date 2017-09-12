@@ -6,15 +6,20 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
-import shoppingModels from '../../shoppingModels';
+import PropTypes from 'prop-types';
+import styles from './styles';
 import TrainModal from './TrainModal';
+import shoppingModels from '../../shoppingModels';
 
 export default class TrainPhoto extends Component {
-  constructor() {
-    super();
-    this.state = {
-      modalVisibility: false,
-    };
+  state = {
+    modalVisibility: false,
+  };
+  
+  static propTypes = {
+    sample: PropTypes.object,
+    trainEinstein: PropTypes.func,
+    trainPhotowidth: PropTypes.number,
   }
 
   showModal() {
@@ -48,7 +53,7 @@ export default class TrainPhoto extends Component {
     }
 
     return (
-        <View style={[styles.container, { width: trainPhotowidth }]}>
+        <View style={[styles.photoContainer, { width: trainPhotowidth }]}>
           <TouchableOpacity
             style={styles.touchable}
             activeOpacity={0.3}
@@ -72,25 +77,3 @@ export default class TrainPhoto extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: 2,
-  },
-  touchable: {
-    flex: 1,
-  },
-  photo: {
-    borderRadius: 4,
-    flex: 1,
-    width: undefined,
-    height: undefined,
-    alignSelf: 'stretch',
-    resizeMode: 'cover',
-  },
-  text: {
-    fontFamily: 'Gill Sans',
-    textAlign: 'center',
-    color: '#FFFFFF',
-  },
-});

@@ -5,8 +5,14 @@ import {
   View,
 } from 'react-native';
 import { Button } from 'native-base';
+import PropTypes from 'prop-types';
+import styles from './styles';
 
 export default class Login extends Component {
+  static propTypes = {
+    authenticate: PropTypes.func,
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -19,15 +25,3 @@ export default class Login extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  buttonText: {
-    fontFamily: 'Gill Sans',
-    fontSize: 18,
-    color: 'white',
-  },
-});

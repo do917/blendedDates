@@ -8,14 +8,37 @@ import Modal from 'react-native-modal';
 import { Button } from 'native-base';
 import { BlurView } from 'react-native-blur';
 import shoppingModels from '../../shoppingModels';
+import styles from './stylesModal';
+import PropTypes from 'prop-types';
 
 export default class TrainModal extends Component {
+  static propTypes = {
+    sample: PropTypes.object,
+    hideModal: PropTypes.func,
+    appViewRef: PropTypes.func,
+    trainEinstein: PropTypes.func,
+    modalVisibility: PropTypes.bool,
+  }
+
   render() {
+    const {
+      sample,
+      hideModal,
+      appViewRef,
+      trainEinstein,
+      modalVisibility,
+    } = this.props;
     const modelKeys = Object.keys(shoppingModels.nouns);
 
     return (
-      <Modal isVisible={this.props.modalVisibility} backdropOpacity={0.8}>
-        <View style={styles.modal} borderRadius={3}>
+      <Modal
+        isVisible={modalVisibility}
+        backdropOpacity={0.8}
+      >
+        <View
+          style={styles.modal}
+          orderRadius={3}
+        >
           <BlurView
             style={styles.absolute}
             viewRef={this.props.appViewRef}
@@ -33,8 +56,8 @@ export default class TrainModal extends Component {
                     key={i}
                     style={styles.button}
                     onPress={() => {
-                      this.props.trainEinstein(this.props.sample, modelKey);
-                      this.props.hideModal();
+                      trainEinstein(sample, modelKey);
+                      hideModal();
                     }}
                   >
                     <Text style={styles.buttonText}>
@@ -44,7 +67,7 @@ export default class TrainModal extends Component {
                 );
               })
             }
-            <Button block info onPress={this.props.hideModal} style={styles.button}>
+            <Button block info onPress={hideModal} style={styles.button}>
               <Text style={styles.buttonText}>
                 Cancel
               </Text>
@@ -56,41 +79,3 @@ export default class TrainModal extends Component {
   }
 }
 
-const styles = StyleSheet.create({
-  modal: {
-    borderRadius: 4,
-    overflow: 'hidden',
-    backgroundColor: 'rgba(0, 0, 0, 0.2)',
-    padding: 12,
-  },
-  text: {
-    fontFamily: 'Courier',
-    fontSize: 18,
-    textAlign: 'left',
-    alignItems: 'center',
-    color: '#FFFFFF',
-    paddingBottom: 10,
-  },
-  options: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
-  button: {
-    flex: 1,
-    flexShrink: 0,
-    flexBasis: '40%',
-    margin: 3,
-  },
-  buttonText: {
-    fontFamily: 'Gill Sans',
-    fontSize: 18,
-    color: '#FFFFFF',
-  },
-  absolute: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    bottom: 0,
-    right: 0,
-  },
-});
