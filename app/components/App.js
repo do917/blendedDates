@@ -16,7 +16,7 @@ import { TOKEN_API,
 import SafariView from 'react-native-safari-view';
 import ImagePicker from 'react-native-image-picker';
 import RNFS from 'react-native-fs';
-import Header from './Header';
+import { Header } from './Header';
 import { Einstein,
   Login,
   Home,
@@ -24,7 +24,7 @@ import { Einstein,
   Results,
   Train,
 } from './Body';
-import Footer from './Footer';
+import { Footer } from './Footer';
 import phrases from '../einsteinPhrases';
 
 export default class App extends Component {

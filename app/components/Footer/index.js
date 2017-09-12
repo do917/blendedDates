@@ -1,3 +1,4 @@
 import Footer from './Footer';
+import styles from './styles';
 
-export default Footer;
+export { Footer, styles };

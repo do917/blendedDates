@@ -5,8 +5,8 @@ import {
   Image,
   StatusBar,
 } from 'react-native';
-
-const imageHeader = require('../../static/header.png');
+import styles from './styles';
+const imageHeader = require('./images/header.png');
 
 export default class Header extends Component {
   render() {
@@ -25,26 +25,3 @@ export default class Header extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    height: 90,
-    backgroundColor: '#141414',
-    zIndex: 1,
-  },
-  statusBar: {
-    height: 18,
-    backgroundColor: '#141414',
-  },
-  header: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  imageHeader: {
-    flex: 1,
-    width: undefined,
-    height: undefined,
-    alignSelf: 'stretch',
-    resizeMode: 'contain',
-  },
-});
