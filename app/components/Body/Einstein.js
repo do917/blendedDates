@@ -6,8 +6,8 @@ import {
   ImageBackground,
 } from 'react-native';
 
-const imageBackground = require('../static/background.png');
-const imageEinstein = require('../static/einstein.png');
+const imageBackground = require('../../static/background.png');
+const imageEinstein = require('../../static/einstein.png');
 
 export default class Einstein extends Component {
   render() {

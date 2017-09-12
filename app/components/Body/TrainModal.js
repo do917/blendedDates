@@ -7,7 +7,7 @@ import {
 import Modal from 'react-native-modal';
 import { Button } from 'native-base';
 import { BlurView } from 'react-native-blur';
-import shoppingModels from '../shoppingModels';
+import shoppingModels from '../../shoppingModels';
 
 export default class TrainModal extends Component {
   render() {

@@ -6,7 +6,7 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
-import shoppingModels from '../shoppingModels';
+import shoppingModels from '../../shoppingModels';
 import TrainModal from './TrainModal';
 
 export default class TrainPhoto extends Component {
