@@ -52,5 +52,10 @@ fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots
 
+# env file
+#
+.env
+
 # dummy data
+#
 dummydata.js

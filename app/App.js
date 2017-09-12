@@ -9,6 +9,13 @@ import {
 import SafariView from 'react-native-safari-view';
 import ImagePicker from 'react-native-image-picker';
 import RNFS from 'react-native-fs';
+import { TOKEN_API,
+  EINSTEIN_VISION_API,
+  REI_MODEL_ID,
+  GENERAL_MODEL_ID,
+  INSTAGRAM_API,
+  INSTAGRAM_WEB_API,
+} from 'react-native-dotenv';
 import Header from './components/Header';
 import Einstein from './components/Einstein';
 import Login from './components/Login';
@@ -134,7 +141,7 @@ export default class App extends Component {
   }
 
   authenticate() {
-    fetch('https://floating-everglades-83969.herokuapp.com/api/auth', { method: 'POST' })
+    fetch(TOKEN_API + 'auth', { method: 'POST' })
       .then(res => res.json())
       .then((json) => {
         SafariView.show({
@@ -146,7 +153,7 @@ export default class App extends Component {
   }
 
   fetchEinsteinToken() {
-    fetch('https://floating-everglades-83969.herokuapp.com/api/einstein/getToken')
+    fetch(TOKEN_API + 'einstein/getToken')
       .then(res => res.json())
       .then((data) => {
         this.setState({
@@ -157,14 +164,14 @@ export default class App extends Component {
   }
 
   fetchUserInfo(token) {
-    return fetch(`https://api.instagram.com/v1/users/self/?access_token=${token}`)
+    return fetch(INSTAGRAM_API + `users/self/?access_token=${token}`)
       .then(res => res.json())
       .then(data => data)
       .catch(error => console.log('fetching user info error: ', error));
   }
 
   fetchUserData(username) {
-    return fetch(`https://www.instagram.com/${username}/?__a=1`)
+    return fetch(INSTAGRAM_WEB_API + `${username}/?__a=1`)
       .then(res => res.json())
       .then(data => data)
       .catch(error => console.log('fetching user id error: ', error));
@@ -176,10 +183,10 @@ export default class App extends Component {
 
     if (!sample.isGeneralImage) {
       // test against REI models:
-      formData.append('modelId', 'LM6JQ5FZMI545K67PJ4T2TPZCA');
+      formData.append('modelId', REI_MODEL_ID);
     } else {
       // test against Salesforce's general image models:
-      formData.append('modelId', 'GeneralImageClassifier');
+      formData.append('modelId', GENERAL_MODEL_ID);
     }
 
     if (sample.fromCamera) {
@@ -192,7 +199,7 @@ export default class App extends Component {
       scanning: sample,
     });
 
-    return fetch('https://api.einstein.ai/v2/vision/predict', {
+    return fetch(EINSTEIN_VISION_API + 'predict', {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${this.state.einsteinToken}`,
@@ -289,7 +296,7 @@ export default class App extends Component {
   trainEinstein(sample, expectedLabel) {
     this.showBody('training');
     const einsteinFeedback = (body) => {
-      return fetch('https://api.einstein.ai/v2/vision/feedback', {
+      return fetch(EINSTEIN_VISION_API + 'feedback', {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${this.state.einsteinToken}`,
@@ -303,7 +310,7 @@ export default class App extends Component {
         .catch(error => console.error('einstein feedback error: ', error));
     };
     const formData = new FormData();
-    formData.append('modelId', 'LM6JQ5FZMI545K67PJ4T2TPZCA');
+    formData.append('modelId', REI_MODEL_ID);
     formData.append('expectedLabel', expectedLabel);
 
     if (sample.fromCamera) {
