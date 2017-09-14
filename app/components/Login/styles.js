@@ -6,8 +6,8 @@ export default EStyleSheet.create({
     justifyContent: 'center',
   },
   buttonText: {
-    fontFamily: 'Gill Sans',
-    fontSize: 18,
-    color: 'white',
+    fontFamily: '$primaryFontFamily',
+    fontSize: '$primaryFontSize',
+    color: '#FFFFFF',
   },
 });

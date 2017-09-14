@@ -7,8 +7,8 @@ export default EStyleSheet.create({
     justifyContent: 'space-between',
   },
   buttonText: {
-    fontFamily: 'Gill Sans',
-    fontSize: 18,
-    color: 'white',
+    fontFamily: '$primaryFontFamily',
+    fontSize: '$primaryFontSize',
+    color: '#FFFFFF',
   },
 });

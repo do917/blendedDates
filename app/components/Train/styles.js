@@ -13,9 +13,9 @@ export default EStyleSheet.create({
     justifyContent: 'flex-end',
   },
   buttonText: {
-    fontFamily: 'Gill Sans',
-    fontSize: 18,
-    color: 'white',
+    fontFamily: '$primaryFontFamily',
+    fontSize: '$primaryFontSize',
+    color: '#FFFFFF',
   },
   photoContainer: {
     paddingHorizontal: 2,
@@ -32,7 +32,7 @@ export default EStyleSheet.create({
     resizeMode: 'cover',
   },
   text: {
-    fontFamily: 'Gill Sans',
+    fontFamily: '$primaryFontFamily',
     textAlign: 'center',
     color: '#FFFFFF',
   },

@@ -19,14 +19,14 @@ export default EStyleSheet.create({
   text: {
     fontFamily: 'Courier',
     height: 85,
-    fontSize: 18,
+    fontSize: '$primaryFontSize',
     textAlign: 'left',
     textAlignVertical: 'center',
     color: '#FFFFFF',
   },
   caret: {
     fontFamily: 'Courier',
-    fontSize: 18,
+    fontSize: '$primaryFontSize',
     color: '#bff442',
   },
 });
