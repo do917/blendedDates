@@ -26,8 +26,8 @@ export default EStyleSheet.create({
     margin: 3,
   },
   buttonText: {
-    fontFamily: 'Gill Sans',
-    fontSize: 18,
+    fontFamily: '$primaryFontFamily',
+    fontSize: '$primaryFontSize',
     color: '#FFFFFF',
   },
   absolute: {

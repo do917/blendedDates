@@ -7,13 +7,13 @@ export default EStyleSheet.create({
     justifyContent: 'space-around',
   },
   buttonText: {
-    fontFamily: 'Gill Sans',
-    fontSize: 18,
+    fontFamily: '$primaryFontFamily',
+    fontSize: '$primaryFontSize',
     color: '#FFFFFF',
   },
   inputField: {
-    fontFamily: 'Gill Sans',
-    fontSize: 18,
+    fontFamily: '$primaryFontFamily',
+    fontSize: '$primaryFontSize',
     color: '#FFFFFF',
     textAlign: 'center',
     height: 40,
